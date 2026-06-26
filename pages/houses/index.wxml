@@ -1,0 +1,10 @@
+<view class="page-wrap">
+  <view class="card-title">园区房源</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onDetail">
+    <image wx:if="{{item.images && item.images.length}}" src="{{item.images[0]}}" mode="aspectFill" class="news-cover" />
+    <view class="card-title">{{item.title}}</view>
+    <text class="order-meta">面积：{{item.area}}</text>
+    <text class="order-meta">价格：{{item.price}}</text>
+  </view>
+  <view class="empty-tip" wx:if="{{!loading && list.length === 0}}">暂无房源</view>
+</view>

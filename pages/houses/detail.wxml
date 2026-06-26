@@ -1,0 +1,17 @@
+<view class="page-wrap" wx:if="{{detail}}">
+  <swiper class="house-swiper" indicator-dots autoplay wx:if="{{detail.images && detail.images.length}}">
+    <swiper-item wx:for="{{detail.images}}" wx:key="*this">
+      <image class="house-swiper-image" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+  <view class="card">
+    <view class="card-title">{{detail.title}}</view>
+    <text class="order-meta">面积：{{detail.area}}</text>
+    <text class="order-meta">价格：{{detail.price}}</text>
+    <text class="order-meta">户型：{{detail.house_type}}</text>
+    <text class="order-time">{{detail.description}}</text>
+    <view class="action-btn action-btn-primary" bindtap="onInvestment">
+      <text class="action-btn-text">登记招商意向</text>
+    </view>
+  </view>
+</view>

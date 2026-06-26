@@ -1,0 +1,23 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="info-item">
+      <text class="info-label">物业电话</text>
+      <text class="info-value link" bindtap="onCall">400-888-6688</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">服务时间</text>
+      <text class="info-value">周一至周日 8:00 - 20:00</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">园区地址</text>
+      <text class="info-value">康瑞园区智慧服务中心</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">紧急报修</text>
+      <text class="info-value">0755-12345678</text>
+    </view>
+  </view>
+  <view class="action-btn action-btn-primary" bindtap="onCall">
+    <text class="action-btn-text">拨打电话</text>
+  </view>
+</view>

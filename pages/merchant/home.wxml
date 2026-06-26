@@ -1,0 +1,13 @@
+<view class="page-wrap">
+  <view class="card" wx:if="{{merchant}}">
+    <view class="card-title">{{merchant.name}}</view>
+    <text class="order-meta">联系人：{{merchant.contact_name}}</text>
+    <text class="order-meta">电话：{{merchant.contact_phone}}</text>
+  </view>
+  <view class="card" wx:if="{{stats}}">
+    <text class="order-meta">预约总数：{{stats.total}}</text>
+    <text class="order-meta">待确认：{{stats.pending}}</text>
+    <view class="action-btn action-btn-primary" bindtap="goAppointments"><text class="action-btn-text">处理预约</text></view>
+  </view>
+  <view class="action-btn action-btn-ghost" bindtap="logout"><text class="action-btn-text ghost">退出登录</text></view>
+</view>

@@ -1,0 +1,13 @@
+<view class="tab-bar">
+  <view class="tab-bar-inner">
+    <view class="tab-item {{active === 'index' ? 'tab-item--active' : ''}}" data-tab="index" bindtap="onTap">
+      <text class="tab-icon">🏠</text>
+      <text class="tab-text">首页</text>
+    </view>
+    <view class="tab-item {{active === 'mine' ? 'tab-item--active' : ''}}" data-tab="mine" bindtap="onTap">
+      <text class="tab-icon">👤</text>
+      <text class="tab-text">我的</text>
+    </view>
+  </view>
+  <view class="tab-bar-safe"></view>
+</view>

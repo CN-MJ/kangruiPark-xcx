@@ -1,0 +1,59 @@
+<view class="park-page">
+  <view class="park-summary-bar" wx:if="{{summary}}">
+    <view class="park-summary-item">
+      <text class="park-summary-num">{{summary.remaining}}</text>
+      <text class="park-summary-label">剩余车位</text>
+    </view>
+    <view class="park-summary-item">
+      <text class="park-summary-num occupied">{{summary.occupied}}</text>
+      <text class="park-summary-label">在场车辆</text>
+    </view>
+    <view class="park-summary-item">
+      <text class="park-summary-num total">{{summary.total}}</text>
+      <text class="park-summary-label">总车位</text>
+    </view>
+  </view>
+
+  <view class="park-search-bar">
+    <text class="park-search-icon">🔍</text>
+    <input
+      class="park-search-input"
+      placeholder="搜索车牌号"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+      bindconfirm="onSearch"
+    />
+    <text class="search-btn" bindtap="onSearch" wx:if="{{keyword}}">搜索</text>
+  </view>
+
+  <view class="park-filter-bar">
+    <view
+      class="park-filter-tab {{activeFilter === item.key ? 'active' : ''}}"
+      wx:for="{{filters}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onFilterTap"
+    >{{item.label}}</view>
+  </view>
+
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+
+  <view class="park-list-card" wx:for="{{list}}" wx:key="id">
+    <view class="park-list-head">
+      <text class="park-list-title plate">{{item.plate_number}}</text>
+      <text class="tag {{item.status === 0 ? 'tag-active' : ''}}">{{item.statusText}}</text>
+    </view>
+    <text class="park-list-meta">入场：{{item.entryText}}</text>
+    <text class="park-list-meta">出场：{{item.exitText}}</text>
+    <view class="park-btn-row" wx:if="{{item.status === 0}}">
+      <view class="action-btn-sm success" data-id="{{item.id}}" bindtap="onExit">
+        <text class="action-btn-sm-text success">确认出场</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length === 0}}">
+    <text class="park-empty-icon">🅿️</text>
+    <text class="park-empty-text">暂无停车记录</text>
+  </view>
+</view>

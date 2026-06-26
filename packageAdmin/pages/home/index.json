@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "园区工作台",
+  "navigationBarBackgroundColor": "#3b66f5",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
+}

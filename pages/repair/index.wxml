@@ -1,0 +1,57 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">姓名</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          placeholder="请输入姓名"
+          placeholder-class="form-placeholder"
+          value="{{userName}}"
+          bindinput="onNameInput"
+        />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          type="number"
+          maxlength="11"
+          placeholder="请输入手机号"
+          placeholder-class="form-placeholder"
+          value="{{userPhone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">报修标题</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          placeholder="如：网络无法连接"
+          placeholder-class="form-placeholder"
+          value="{{title}}"
+          bindinput="onTitleInput"
+        />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">问题描述</text>
+      <view class="form-field form-field-textarea">
+        <textarea
+          class="form-textarea"
+          placeholder="请描述故障情况"
+          placeholder-class="form-placeholder"
+          value="{{content}}"
+          bindinput="onContentInput"
+        />
+      </view>
+    </view>
+    <view class="action-btn action-btn-primary" bindtap="onSubmit">
+      <text class="action-btn-text">提交报修</text>
+    </view>
+  </view>
+</view>

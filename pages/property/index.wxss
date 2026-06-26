@@ -1,0 +1,27 @@
+.menu-card {
+  position: relative;
+  padding-right: 60rpx;
+}
+
+.menu-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.menu-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.menu-arrow {
+  position: absolute;
+  right: 28rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 36rpx;
+  color: #ccc;
+}

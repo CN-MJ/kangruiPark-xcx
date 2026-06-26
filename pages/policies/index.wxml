@@ -1,0 +1,7 @@
+<view class="page-wrap">
+  <view class="card-title">政策直达</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onDetail">
+    <view class="card-title">{{item.title}}</view>
+    <text class="order-meta">级别：{{item.level}}</text>
+  </view>
+</view>

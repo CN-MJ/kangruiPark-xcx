@@ -1,0 +1,41 @@
+<view class="login-page">
+  <view class="login-hero">
+    <view class="login-hero-inner">
+      <view class="login-logo">
+        <text class="login-logo-icon">🏛</text>
+      </view>
+      <view class="login-title">园区工作台</view>
+      <view class="login-sub">园区人员专用入口</view>
+      <view class="login-features">
+        <view class="feature-tag">发布新闻</view>
+        <view class="feature-tag">处理预约</view>
+        <view class="feature-tag">停车管理</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="login-body">
+    <view class="login-card">
+      <view class="form-item">
+        <view class="form-label">手机号登录</view>
+        <view class="form-field">
+          <input
+            class="form-input login-input"
+            type="number"
+            maxlength="11"
+            placeholder="请输入已授权的手机号"
+            placeholder-class="form-placeholder"
+            value="{{phone}}"
+            bindinput="onPhoneInput"
+          />
+        </view>
+      </view>
+      <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onLogin">
+        <view wx:if="{{loading}}" class="action-btn-spinner"></view>
+        <text class="action-btn-text">进入工作台</text>
+      </view>
+    </view>
+
+    <view class="login-tip">测试账号：13800000001</view>
+  </view>
+</view>

@@ -1,0 +1,29 @@
+.detail-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+.detail-time {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.detail-cover {
+  width: 100%;
+  margin-top: 24rpx;
+  border-radius: 12rpx;
+}
+
+.detail-content {
+  display: block;
+  margin-top: 28rpx;
+  font-size: 28rpx;
+  color: #444;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}

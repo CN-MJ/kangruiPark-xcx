@@ -1,0 +1,24 @@
+.info-item {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f2f3f5;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.info-value {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.info-value.link {
+  color: #3b66f5;
+}

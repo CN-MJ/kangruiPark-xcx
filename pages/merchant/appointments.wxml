@@ -1,0 +1,15 @@
+<view class="page-wrap">
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <view class="card-title">{{item.resource_name}}</view>
+    <text class="order-meta">{{item.user_name}} · {{item.user_phone}}</text>
+    <text class="order-meta">状态：{{item.status_text}}</text>
+    <view class="park-btn-row" wx:if="{{item.status===0}}">
+      <view class="action-btn-sm" data-id="{{item.id}}" data-action="confirm" bindtap="onAction">
+        <text class="action-btn-sm-text">确认</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" data-action="reject" bindtap="onAction">
+        <text class="action-btn-sm-text danger">拒绝</text>
+      </view>
+    </view>
+  </view>
+</view>

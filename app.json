@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/mine/index",
+    "pages/orders/index",
+    "pages/appointment/create",
+    "pages/parking/index",
+    "pages/news/list",
+    "pages/news/detail",
+    "pages/feedback/index",
+    "pages/repair/index",
+    "pages/checkin/index",
+    "pages/contact/index",
+    "pages/nav/index",
+    "pages/enterprise/index",
+    "pages/property/index",
+    "pages/more/index"
+    ,"pages/houses/index"
+    ,"pages/houses/detail"
+    ,"pages/investment/index"
+    ,"pages/investment/success"
+    ,"pages/policies/index"
+    ,"pages/policies/detail"
+    ,"pages/activities/index"
+    ,"pages/activities/detail"
+    ,"pages/merchant/login"
+    ,"pages/merchant/home"
+    ,"pages/merchant/appointments"
+  ],
+  "subPackages": [
+    {
+      "root": "packageAdmin",
+      "name": "admin",
+      "pages": [
+        "pages/login/index",
+        "pages/home/index",
+        "pages/appointments/index",
+        "pages/parking/index",
+        "pages/news/list/index",
+        "pages/news/edit/index",
+        "pages/merchants/index",
+        "pages/houses/index",
+        "pages/houses/edit",
+        "pages/policies/index",
+        "pages/policies/edit",
+        "pages/activities/index",
+        "pages/activities/edit",
+        "pages/investments/index"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "康瑞园区",
+    "navigationBarBackgroundColor": "#3b66f5",
+    "backgroundColor": "#f4f6f8",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

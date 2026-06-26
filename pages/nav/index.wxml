@@ -1,0 +1,10 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="card-title">园区导览</view>
+    <view class="place-item" wx:for="{{places}}" wx:key="name">
+      <text class="place-name">{{item.name}}</text>
+      <text class="place-desc">{{item.desc}}</text>
+    </view>
+  </view>
+  <view class="tip-text">更多导航功能持续完善中</view>
+</view>

@@ -1,0 +1,86 @@
+<view class="park-page edit-page">
+  <view class="card edit-card">
+    <text class="edit-section-title">内容类型</text>
+    <picker mode="selector" range="{{typeOptions}}" range-key="label" value="{{typeIndex}}" bindchange="onTypeChange">
+      <view class="type-picker">
+        <text class="type-picker-value">{{typeOptions[typeIndex].label}}</text>
+        <text class="type-picker-arrow">›</text>
+      </view>
+    </picker>
+    <text class="type-tip" wx:if="{{isNotice}}">首页公告将显示在首页顶部滚动栏，标题建议写简短文字</text>
+  </view>
+
+  <view class="card edit-card" wx:if="{{!isNotice}}">
+    <text class="edit-section-title">封面图片</text>
+    <view class="cover-upload" bindtap="onChooseCover">
+      <block wx:if="{{coverLocal}}">
+        <image class="cover-img" src="{{coverLocal}}" mode="aspectFill" />
+        <view class="cover-mask" wx:if="{{uploading}}">
+          <text>上传中...</text>
+        </view>
+        <view class="cover-change">点击更换</view>
+      </block>
+      <block wx:else>
+        <text class="cover-plus">+</text>
+        <text class="cover-tip">上传封面图</text>
+        <text class="cover-sub">建议 16:9，支持相册或拍照</text>
+      </block>
+    </view>
+    <text class="cover-remove" wx:if="{{coverLocal && !uploading}}" catchtap="onRemoveCover">移除封面</text>
+  </view>
+
+  <view class="card edit-card">
+    <text class="edit-section-title">基本信息</text>
+    <view class="form-item">
+      <text class="form-label">{{isNotice ? '公告标题' : '标题'}}</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          placeholder="{{isNotice ? '如：【园区通知】平台正式上线' : '请输入新闻标题'}}"
+          placeholder-class="form-placeholder"
+          maxlength="80"
+          value="{{title}}"
+          bindinput="onTitleInput"
+        />
+      </view>
+    </view>
+  </view>
+
+  <view class="card edit-card">
+    <text class="edit-section-title">{{isNotice ? '公告详情' : '正文内容'}}</text>
+    <view class="form-item">
+      <view class="form-field form-field-textarea">
+        <textarea
+          class="form-textarea edit-textarea"
+          placeholder="{{isNotice ? '用户点击公告后查看的详细内容' : '请输入新闻正文，支持多段文字'}}"
+          placeholder-class="form-placeholder"
+          value="{{content}}"
+          bindinput="onContentInput"
+          maxlength="-1"
+          show-confirm-bar="{{false}}"
+        />
+      </view>
+    </view>
+    <text class="char-count">{{contentLen}} 字</text>
+  </view>
+
+  <view class="card edit-card">
+    <view class="switch-item">
+      <view>
+        <text class="form-label">置顶显示</text>
+        <text class="switch-desc">{{isNotice ? '置顶公告将优先在首页滚动展示' : '置顶后将在首页和列表优先展示'}}</text>
+      </view>
+      <switch checked="{{isTop}}" color="#3b66f5" bindchange="onTopChange" />
+    </view>
+  </view>
+
+  <view class="edit-actions">
+    <view class="action-btn action-btn-plain" bindtap="onPreview">
+      <text class="action-btn-text plain">预览内容</text>
+    </view>
+    <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onSubmit">
+      <view wx:if="{{loading}}" class="action-btn-spinner"></view>
+      <text class="action-btn-text">{{id ? '保存修改' : (isNotice ? '发布公告' : '发布新闻')}}</text>
+    </view>
+  </view>
+</view>

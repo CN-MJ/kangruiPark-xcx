@@ -1,0 +1,9 @@
+<view class="page-wrap" wx:if="{{detail}}">
+  <view class="card">
+    <text class="detail-title">{{detail.title}}</text>
+    <text class="detail-time">{{detail.timeText}}</text>
+    <image wx:if="{{detail.cover_image}}" class="detail-cover" src="{{detail.cover_image}}" mode="widthFix" />
+    <text class="detail-content">{{detail.content}}</text>
+  </view>
+</view>
+<view class="empty-tip" wx:else>{{loading ? '加载中...' : '内容不存在'}}</view>

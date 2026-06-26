@@ -1,0 +1,63 @@
+<view class="park-page news-page">
+  <view class="news-header" wx:if="{{!loading}}">
+    <text class="news-header-title">共 {{total}} 条内容</text>
+    <text class="news-header-tip">园区动态与首页公告均可在此管理</text>
+  </view>
+
+  <view class="park-filter-bar">
+    <view
+      class="park-filter-tab {{activeFilter === item.key ? 'active' : ''}}"
+      wx:for="{{filters}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onFilterTap"
+    >{{item.label}}</view>
+  </view>
+
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+
+  <view
+    class="park-list-card news-card"
+    wx:for="{{list}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="onPreview"
+  >
+    <view class="news-card-body">
+      <image wx:if="{{item.hasCover}}" class="news-cover" src="{{item.cover_image}}" mode="aspectFill" />
+      <view wx:else class="news-cover news-cover-placeholder">{{item.isNotice ? '📢' : '📰'}}</view>
+      <view class="news-content">
+        <view class="park-list-head">
+          <text class="park-list-title">{{item.title}}</text>
+          <view class="tag-group">
+            <text class="tag {{item.isNotice ? 'tag-notice' : 'tag-active'}}">{{item.typeText}}</text>
+            <text class="tag tag-active" wx:if="{{item.is_top}}">置顶</text>
+          </view>
+        </view>
+        <text class="news-summary" wx:if="{{item.summary}}">{{item.summary}}</text>
+        <text class="park-list-meta">{{item.timeText}}</text>
+      </view>
+    </view>
+    <view class="park-btn-row" catchtap="stopBubble">
+      <view class="action-btn-sm" data-id="{{item.id}}" catchtap="onPreview">
+        <text class="action-btn-sm-text">预览</text>
+      </view>
+      <view class="action-btn-sm" data-id="{{item.id}}" catchtap="onEdit">
+        <text class="action-btn-sm-text">编辑</text>
+      </view>
+      <view class="action-btn-sm" data-id="{{item.id}}" catchtap="onToggleTop">
+        <text class="action-btn-sm-text">{{item.is_top ? '取消置顶' : '置顶'}}</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" catchtap="onDelete">
+        <text class="action-btn-sm-text danger">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length === 0}}">
+    <text class="park-empty-icon">📰</text>
+    <text class="park-empty-text">{{activeFilter === 'top' ? '暂无置顶新闻' : '暂无新闻，点击右下角发布'}}</text>
+  </view>
+
+  <view class="park-fab" bindtap="onCreate">+</view>
+</view>

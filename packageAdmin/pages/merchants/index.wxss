@@ -1,0 +1,44 @@
+@import '../../styles/park.wxss';
+
+.park-summary-num.visitor {
+  color: #722ed1;
+}
+
+.park-summary-num.checkin {
+  color: #52c41a;
+}
+
+.user-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5b8cff, #3b66f5);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-btn {
+  font-size: 26rpx;
+  color: #3b66f5;
+  padding: 0 8rpx;
+}
+
+.search-btn.clear {
+  color: #999;
+}

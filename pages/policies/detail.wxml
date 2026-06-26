@@ -1,0 +1,7 @@
+<view class="page-wrap" wx:if="{{detail}}">
+  <view class="card">
+    <view class="card-title">{{detail.title}}</view>
+    <text class="order-meta">级别：{{detail.level}}</text>
+    <rich-text nodes="{{detail.content}}"></rich-text>
+  </view>
+</view>

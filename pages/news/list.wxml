@@ -1,0 +1,13 @@
+<view class="page-wrap">
+  <view wx:if="{{list.length > 0}}">
+    <view class="news-card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onItemTap">
+      <image class="news-cover" src="{{item.cover_image || defaultCover}}" mode="aspectFill" />
+      <view class="news-body">
+        <text class="news-title">{{item.title}}</text>
+        <text class="news-time">{{item.timeText}}</text>
+        <view class="tag">{{item.tag}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty-tip" wx:else>{{loading ? '加载中...' : '暂无新闻'}}</view>
+</view>

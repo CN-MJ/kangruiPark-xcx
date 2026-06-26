@@ -1,0 +1,11 @@
+@import '../../styles/park.wxss';
+
+.search-btn {
+  font-size: 26rpx;
+  color: #3b66f5;
+  padding: 0 8rpx;
+}
+
+.search-btn.clear {
+  color: #999;
+}

@@ -1,0 +1,44 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="card-title">查询预约</view>
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          type="number"
+          maxlength="11"
+          placeholder="请输入手机号"
+          placeholder-class="form-placeholder"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+    </view>
+    <view class="action-btn action-btn-primary" bindtap="onSearch">
+      <text class="action-btn-text">查询</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{list.length > 0}}">
+    <view class="card-title">预约记录</view>
+    <view class="list-item" wx:for="{{list}}" wx:key="id">
+      <view class="order-head">
+        <text class="order-resource">{{item.displayTitle}}</text>
+        <text class="tag {{item.statusClass}}">{{item.statusText}}</text>
+      </view>
+      <text class="order-meta" wx:if="{{item.locationText}}">位置：{{item.locationText}}</text>
+      <text class="order-meta">{{item.user_name}} · {{item.user_phone}}</text>
+      <text class="order-time">{{item.timeText}}</text>
+      <view wx:if="{{item.status === 0}}" class="action-btn-sm danger action-btn-sm-wrap" data-id="{{item.id}}" bindtap="onCancel">
+        <text class="action-btn-sm-text danger">取消预约</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:elif="{{!loading && phone}}">暂无预约记录</view>
+
+  <view class="action-btn action-btn-primary" bindtap="goCreate">
+    <text class="action-btn-text">新建预约</text>
+  </view>
+</view>

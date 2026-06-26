@@ -1,0 +1,55 @@
+<view class="service-page">
+  <!-- 左侧分类 -->
+  <view class="sidebar">
+    <view
+      class="sidebar-item {{activeId === item.id ? 'sidebar-item--active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onCategoryTap"
+    >
+      <text class="sidebar-text">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 右侧内容 -->
+  <scroll-view
+    class="content-scroll"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-into-view="{{scrollIntoView}}"
+    scroll-with-animation
+    bindscroll="onContentScroll"
+    throttle="{{false}}"
+  >
+    <view class="content-inner">
+      <view
+        class="section-block"
+        id="section-{{section.id}}"
+        wx:for="{{sections}}"
+        wx:key="id"
+        wx:for-item="section"
+      >
+        <text class="section-title">{{section.title}}</text>
+        <view class="service-grid">
+          <view
+            class="service-item"
+            wx:for="{{section.items}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="onItemTap"
+            hover-class="service-item--press"
+            hover-stay-time="100"
+          >
+            <view class="service-icon-wrap" style="background: {{item.bg}};">
+              <text class="service-icon">{{item.icon}}</text>
+            </view>
+            <text class="service-label">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="content-bottom"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,32 @@
+.checkin-page {
+  padding-top: 40rpx;
+}
+
+.checkin-card {
+  text-align: center;
+  padding: 48rpx 32rpx;
+}
+
+.checkin-icon {
+  display: block;
+  font-size: 72rpx;
+  margin-bottom: 20rpx;
+}
+
+.checkin-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.checkin-sub {
+  display: block;
+  margin: 16rpx 0 32rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.checkin-card .form-item {
+  text-align: left;
+}

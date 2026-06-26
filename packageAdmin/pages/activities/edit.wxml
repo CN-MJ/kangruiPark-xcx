@@ -1,0 +1,15 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item"><text class="form-label">活动标题</text><input class="form-input" value="{{title}}" data-key="title" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">封面图</text><view class="form-picker" bindtap="onChooseCover">{{cover_image ? '已上传，点此更换' : '上传图片'}}</view></view>
+    <view class="form-item"><text class="form-label">开始日期</text><picker mode="date" value="{{startDate}}" data-key="startDate" bindchange="onDateChange"><view class="form-picker">{{startDate}}</view></picker></view>
+    <view class="form-item"><text class="form-label">开始时间</text><picker mode="time" value="{{startClock}}" data-key="startClock" bindchange="onTimeChange"><view class="form-picker">{{startClock}}</view></picker></view>
+    <view class="form-item"><text class="form-label">结束日期</text><picker mode="date" value="{{endDate}}" data-key="endDate" bindchange="onDateChange"><view class="form-picker">{{endDate}}</view></picker></view>
+    <view class="form-item"><text class="form-label">结束时间</text><picker mode="time" value="{{endClock}}" data-key="endClock" bindchange="onTimeChange"><view class="form-picker">{{endClock}}</view></picker></view>
+    <view class="form-item"><text class="form-label">地点</text><input class="form-input" value="{{location}}" data-key="location" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">描述</text><textarea class="form-textarea" value="{{description}}" data-key="description" bindinput="onInput"></textarea></view>
+    <view class="form-item"><text class="form-label">最大人数</text><input class="form-input" value="{{max_attendees}}" data-key="max_attendees" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">状态</text><picker mode="selector" range="{{['报名中','已结束','已取消']}}" value="{{status}}" bindchange="onStatusChange"><view class="form-picker">{{['报名中','已结束','已取消'][status]}}</view></picker></view>
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit"><text class="action-btn-text">保存</text></view>
+  </view>
+</view>

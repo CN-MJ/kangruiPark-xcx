@@ -1,0 +1,9 @@
+<view class="page-wrap">
+  <view class="card-title">园区活动</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onDetail">
+    <image wx:if="{{item.cover_image}}" src="{{item.cover_image}}" mode="aspectFill" class="news-cover" />
+    <view class="card-title">{{item.title}}</view>
+    <text class="order-meta">地点：{{item.location}}</text>
+    <text class="order-time">{{item.timeText}}</text>
+  </view>
+</view>

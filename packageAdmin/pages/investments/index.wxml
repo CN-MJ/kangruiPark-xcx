@@ -1,0 +1,12 @@
+<view class="park-page">
+  <view class="park-list-card" wx:for="{{list}}" wx:key="id">
+    <text class="park-list-title">{{item.company_name}}</text>
+    <text class="park-list-meta">{{item.contact_name}} · {{item.contact_phone}}</text>
+    <text class="park-list-meta">需求：{{item.demand_area}}</text>
+    <picker mode="selector" range="{{statuses}}" value="{{item.status}}" data-id="{{item.id}}" bindchange="onStatusChange">
+      <view class="form-picker">状态：{{statuses[item.status]}}</view>
+    </picker>
+  </view>
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">暂无招商意向</view>
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+</view>

@@ -1,0 +1,60 @@
+<view class="page-wrap">
+  <view class="card stats-card" wx:if="{{stats}}">
+    <view class="stats-item">
+      <text class="stats-num">{{stats.remaining_spots}}</text>
+      <text class="stats-label">剩余车位</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-num sub">{{stats.occupied_count}}</text>
+      <text class="stats-label">已占用</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-num sub">{{stats.total_spots}}</text>
+      <text class="stats-label">总车位</text>
+    </view>
+  </view>
+
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'entry' ? 'active' : ''}}" data-mode="entry" bindtap="onModeChange">车辆入场</view>
+    <view class="mode-tab {{mode === 'exit' ? 'active' : ''}}" data-mode="exit" bindtap="onModeChange">车辆出场</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">{{mode === 'entry' ? '入场预约' : '出场登记'}}</view>
+    <view class="form-item">
+      <text class="form-label">车牌号</text>
+      <view class="form-field">
+        <input
+          class="form-input"
+          placeholder="如：粤B12345"
+          placeholder-class="form-placeholder"
+          value="{{plateNumber}}"
+          bindinput="onPlateInput"
+          bindconfirm="onQueryActive"
+        />
+      </view>
+    </view>
+
+    <view class="active-record" wx:if="{{mode === 'exit' && activeRecord}}">
+      <text class="active-label">在场信息</text>
+      <text class="active-meta">入场时间：{{activeRecord.entryText}}</text>
+      <text class="active-meta">车牌号：{{activeRecord.plate_number}}</text>
+    </view>
+
+    <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onSubmit" wx:if="{{mode === 'entry'}}">
+      <view wx:if="{{loading}}" class="action-btn-spinner"></view>
+      <text class="action-btn-text">提交入场预约</text>
+    </view>
+
+    <view class="action-btn action-btn-exit {{loading ? 'is-loading' : ''}}" bindtap="onSubmit" wx:if="{{mode === 'exit'}}">
+      <view wx:if="{{loading}}" class="action-btn-spinner"></view>
+      <text class="action-btn-text">确认出场</text>
+    </view>
+
+    <view class="query-link" wx:if="{{mode === 'exit'}}" bindtap="onQueryActive">查询在场记录</view>
+  </view>
+
+  <view class="tip-text">{{mode === 'entry' ? '温馨提示：入场后请按园区规定停放车辆' : '出场后车位将自动释放，请确认车牌无误'}}</view>
+</view>

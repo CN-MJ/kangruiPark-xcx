@@ -1,0 +1,12 @@
+<view class="page-wrap">
+  <view class="card menu-card" bindtap="onRepair">
+    <text class="menu-title">IT报修</text>
+    <text class="menu-desc">网络、设备等故障报修</text>
+    <text class="menu-arrow">›</text>
+  </view>
+  <view class="card menu-card" bindtap="onContact">
+    <text class="menu-title">联系物业</text>
+    <text class="menu-desc">咨询、投诉与服务申请</text>
+    <text class="menu-arrow">›</text>
+  </view>
+</view>

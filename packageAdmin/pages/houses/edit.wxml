@@ -1,0 +1,12 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item"><text class="form-label">房源名称</text><input class="form-input" data-key="title" value="{{title}}" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">面积</text><input class="form-input" data-key="area" value="{{area}}" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">价格</text><input class="form-input" data-key="price" value="{{price}}" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">户型</text><input class="form-input" data-key="house_type" value="{{house_type}}" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">描述</text><textarea class="form-textarea" data-key="description" value="{{description}}" bindinput="onInput"></textarea></view>
+    <view class="form-item"><text class="form-label">状态</text><picker mode="selector" range="{{['已售/已租','在售/在租']}}" value="{{status}}" bindchange="onStatusChange"><view class="form-picker">{{status===1?'在售/在租':'已售/已租'}}</view></picker></view>
+    <view class="form-item"><text class="form-label">封面图</text><view class="form-picker" bindtap="onChooseImage">{{image ? '已上传，点此更换' : '上传图片'}}</view></view>
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit"><text class="action-btn-text">保存</text></view>
+  </view>
+</view>

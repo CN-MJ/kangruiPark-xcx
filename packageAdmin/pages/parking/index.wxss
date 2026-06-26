@@ -1,0 +1,20 @@
+@import '../../styles/park.wxss';
+
+.park-summary-num.occupied {
+  color: #fa8c16;
+}
+
+.park-summary-num.total {
+  color: #666;
+}
+
+.plate {
+  font-family: 'DIN Alternate', monospace;
+  letter-spacing: 2rpx;
+}
+
+.search-btn {
+  font-size: 26rpx;
+  color: #3b66f5;
+  padding: 0 8rpx;
+}

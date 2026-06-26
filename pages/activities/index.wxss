@@ -1,0 +1,6 @@
+.news-cover {
+  width: 100%;
+  height: 260rpx;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
