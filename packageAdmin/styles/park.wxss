@@ -1,17 +1,17 @@
-/* 园区工作台公共样式 */
+/* 园区工作台公共样式（与首页青绿主题一致） */
 .park-page {
   min-height: 100vh;
   padding: 0 24rpx 40rpx;
   padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
-  background: #f4f6f8;
+  background: #f4f7f6;
 }
 
 .park-hero {
   margin: 0 -24rpx 24rpx;
   padding: 48rpx 32rpx 56rpx;
-  background: linear-gradient(145deg, #5b8cff 0%, #3b66f5 55%, #2f55e0 100%);
+  background: linear-gradient(135deg, #115e59 0%, #0f766e 55%, #14b8a6 100%);
   border-radius: 0 0 36rpx 36rpx;
-  box-shadow: 0 12rpx 40rpx rgba(59, 102, 245, 0.28);
+  box-shadow: 0 12rpx 40rpx rgba(15, 118, 110, 0.28);
 }
 
 .park-hero-title {
@@ -46,7 +46,7 @@
   background: #fff;
   border-radius: 20rpx;
   padding: 28rpx 24rpx;
-  box-shadow: 0 8rpx 28rpx rgba(15, 35, 95, 0.1);
+  box-shadow: 0 8rpx 28rpx rgba(15, 118, 110, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -62,10 +62,10 @@
   opacity: 0.12;
 }
 
-.park-stat-card.blue::after { background: #3b66f5; }
-.park-stat-card.green::after { background: #52c41a; }
-.park-stat-card.orange::after { background: #fa8c16; }
-.park-stat-card.purple::after { background: #722ed1; }
+.park-stat-card.blue::after { background: #0f766e; }
+.park-stat-card.green::after { background: #16a34a; }
+.park-stat-card.orange::after { background: #d97706; }
+.park-stat-card.purple::after { background: #7c3aed; }
 
 .park-stat-num {
   display: block;
@@ -74,16 +74,16 @@
   line-height: 1.1;
 }
 
-.park-stat-num.blue { color: #3b66f5; }
-.park-stat-num.green { color: #52c41a; }
-.park-stat-num.orange { color: #fa8c16; }
-.park-stat-num.purple { color: #722ed1; }
+.park-stat-num.blue { color: #0f766e; }
+.park-stat-num.green { color: #16a34a; }
+.park-stat-num.orange { color: #d97706; }
+.park-stat-num.purple { color: #7c3aed; }
 
 .park-stat-label {
   display: block;
   margin-top: 10rpx;
   font-size: 24rpx;
-  color: #999;
+  color: #64748b;
 }
 
 .park-section-title {
@@ -91,7 +91,7 @@
   margin: 8rpx 0 16rpx 4rpx;
   font-size: 28rpx;
   font-weight: 600;
-  color: #666;
+  color: #334155;
 }
 
 .park-menu-grid {
@@ -105,7 +105,7 @@
   background: #fff;
   border-radius: 20rpx;
   padding: 28rpx 24rpx;
-  box-shadow: 0 8rpx 28rpx rgba(15, 35, 95, 0.1);
+  box-shadow: 0 8rpx 28rpx rgba(15, 118, 110, 0.08);
 }
 
 .park-menu-icon-wrap {
@@ -119,23 +119,23 @@
   font-size: 36rpx;
 }
 
-.park-menu-icon-wrap.blue { background: rgba(59, 102, 245, 0.12); }
-.park-menu-icon-wrap.green { background: rgba(82, 196, 26, 0.12); }
-.park-menu-icon-wrap.orange { background: rgba(250, 140, 22, 0.12); }
-.park-menu-icon-wrap.purple { background: rgba(114, 46, 209, 0.12); }
+.park-menu-icon-wrap.blue { background: rgba(15, 118, 110, 0.12); }
+.park-menu-icon-wrap.green { background: rgba(22, 163, 74, 0.12); }
+.park-menu-icon-wrap.orange { background: rgba(217, 119, 6, 0.12); }
+.park-menu-icon-wrap.purple { background: rgba(124, 58, 237, 0.12); }
 
 .park-menu-name {
   display: block;
   font-size: 28rpx;
   font-weight: 600;
-  color: #333;
+  color: #1c2b2a;
 }
 
 .park-menu-desc {
   display: block;
   margin-top: 6rpx;
   font-size: 22rpx;
-  color: #aaa;
+  color: #94a3b8;
   line-height: 1.4;
 }
 
@@ -151,15 +151,15 @@
   flex-shrink: 0;
   padding: 12rpx 28rpx;
   font-size: 26rpx;
-  color: #666;
+  color: #64748b;
   background: #fff;
   border-radius: 32rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2rpx 8rpx rgba(15, 118, 110, 0.06);
 }
 
 .park-filter-tab.active {
   color: #fff;
-  background: #3b66f5;
+  background: #0f766e;
   font-weight: 500;
 }
 
@@ -170,20 +170,21 @@
   border-radius: 40rpx;
   padding: 0 24rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(15, 35, 95, 0.08);
+  box-shadow: 0 4rpx 16rpx rgba(15, 118, 110, 0.08);
 }
 
 .park-search-input {
   flex: 1;
   height: 72rpx;
   font-size: 28rpx;
-  color: #333;
+  color: #334155;
 }
 
 .park-search-icon {
-  font-size: 28rpx;
-  color: #bbb;
+  display: flex;
+  align-items: center;
   margin-right: 12rpx;
+  flex-shrink: 0;
 }
 
 .park-list-card {
@@ -191,7 +192,7 @@
   border-radius: 20rpx;
   padding: 28rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 8rpx 28rpx rgba(15, 35, 95, 0.1);
+  box-shadow: 0 8rpx 28rpx rgba(15, 118, 110, 0.08);
 }
 
 .park-list-head {
@@ -205,7 +206,7 @@
   flex: 1;
   font-size: 30rpx;
   font-weight: 600;
-  color: #333;
+  color: #1c2b2a;
   line-height: 1.4;
 }
 
@@ -213,12 +214,12 @@
   display: block;
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #999;
+  color: #64748b;
   line-height: 1.5;
 }
 
 .park-list-meta .highlight {
-  color: #3b66f5;
+  color: #0f766e;
 }
 
 .park-btn-row {
@@ -240,28 +241,28 @@
   border-radius: 16rpx;
   padding: 20rpx;
   text-align: center;
-  box-shadow: 0 4rpx 16rpx rgba(15, 35, 95, 0.08);
+  box-shadow: 0 4rpx 16rpx rgba(15, 118, 110, 0.08);
 }
 
 .park-summary-num {
   display: block;
   font-size: 36rpx;
   font-weight: 700;
-  color: #3b66f5;
+  color: #0f766e;
 }
 
 .park-summary-label {
   display: block;
   margin-top: 6rpx;
   font-size: 22rpx;
-  color: #999;
+  color: #64748b;
 }
 
 .park-loading {
   text-align: center;
   padding: 60rpx 0;
   font-size: 26rpx;
-  color: #bbb;
+  color: #94a3b8;
 }
 
 .park-empty {
@@ -270,15 +271,16 @@
 }
 
 .park-empty-icon {
-  display: block;
-  font-size: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20rpx;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .park-empty-text {
   font-size: 28rpx;
-  color: #999;
+  color: #64748b;
 }
 
 .park-fab {
@@ -288,12 +290,69 @@
   width: 112rpx;
   height: 112rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #5b8cff, #3b66f5);
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
   color: #fff;
   font-size: 48rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12rpx 32rpx rgba(59, 102, 245, 0.4);
+  box-shadow: 0 12rpx 32rpx rgba(15, 118, 110, 0.35);
   z-index: 10;
+}
+
+.park-status-tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.park-status-tag.open,
+.park-status-tag.on {
+  background: #ecfdf5;
+  color: #0f766e;
+}
+
+.park-status-tag.done {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.park-status-tag.cancel,
+.park-status-tag.off {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.park-status-tag.pending {
+  background: #fff7ed;
+  color: #d97706;
+}
+
+.park-link {
+  color: #0f766e;
+  font-size: 24rpx;
+}
+
+.park-list-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.park-summary-link {
+  margin-bottom: 20rpx;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 118, 110, 0.08);
+  font-size: 26rpx;
+  color: #334155;
+}
+
+.park-summary-link .highlight {
+  color: #0f766e;
+  font-weight: 600;
 }

@@ -1,4 +1,6 @@
 <view class="page-wrap">
+  <view class="form-tip" wx:if="{{appointmentType === 'visitor'}}">提交后需拜访企业确认，您可在「预约查询」查看进度</view>
+  <view class="form-tip" wx:elif="{{appointmentType === 'venue'}}">请选择场馆与时间，提交后等待园区确认</view>
   <view class="card">
     <view class="form-item">
       <text class="form-label">姓名</text>

@@ -1,1 +1,3 @@
-page { background: #f6f7fb; }
+@import '../../styles/park.wxss';
+
+page { background: #f4f7f6; }

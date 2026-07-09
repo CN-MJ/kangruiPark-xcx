@@ -1,0 +1,18 @@
+<view class="park-page">
+  <view class="park-summary-link" wx:if="{{activity}}">
+    <text>{{activity.title}}</text>
+    <text class="park-list-meta">时间：{{activity.timeText}} · 地点：{{activity.location}}</text>
+    <text class="park-list-meta">已报名：<text class="highlight">{{activity.attendeesText}}</text></text>
+  </view>
+
+  <view class="park-list-card" wx:for="{{list}}" wx:key="id">
+    <text class="park-list-title">{{item.contact_name}}</text>
+    <text class="park-list-meta">手机：{{item.contact_phone}}</text>
+    <text class="park-list-meta">报名时间：{{item.createdText}}</text>
+  </view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">
+    <text class="park-empty-text">暂无报名记录</text>
+  </view>
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+</view>

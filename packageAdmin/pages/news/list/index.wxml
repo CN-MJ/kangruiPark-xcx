@@ -25,7 +25,9 @@
   >
     <view class="news-card-body">
       <image wx:if="{{item.hasCover}}" class="news-cover" src="{{item.cover_image}}" mode="aspectFill" />
-      <view wx:else class="news-cover news-cover-placeholder">{{item.isNotice ? '📢' : '📰'}}</view>
+      <view wx:else class="news-cover news-cover-placeholder">
+        <kr-icon name="{{item.isNotice ? 'news' : 'news'}}" size="48" color="#94a3b8" />
+      </view>
       <view class="news-content">
         <view class="park-list-head">
           <text class="park-list-title">{{item.title}}</text>

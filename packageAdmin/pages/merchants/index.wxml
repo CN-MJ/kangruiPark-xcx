@@ -15,7 +15,9 @@
   </view>
 
   <view class="park-search-bar">
-    <text class="park-search-icon">🔍</text>
+    <view class="park-search-icon">
+      <kr-icon name="search" size="32" color="#94a3b8" />
+    </view>
     <input
       class="park-search-input"
       placeholder="搜索姓名或手机号"
@@ -52,7 +54,9 @@
   </view>
 
   <view class="park-empty" wx:if="{{!loading && list.length === 0}}">
-    <text class="park-empty-icon">🏢</text>
+    <view class="park-empty-icon">
+      <kr-icon name="merchants" size="64" color="#cbd5e1" />
+    </view>
     <text class="park-empty-text">暂无人员记录</text>
   </view>
 </view>

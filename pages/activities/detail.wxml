@@ -2,13 +2,19 @@
   <view class="card">
     <image wx:if="{{detail.cover_image}}" src="{{detail.cover_image}}" mode="aspectFill" class="news-cover" />
     <view class="card-title">{{detail.title}}</view>
+    <text class="order-meta">状态：{{statusText}}</text>
     <text class="order-meta">地点：{{detail.location}}</text>
-    <text class="order-meta">人数：{{detail.registered_count}} / {{detail.max_attendees}}</text>
+    <text class="order-meta">人数：{{attendeesText}}</text>
     <text class="order-time">{{detail.description}}</text>
   </view>
-  <view class="card">
+
+  <view class="card" wx:if="{{canRegister}}">
     <view class="form-item"><text class="form-label">联系人</text><input class="form-input" data-key="contact_name" bindinput="onInput" /></view>
-    <view class="form-item"><text class="form-label">手机号</text><input class="form-input" data-key="contact_phone" bindinput="onInput" /></view>
+    <view class="form-item"><text class="form-label">手机号</text><input class="form-input" type="number" data-key="contact_phone" bindinput="onInput" /></view>
     <view class="action-btn action-btn-primary" bindtap="onRegister"><text class="action-btn-text">立即报名</text></view>
+  </view>
+
+  <view class="card" wx:if="{{!canRegister}}">
+    <text class="order-meta">{{detail.status !== 0 ? '活动已结束或已取消，无法报名' : '报名人数已满'}}</text>
   </view>
 </view>

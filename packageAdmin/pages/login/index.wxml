@@ -17,7 +17,7 @@
   <view class="login-body">
     <view class="login-card">
       <view class="form-item">
-        <view class="form-label">手机号登录</view>
+        <view class="form-label">手机号</view>
         <view class="form-field">
           <input
             class="form-input login-input"
@@ -30,12 +30,26 @@
           />
         </view>
       </view>
+      <view class="form-item">
+        <view class="form-label">登录密码</view>
+        <view class="form-field">
+          <input
+            class="form-input login-input"
+            password
+            placeholder="请输入登录密码"
+            placeholder-class="form-placeholder"
+            value="{{password}}"
+            bindinput="onPasswordInput"
+          />
+        </view>
+      </view>
       <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onLogin">
         <view wx:if="{{loading}}" class="action-btn-spinner"></view>
         <text class="action-btn-text">进入工作台</text>
       </view>
+      <view class="forgot-link" bindtap="onForgotPassword">忘记密码？</view>
     </view>
 
-    <view class="login-tip">测试账号：13800000001</view>
+    <view class="login-tip">测试账号：13800000001 / 密码：123456</view>
   </view>
 </view>

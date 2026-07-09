@@ -13,6 +13,7 @@ function getGreeting() {
 
 Page({
   data: {
+    statusBarHeight: 20,
     greeting: '',
     dateText: '',
     parkName: '',
@@ -23,59 +24,64 @@ Page({
         title: '预约管理',
         desc: '查看与处理访客预约',
         url: '/packageAdmin/pages/appointments/index',
-        icon: '📋',
+        icon: 'order',
         theme: 'blue',
       },
       {
         title: '停车管理',
         desc: '车辆进出与余位',
         url: '/packageAdmin/pages/parking/index',
-        icon: '🅿️',
+        icon: 'parking',
         theme: 'green',
       },
       {
         title: '新闻管理',
         desc: '园区动态与首页公告',
         url: '/packageAdmin/pages/news/list/index',
-        icon: '📰',
+        icon: 'news',
         theme: 'orange',
       },
       {
         title: '商户管理',
         desc: '入住签到与人员',
         url: '/packageAdmin/pages/merchants/index',
-        icon: '🏢',
+        icon: 'merchants',
         theme: 'purple',
       },
       {
         title: '房源管理',
-        desc: '招商房源维护',
+        desc: '招商房源 · 关联意向',
         url: '/packageAdmin/pages/houses/index',
-        icon: '🏠',
+        icon: 'house',
         theme: 'blue',
       },
       {
         title: '政策管理',
-        desc: '扶持政策发布',
+        desc: '政策发布 · 政策直达',
         url: '/packageAdmin/pages/policies/index',
-        icon: '📜',
+        icon: 'policy',
         theme: 'green',
       },
       {
         title: '活动管理',
-        desc: '园区活动与报名',
+        desc: '活动发布 · 报名管理',
         url: '/packageAdmin/pages/activities/index',
-        icon: '🎉',
+        icon: 'activity',
         theme: 'orange',
       },
       {
         title: '招商意向',
-        desc: '线索跟进转化',
+        desc: '线索跟进 · 关联房源',
         url: '/packageAdmin/pages/investments/index',
-        icon: '🤝',
+        icon: 'investment',
         theme: 'purple',
       },
     ],
+  },
+
+  onLoad() {
+    const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+    this.setData({ statusBarHeight: windowInfo.statusBarHeight || 20 })
   },
 
   onShow() {
@@ -111,6 +117,19 @@ Page({
   onMenuTap(e) {
     const { url } = e.currentTarget.dataset
     wx.navigateTo({ url })
+  },
+
+  onBack() {
+    const pages = getCurrentPages()
+    if (pages.length > 1) {
+      wx.navigateBack()
+      return
+    }
+    wx.reLaunch({ url: '/pages/mine/index' })
+  },
+
+  onChangePassword() {
+    wx.navigateTo({ url: '/packageAdmin/pages/change-password/index' })
   },
 
   onLogout() {

@@ -71,6 +71,6 @@ Page({
   },
 
   goCreate() {
-    wx.navigateTo({ url: '/pages/appointment/create?type=venue' })
+    wx.navigateTo({ url: '/pages/appointment/index' })
   },
 })

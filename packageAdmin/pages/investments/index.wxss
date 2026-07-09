@@ -1,1 +1,12 @@
-page { background: #f6f7fb; }
+@import '../../styles/park.wxss';
+
+page { background: #f4f7f6; }
+
+.form-picker {
+  margin-top: 12rpx;
+  padding: 20rpx 24rpx;
+  background: #f7f8fa;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #334155;
+}

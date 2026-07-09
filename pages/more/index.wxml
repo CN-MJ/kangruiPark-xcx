@@ -43,7 +43,7 @@
             hover-stay-time="100"
           >
             <view class="service-icon-wrap" style="background: {{item.bg}};">
-              <text class="service-icon">{{item.icon}}</text>
+              <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
             </view>
             <text class="service-label">{{item.label}}</text>
           </view>

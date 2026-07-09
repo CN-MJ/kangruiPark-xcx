@@ -1,0 +1,10 @@
+@import './confirm-entry.wxss';
+
+.confirm-hero.exit {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+}
+
+.confirm-meta-value.highlight {
+  color: #16a34a;
+  font-weight: 600;
+}

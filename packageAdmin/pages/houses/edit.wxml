@@ -6,7 +6,11 @@
     <view class="form-item"><text class="form-label">户型</text><input class="form-input" data-key="house_type" value="{{house_type}}" bindinput="onInput" /></view>
     <view class="form-item"><text class="form-label">描述</text><textarea class="form-textarea" data-key="description" value="{{description}}" bindinput="onInput"></textarea></view>
     <view class="form-item"><text class="form-label">状态</text><picker mode="selector" range="{{['已售/已租','在售/在租']}}" value="{{status}}" bindchange="onStatusChange"><view class="form-picker">{{status===1?'在售/在租':'已售/已租'}}</view></picker></view>
+    <view class="form-item"><text class="form-label">排序值</text><input class="form-input" type="number" data-key="sort_order" value="{{sort_order}}" bindinput="onInput" placeholder="越大越靠前" /></view>
     <view class="form-item"><text class="form-label">封面图</text><view class="form-picker" bindtap="onChooseImage">{{image ? '已上传，点此更换' : '上传图片'}}</view></view>
+    <view class="park-summary-link" wx:if="{{id && intents_count > 0}}" bindtap="onViewIntents">
+      该房源有 <text class="highlight">{{intents_count}}</text> 条招商意向，点击查看
+    </view>
     <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit"><text class="action-btn-text">保存</text></view>
   </view>
 </view>

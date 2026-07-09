@@ -6,7 +6,7 @@
         <text class="mine-name">{{userName}}</text>
         <text class="role-tag">{{roleText}}</text>
       </view>
-      <text class="mine-phone" bindtap="onBindPhone">{{userPhone}} {{userPhone === '未绑定手机号' ? '· 点击绑定' : ''}}</text>
+      <text class="mine-phone" bindtap="onBindPhone">{{userPhone}}{{userPhone === '未绑定手机号' ? ' · 点击绑定' : (!phoneVerified ? ' · 点击验证' : '')}}</text>
     </view>
   </view>
 
@@ -27,6 +27,14 @@
 
   <view class="card menu-card" bindtap="goOrders">
     <text class="menu-title">我的订单</text>
+    <text class="menu-arrow">›</text>
+  </view>
+
+  <view class="card menu-card" bindtap="goVehicles">
+    <view>
+      <text class="menu-title">我的车辆</text>
+      <text class="menu-desc">绑定车牌，接收摄像头识别提醒</text>
+    </view>
     <text class="menu-arrow">›</text>
   </view>
 

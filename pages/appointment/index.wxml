@@ -1,0 +1,26 @@
+<view class="page-wrap appointment-hub">
+  <view class="hub-hero">
+    <text class="hub-title">服务预约</text>
+    <text class="hub-desc">选择预约类型，填写信息后即可提交</text>
+  </view>
+
+  <view class="hub-list">
+    <view
+      class="hub-item hub-item--{{item.tone}}"
+      wx:for="{{services}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onItemTap"
+      hover-class="press-scale"
+    >
+      <view class="hub-item-icon">
+        <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
+      </view>
+      <view class="hub-item-body">
+        <text class="hub-item-title">{{item.title}}</text>
+        <text class="hub-item-desc">{{item.desc}}</text>
+      </view>
+      <text class="hub-item-arrow">›</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,49 @@
+<view class="page-wrap vehicles-page">
+  <view class="card verify-card" wx:if="{{needVerify}}">
+    <view class="card-title">需要验证手机号</view>
+    <text class="bind-tip">绑定车辆前请先完成手机号短信验证</text>
+    <view class="action-btn action-btn-primary" bindtap="goBindPhone">
+      <text class="action-btn-text">去验证手机号</text>
+    </view>
+  </view>
+
+  <view class="card bind-card" wx:if="{{!needVerify}}">
+    <view class="card-title">绑定车牌</view>
+    <text class="bind-tip">绑定后，摄像头识别到您的车辆时将推送待确认事件</text>
+    <view class="form-item">
+      <view class="form-field plate-field">
+        <input
+          class="form-input plate-input"
+          placeholder="如：粤B12345"
+          placeholder-class="form-placeholder"
+          value="{{plateInput}}"
+          bindinput="onPlateInput"
+        />
+      </view>
+    </view>
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onBind">
+      <view wx:if="{{submitting}}" class="action-btn-spinner"></view>
+      <text class="action-btn-text">添加车辆</text>
+    </view>
+  </view>
+
+  <view class="section-title" wx:if="{{!needVerify}}">已绑定车辆</view>
+  <view class="park-loading" wx:if="{{!needVerify && loading}}">加载中...</view>
+
+  <view class="vehicle-list" wx:if="{{!needVerify && !loading && list.length > 0}}">
+    <view class="vehicle-item" wx:for="{{list}}" wx:key="id">
+      <view class="vehicle-main">
+        <text class="vehicle-plate">{{item.plate_number}}</text>
+        <text class="vehicle-tag" wx:if="{{item.is_default}}">默认</text>
+      </view>
+      <view class="vehicle-actions">
+        <text class="vehicle-action" wx:if="{{!item.is_default}}" data-id="{{item.id}}" bindtap="onSetDefault">设为默认</text>
+        <text class="vehicle-action danger" data-id="{{item.id}}" data-plate="{{item.plate_number}}" bindtap="onUnbind">解绑</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="vehicle-empty" wx:if="{{!needVerify && !loading && list.length === 0}}">
+    <text>暂无绑定车辆</text>
+  </view>
+</view>

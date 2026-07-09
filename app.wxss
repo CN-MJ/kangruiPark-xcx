@@ -1,7 +1,22 @@
 /**app.wxss**/
 page {
-  background: #f4f6f8;
-  color: #333;
+  --primary: #0f766e;
+  --primary-dark: #115e59;
+  --primary-light: #14b8a6;
+  --text-primary: #1c2b2a;
+  --text-regular: #334155;
+  --text-secondary: #64748b;
+  --text-placeholder: #94a3b8;
+  --text-disabled: #cbd5e1;
+  --bg-page: #f4f7f6;
+  --bg-card: #ffffff;
+  --radius-sm: 12rpx;
+  --radius-md: 20rpx;
+  --radius-lg: 24rpx;
+  --shadow-card: 0 8rpx 28rpx rgba(15, 118, 110, 0.08), 0 2rpx 8rpx rgba(15, 118, 110, 0.04);
+  --shadow-soft: 0 6rpx 22rpx rgba(15, 118, 110, 0.06), 0 2rpx 6rpx rgba(15, 118, 110, 0.03);
+  background: #f4f7f6;
+  color: #334155;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -121,12 +136,12 @@ view, text, image, input, textarea, button {
 
 .action-btn-primary {
   margin-top: 32rpx;
-  background: #3b66f5;
+  background: #0f766e;
 }
 
 .action-btn-plain {
   background: #fff;
-  border: 2rpx solid #3b66f5;
+  border: 2rpx solid #0f766e;
 }
 
 .action-btn-ghost {
@@ -148,7 +163,7 @@ view, text, image, input, textarea, button {
 }
 
 .action-btn-text.plain {
-  color: #3b66f5;
+  color: #0f766e;
 }
 
 .action-btn-text.ghost {
@@ -181,7 +196,7 @@ view, text, image, input, textarea, button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #eef4ff;
+  background: #ecfdf5;
 }
 
 .action-btn-sm.danger {
@@ -195,7 +210,7 @@ view, text, image, input, textarea, button {
 .action-btn-sm-text {
   font-size: 24rpx;
   line-height: 1;
-  color: #3b66f5;
+  color: #0f766e;
 }
 
 .action-btn-sm-text.danger {
@@ -242,8 +257,8 @@ view, text, image, input, textarea, button {
 }
 
 .tag-active {
-  background: rgba(59, 102, 245, 0.1);
-  color: #3b66f5;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
 }
 
 .tag-cancelled {

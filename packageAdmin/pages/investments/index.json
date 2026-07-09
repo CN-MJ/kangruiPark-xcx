@@ -1,1 +1,5 @@
-{"navigationBarTitleText":"招商意向管理"}
+{
+  "navigationBarTitleText": "招商意向",
+  "navigationBarBackgroundColor": "#115e59",
+  "navigationBarTextStyle": "white"
+}

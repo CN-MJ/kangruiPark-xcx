@@ -12,6 +12,7 @@ Page({
     image: '',
     status: 1,
     sort_order: 0,
+    intents_count: 0,
     submitting: false,
   },
   onLoad(options) {
@@ -19,7 +20,7 @@ Page({
       this.setData({ id: options.id })
       parkRequest(`/park/houses/${options.id}`).then((res) => {
         const d = res.data
-        this.setData({ ...d, image: (d.images && d.images[0]) || '' })
+        this.setData({ ...d, image: (d.images && d.images[0]) || '', intents_count: d.intents_count || 0 })
       })
     }
   },
@@ -62,6 +63,14 @@ Page({
     req.then(() => {
       wx.showToast({ title: '保存成功', icon: 'success' })
       setTimeout(() => wx.navigateBack(), 500)
-    }).finally(() => this.setData({ submitting: false }))
+    })      .finally(() => this.setData({ submitting: false }))
+  },
+
+  onViewIntents() {
+    const { id, title } = this.data
+    if (!id) return
+    wx.navigateTo({
+      url: `/packageAdmin/pages/investments/index?house_id=${id}&house_title=${encodeURIComponent(title || '')}`,
+    })
   },
 })

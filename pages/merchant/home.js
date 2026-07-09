@@ -29,6 +29,9 @@ Page({
   goAppointments() {
     wx.navigateTo({ url: '/pages/merchant/appointments' })
   },
+  goChangePassword() {
+    wx.navigateTo({ url: '/pages/merchant/change-password' })
+  },
   logout() {
     merchantRequest('/merchant/logout', { method: 'POST' }).finally(() => {
       merchantAuth.clearAuth()

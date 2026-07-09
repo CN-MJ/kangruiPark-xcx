@@ -22,7 +22,9 @@
 }
 
 .tab-icon {
-  font-size: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
@@ -33,7 +35,7 @@
 }
 
 .tab-item--active .tab-text {
-  color: #3b66f5;
+  color: #0f766e;
   font-weight: 500;
 }
 

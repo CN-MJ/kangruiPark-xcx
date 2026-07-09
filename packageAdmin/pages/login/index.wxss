@@ -1,14 +1,14 @@
 .login-page {
   min-height: 100vh;
-  background: #f4f6f8;
+  background: #f4f7f6;
   box-sizing: border-box;
 }
 
 .login-hero {
   padding: 48rpx 32rpx 72rpx;
-  background: linear-gradient(145deg, #5b8cff 0%, #3b66f5 55%, #2f55e0 100%);
+  background: linear-gradient(135deg, #115e59 0%, #0f766e 55%, #14b8a6 100%);
   border-radius: 0 0 48rpx 48rpx;
-  box-shadow: 0 12rpx 40rpx rgba(59, 102, 245, 0.3);
+  box-shadow: 0 12rpx 40rpx rgba(15, 118, 110, 0.28);
 }
 
 .login-hero-inner {
@@ -110,4 +110,11 @@
   font-size: 24rpx;
   color: #bbb;
   line-height: 1.5;
+}
+
+.forgot-link {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #0f766e;
 }

@@ -18,7 +18,7 @@
   width: 80rpx;
   height: 80rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #5b8cff, #3b66f5);
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
   color: #fff;
   font-size: 32rpx;
   font-weight: 600;
@@ -35,7 +35,7 @@
 
 .search-btn {
   font-size: 26rpx;
-  color: #3b66f5;
+  color: #0f766e;
   padding: 0 8rpx;
 }
 

@@ -2,7 +2,7 @@
 
 .search-btn {
   font-size: 26rpx;
-  color: #3b66f5;
+  color: #0f766e;
   padding: 0 8rpx;
 }
 

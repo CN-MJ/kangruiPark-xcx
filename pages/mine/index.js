@@ -1,6 +1,15 @@
 const nav = require('../../utils/nav')
 const parkAuth = require('../../utils/parkAuth')
-const { getPhone, getName, getRole, getRoleText, isMerchant, isVisitor, saveUserProfile } = require('../../utils/user')
+const {
+  getPhone,
+  getName,
+  getRoleText,
+  isMerchant,
+  isVisitor,
+  isPhoneVerified,
+  saveUserProfile,
+  requirePhoneVerified,
+} = require('../../utils/user')
 const { request } = require('../../utils/request')
 
 const APP_VERSION = '1.0.0'
@@ -14,6 +23,7 @@ Page({
     isMerchant: false,
     isParkStaff: false,
     parkStaffName: '',
+    phoneVerified: false,
     appVersion: APP_VERSION,
   },
 
@@ -33,6 +43,7 @@ Page({
       isMerchant: isMerchant(),
       isParkStaff: parkAuth.isParkLoggedIn(),
       parkStaffName: parkUser ? parkUser.name : '',
+      phoneVerified: isPhoneVerified(),
     })
 
     if (phone) {
@@ -47,6 +58,7 @@ Page({
             isVisitor: res.data.role === 'visitor',
             isMerchant: res.data.role === 'merchant',
             userName: res.data.name,
+            phoneVerified: !!res.data.phone_verified,
           })
         })
         .catch((err) => {
@@ -56,18 +68,7 @@ Page({
   },
 
   onBindPhone() {
-    wx.showModal({
-      title: '绑定手机号',
-      editable: true,
-      placeholderText: '请输入手机号',
-      success: (res) => {
-        if (!res.confirm || !res.content) return
-        const phone = res.content.trim()
-        if (!phone) return
-        wx.setStorageSync('user_phone', phone)
-        this.refreshProfile()
-      },
-    })
+    wx.navigateTo({ url: '/pages/mine/bind-phone' })
   },
 
   goCheckin() {
@@ -75,11 +76,17 @@ Page({
       wx.showToast({ title: '请先绑定手机号', icon: 'none' })
       return
     }
+    if (!requirePhoneVerified()) return
     nav.go('checkin')
   },
 
   goOrders() {
     nav.go('order')
+  },
+
+  goVehicles() {
+    if (!requirePhoneVerified()) return
+    wx.navigateTo({ url: '/pages/vehicles/index' })
   },
 
   goContact() {

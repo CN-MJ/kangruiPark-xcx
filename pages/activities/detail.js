@@ -1,10 +1,21 @@
 const { request } = require('../../utils/request')
 
+const STATUS_MAP = { 0: '报名中', 1: '已结束', 2: '已取消' }
+
+function formatAttendees(registered, max) {
+  const reg = Number(registered || 0)
+  const cap = Number(max || 0)
+  return cap > 0 ? `${reg} / ${cap}` : `${reg} / 不限`
+}
+
 Page({
   data: {
     detail: null,
     contact_name: '',
     contact_phone: '',
+    canRegister: false,
+    statusText: '',
+    attendeesText: '',
   },
 
   onLoad(options) {
@@ -13,7 +24,19 @@ Page({
 
   loadDetail(id) {
     request(`/activities/${id}`)
-      .then((res) => this.setData({ detail: res.data }))
+      .then((res) => {
+        const detail = res.data
+        const max = Number(detail.max_attendees || 0)
+        const registered = Number(detail.registered_count || 0)
+        const isOpen = detail.status === 0
+        const notFull = max === 0 || registered < max
+        this.setData({
+          detail,
+          canRegister: isOpen && notFull,
+          statusText: STATUS_MAP[detail.status] || '未知',
+          attendeesText: formatAttendees(registered, max),
+        })
+      })
       .catch((err) => wx.showToast({ title: err.message || '加载失败', icon: 'none' }))
   },
 
@@ -22,8 +45,8 @@ Page({
   },
 
   onRegister() {
-    const { detail, contact_name, contact_phone } = this.data
-    if (!detail) return
+    const { detail, contact_name, contact_phone, canRegister } = this.data
+    if (!detail || !canRegister) return
     if (!contact_name.trim() || !contact_phone.trim()) {
       wx.showToast({ title: '请填写联系人和手机号', icon: 'none' })
       return

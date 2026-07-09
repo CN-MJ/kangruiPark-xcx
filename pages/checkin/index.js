@@ -1,5 +1,5 @@
-const { request } = require('../../utils/request')
-const { getPhone, getName, setPhone, setName, saveUserProfile } = require('../../utils/user')
+const { userRequest } = require('../../utils/request')
+const { getPhone, getName, setName, saveUserProfile, requirePhoneVerified } = require('../../utils/user')
 
 Page({
   data: {
@@ -8,12 +8,45 @@ Page({
     checkedIn: false,
     checkinTime: '',
     submitting: false,
+    needVerify: false,
   },
 
   onLoad() {
+    const phone = getPhone()
+    if (!phone) {
+      wx.showModal({
+        title: '请先绑定手机号',
+        content: '签到前需完成手机号短信验证',
+        confirmText: '去绑定',
+        showCancel: false,
+        success: () => {
+          wx.redirectTo({ url: '/pages/mine/bind-phone' })
+        },
+      })
+      return
+    }
+
+    if (!requirePhoneVerified({ redirect: false })) {
+      this.setData({ needVerify: true, userPhone: phone })
+      wx.showModal({
+        title: '需要验证手机号',
+        content: '请先完成手机号短信验证后再签到',
+        confirmText: '去验证',
+        showCancel: true,
+        success: (res) => {
+          if (res.confirm) {
+            wx.redirectTo({ url: '/pages/mine/bind-phone' })
+          } else {
+            wx.navigateBack()
+          }
+        },
+      })
+      return
+    }
+
     this.setData({
       userName: getName(),
-      userPhone: getPhone(),
+      userPhone: phone,
     })
   },
 
@@ -21,33 +54,21 @@ Page({
     this.setData({ userName: e.detail.value })
   },
 
-  onPhoneInput(e) {
-    this.setData({ userPhone: e.detail.value })
-  },
-
   onCheckin() {
-    if (this.data.submitting) return
+    if (this.data.submitting || this.data.needVerify) return
 
-    const { userName, userPhone } = this.data
-    if (!userPhone.trim()) {
-      wx.showToast({ title: '请输入手机号', icon: 'none' })
-      return
-    }
+    const { userName } = this.data
     if (!userName.trim()) {
       wx.showToast({ title: '请输入姓名', icon: 'none' })
       return
     }
 
-    setPhone(userPhone.trim())
     setName(userName.trim())
 
     this.setData({ submitting: true })
-    request('/users/checkin', {
+    userRequest('/users/checkin', {
       method: 'POST',
-      data: {
-        phone: userPhone.trim(),
-        name: userName.trim(),
-      },
+      data: { name: userName.trim() },
     })
       .then((res) => {
         saveUserProfile(res.data)

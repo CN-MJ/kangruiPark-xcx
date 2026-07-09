@@ -30,3 +30,15 @@
 .checkin-card .form-item {
   text-align: left;
 }
+
+.readonly-field {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 0 24rpx;
+}
+
+.readonly-phone {
+  font-size: 30rpx;
+  color: #334155;
+}

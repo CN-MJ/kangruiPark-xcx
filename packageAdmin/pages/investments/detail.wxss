@@ -1,0 +1,10 @@
+@import '../../styles/park.wxss';
+
+.form-picker {
+  margin: 20rpx 0;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #334155;
+}

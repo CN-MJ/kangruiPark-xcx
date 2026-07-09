@@ -1,172 +1,142 @@
-<view class="page">
-  <!-- 顶部蓝色区域 -->
-  <view class="header" style="padding-top: {{statusBarHeight}}px;">
-    <view class="header-top" style="height: {{navBarHeight}}px;">
-      <image class="header-avatar" src="{{avatarUrl}}" mode="aspectFill" />
-      <view class="header-location" bindtap="onLocationTap">
-        <view class="location-row">
-          <text class="location-name">{{parkName}}</text>
-          <text class="location-arrow">▾</text>
-        </view>
-        <text class="location-sub">{{dateText}}  {{weatherText}}</text>
+<view class="home-page">
+  <view class="home-header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="home-header-inner">
+      <view class="home-brand">
+        <text class="home-greeting">{{greeting}}</text>
+        <text class="home-title">{{parkName}}</text>
+        <text class="home-date">{{dateText}}</text>
       </view>
-    </view>
-
-    <!-- 快捷入口 -->
-    <view class="quick-actions">
-      <view
-        class="quick-item"
-        wx:for="{{quickActions}}"
-        wx:key="id"
-        data-action="{{item.id}}"
-        bindtap="onQuickAction"
-        hover-class="press-scale"
-        hover-stay-time="100"
-      >
-        <view class="quick-icon-wrap" style="background: {{item.bg}};">
-          <text class="quick-icon">{{item.icon}}</text>
-        </view>
-        <text class="quick-label">{{item.label}}</text>
-      </view>
+      <view class="home-badge">智慧园区</view>
     </view>
   </view>
 
-  <!-- 主内容滚动区 -->
-  <scroll-view class="main-scroll" scroll-y enhanced show-scrollbar="{{false}}">
-    <view class="main-body">
-      <!-- 功能导航 -->
-      <view class="nav-grid">
+  <scroll-view class="home-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="home-body">
+      <!-- 三大核心功能 -->
+      <view class="core-grid">
         <view
-          class="nav-item"
-          wx:for="{{navItems}}"
+          class="core-card core-card--{{item.tone}}"
+          wx:for="{{coreServices}}"
           wx:key="id"
-          data-action="{{item.id}}"
-          bindtap="onNavTap"
+          data-id="{{item.id}}"
+          bindtap="onCoreTap"
           hover-class="press-scale"
-          hover-stay-time="100"
         >
-          <view class="nav-icon-wrap" style="background: {{item.bg}};">
-            <text class="nav-icon">{{item.icon}}</text>
+          <view class="core-icon">
+            <kr-icon name="{{item.icon}}" size="44" color="{{item.iconColor}}" />
           </view>
-          <text class="nav-label">{{item.label}}</text>
+          <text class="core-title">{{item.title}}</text>
+          <text class="core-desc">{{item.desc}}</text>
         </view>
       </view>
 
-      <!-- 横幅 -->
-      <view class="banner" bindtap="onBannerTap" hover-class="press-scale" hover-stay-time="100">
-        <view class="banner-content">
-          <text class="banner-title">{{banner.title}}</text>
-          <text class="banner-sub">{{banner.subtitle}}</text>
-          <view class="banner-btn">{{banner.btnText}}</view>
+      <!-- 停车余位 -->
+      <view class="parking-panel" wx:if="{{parkingStats}}" bindtap="onParkingTap" hover-class="press-scale">
+        <view class="parking-panel-head">
+          <view>
+            <text class="parking-panel-title">停车余位</text>
+            <text class="parking-panel-status">{{parkingStats.statusText}}</text>
+          </view>
+          <view class="parking-panel-right">
+            <text class="pending-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</text>
+            <text class="parking-panel-link">去办理 ›</text>
+          </view>
         </view>
-        <view class="banner-deco">
-          <view class="banner-deco-circle banner-deco-circle--1"></view>
-          <view class="banner-deco-circle banner-deco-circle--2"></view>
-          <view class="banner-deco-bar"></view>
+        <view class="parking-panel-stats">
+          <view class="parking-stat">
+            <text class="parking-stat-num">{{parkingStats.remaining_spots}}</text>
+            <text class="parking-stat-label">剩余</text>
+          </view>
+          <view class="parking-stat">
+            <text class="parking-stat-num muted">{{parkingStats.occupied_count}}</text>
+            <text class="parking-stat-label">已占</text>
+          </view>
+          <view class="parking-stat">
+            <text class="parking-stat-num muted">{{parkingStats.total_spots}}</text>
+            <text class="parking-stat-label">总数</text>
+          </view>
+        </view>
+        <view class="parking-progress">
+          <view class="parking-progress-bar" style="width: {{parkingStats.percent}}%;"></view>
         </view>
       </view>
 
-      <!-- 公告栏 -->
-      <view class="notice-bar" hover-class="press-scale" hover-stay-time="100">
-        <view class="notice-tag">公告</view>
-        <swiper class="notice-swiper" vertical autoplay circular interval="4000" duration="500" wx:if="{{notices.length > 0}}">
-          <swiper-item wx:for="{{notices}}" wx:key="id" data-id="{{item.id}}" bindtap="onNoticeItemTap">
-            <text class="notice-text">{{item.text}}</text>
+      <view class="pending-strip" wx:if="{{pendingCount > 0}}">
+        <view class="pending-strip-head">
+          <text class="pending-strip-title">摄像头待确认</text>
+          <text class="pending-strip-badge">{{pendingCount}}</text>
+        </view>
+        <view
+          class="pending-strip-item"
+          wx:for="{{pendingEvents}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-direction="{{item.direction}}"
+          bindtap="onPendingTap"
+          hover-class="press-scale"
+        >
+          <text class="pending-strip-plate">{{item.plate_number}}</text>
+          <text class="pending-strip-meta">{{item.direction_text}} · {{item.timeText}}</text>
+        </view>
+      </view>
+
+      <!-- 公告 -->
+      <view class="notice-panel" wx:if="{{notices.length > 0}}">
+        <text class="notice-panel-tag">公告</text>
+        <swiper class="notice-panel-swiper" vertical autoplay circular interval="4000">
+          <swiper-item wx:for="{{notices}}" wx:key="id" data-id="{{item.id}}" bindtap="onNoticeTap">
+            <text class="notice-panel-text">{{item.title}}</text>
           </swiper-item>
         </swiper>
-        <text class="notice-text notice-empty" wx:else>暂无公告</text>
-        <text class="notice-arrow" bindtap="onNoticeTap">›</text>
       </view>
 
-      <!-- 公告下方：物业服务 / 停车服务 / 场馆预定 / 企业增值 -->
-      <view class="service-grid">
-        <view
-          class="service-card"
-          wx:for="{{serviceCards}}"
-          wx:key="id"
-          style="background: {{item.bg}};"
-          data-action="{{item.id}}"
-          bindtap="onServiceCardTap"
-          hover-class="press-scale"
-          hover-stay-time="100"
-        >
-          <view class="service-card-text">
-            <text class="service-card-title">{{item.title}}</text>
-            <text class="service-card-sub">{{item.subtitle}}</text>
-          </view>
-          <view class="service-card-icon-wrap">
-            <text class="service-card-icon">{{item.icon}}</text>
-          </view>
+      <!-- 快捷入口 -->
+      <view class="section-block">
+        <view class="section-head">
+          <text class="section-title">常用服务</text>
         </view>
-      </view>
-
-      <!-- 便民服务 -->
-      <view class="section">
-        <view class="section-header">
-          <view class="section-title-wrap">
-            <view class="section-icon-badge">
-              <text class="section-icon-text">👍</text>
+        <scroll-view class="quick-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+          <view class="quick-row">
+            <view
+              class="quick-chip"
+              wx:for="{{quickEntries}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onQuickTap"
+              hover-class="press-scale"
+            >
+              <view class="quick-chip-icon">
+                <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
+              </view>
+              <text class="quick-chip-label">{{item.label}}</text>
             </view>
-            <text class="section-title">{{serviceSection.title}}</text>
-            <text class="section-divider">|</text>
-            <text class="section-sub">{{serviceSection.subtitle}}</text>
           </view>
-        </view>
-        <view class="service-list-card">
-          <view
-            class="service-list-item"
-            wx:for="{{serviceList}}"
-            wx:key="id"
-            data-action="{{item.id}}"
-            bindtap="onServiceListTap"
-            hover-class="press-scale"
-            hover-stay-time="100"
-          >
-            <view class="service-list-left">
-              <view class="service-list-icon" style="background: {{item.bg}};">{{item.icon}}</view>
-              <text class="service-list-label">{{item.label}}</text>
-            </view>
-            <text class="service-list-arrow">›</text>
-          </view>
-        </view>
+        </scroll-view>
       </view>
 
-      <!-- 园区动态（活动卡片样式，内容为园区自有数据） -->
-      <view class="section section-last">
-        <view class="section-header section-header-row">
-          <text class="section-title-alone">{{newsSection.title}}</text>
+      <!-- 园区动态 -->
+      <view class="section-block section-block--last">
+        <view class="section-head">
+          <text class="section-title">园区动态</text>
           <text class="section-more" bindtap="onNewsMore">更多</text>
         </view>
-
-        <view wx:if="{{newsList.length > 0}}">
+        <view class="news-list" wx:if="{{newsList.length > 0}}">
           <view
-            class="activity-card"
+            class="news-row"
             wx:for="{{newsList}}"
             wx:key="id"
             data-id="{{item.id}}"
             bindtap="onNewsTap"
             hover-class="press-scale"
-            hover-stay-time="100"
           >
-            <image
-              class="activity-cover"
-              src="{{item.cover_image || defaultCover}}"
-              mode="aspectFill"
-            />
-            <view class="activity-body">
-              <text class="activity-title">{{item.title}}</text>
-              <text class="activity-time">{{item.timeText}}</text>
-              <view class="activity-footer">
-                <view class="activity-tag">{{item.tag}}</view>
-                <text class="activity-meta">{{item.meta}}</text>
-              </view>
+            <view class="news-row-main">
+              <text class="news-row-title">{{item.title}}</text>
+              <text class="news-row-time">{{item.timeText}}</text>
             </view>
+            <text class="news-row-tag" wx:if="{{item.isTop}}">置顶</text>
           </view>
         </view>
-
-        <view class="empty-news" wx:else>
-          <text class="empty-news-text">暂无园区动态，敬请期待</text>
-        </view>
+        <view class="news-empty" wx:else>暂无动态</view>
       </view>
 
       <view class="safe-bottom"></view>

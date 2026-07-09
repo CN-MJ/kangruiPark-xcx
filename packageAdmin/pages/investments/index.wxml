@@ -1,12 +1,40 @@
 <view class="park-page">
+  <view class="park-summary-link" wx:if="{{houseId}}">
+    <text>当前筛选房源：<text class="highlight">{{houseTitle || ('ID ' + houseId)}}</text></text>
+    <text class="park-link" bindtap="clearHouseFilter">清除筛选</text>
+  </view>
+
+  <picker mode="selector" range="{{statusTabs}}" value="{{statusFilterIndex}}" bindchange="onStatusFilter">
+    <view class="park-filter-tab active" style="display:inline-block;margin-bottom:20rpx;">
+      状态：{{statusTabs[statusFilterIndex]}}
+    </view>
+  </picker>
+
   <view class="park-list-card" wx:for="{{list}}" wx:key="id">
-    <text class="park-list-title">{{item.company_name}}</text>
+    <view class="park-list-head-row">
+      <text class="park-list-title">{{item.company_name}}</text>
+      <text class="park-status-tag {{item.statusClass}}">{{item.statusText}}</text>
+    </view>
     <text class="park-list-meta">{{item.contact_name}} · {{item.contact_phone}}</text>
-    <text class="park-list-meta">需求：{{item.demand_area}}</text>
+    <text class="park-list-meta">需求面积：{{item.demand_area}}</text>
+    <text class="park-list-meta" wx:if="{{item.houseTitle}}">
+      关联房源：<text class="park-link" catchtap="onViewHouse" data-id="{{item.house_id}}">{{item.houseTitle}}</text>
+    </text>
+    <text class="park-list-meta" wx:if="{{item.message}}">留言：{{item.message}}</text>
+    <text class="park-list-meta">来源：{{item.source}} · {{item.createdText}}</text>
+    <view class="park-btn-row">
+      <view class="action-btn-sm" data-id="{{item.id}}" bindtap="onDetail">
+        <text class="action-btn-sm-text">查看详情</text>
+      </view>
+    </view>
     <picker mode="selector" range="{{statuses}}" value="{{item.status}}" data-id="{{item.id}}" bindchange="onStatusChange">
-      <view class="form-picker">状态：{{statuses[item.status]}}</view>
+      <view class="form-picker">更新状态：{{statuses[item.status]}}</view>
     </picker>
   </view>
-  <view class="park-empty" wx:if="{{!loading && list.length===0}}">暂无招商意向</view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">
+    <text class="park-empty-text">暂无招商意向</text>
+    <text class="park-list-meta">访客可在小程序「招商意向」或房源详情页提交</text>
+  </view>
   <view class="park-loading" wx:if="{{loading}}">加载中...</view>
 </view>

@@ -11,14 +11,8 @@ Component({
       const { tab } = e.currentTarget.dataset
       if (tab === this.data.active) return
 
-      if (tab === 'index') {
-        wx.redirectTo({ url: '/pages/index/index' })
-        return
-      }
-
-      if (tab === 'mine') {
-        wx.redirectTo({ url: '/pages/mine/index' })
-      }
+      const url = tab === 'index' ? '/pages/index/index' : '/pages/mine/index'
+      wx.reLaunch({ url })
     },
   },
 })

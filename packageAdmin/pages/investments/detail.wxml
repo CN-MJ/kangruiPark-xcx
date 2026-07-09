@@ -1,0 +1,27 @@
+<view class="park-page" wx:if="{{detail}}">
+  <view class="park-list-card">
+    <view class="park-list-head-row">
+      <text class="park-list-title">{{detail.company_name}}</text>
+      <text class="park-status-tag pending">{{detail.statusText}}</text>
+    </view>
+    <text class="park-list-meta">联系人：{{detail.contact_name}}</text>
+    <text class="park-list-meta">电话：{{detail.contact_phone}}</text>
+    <text class="park-list-meta">需求面积：{{detail.demand_area}}</text>
+    <text class="park-list-meta">来源：{{detail.source}}</text>
+    <text class="park-list-meta">提交时间：{{detail.createdText}}</text>
+    <text class="park-list-meta" wx:if="{{detail.message}}">留言：{{detail.message}}</text>
+    <text class="park-list-meta" wx:if="{{detail.houseTitle}}">
+      关联房源：<text class="park-link" bindtap="onViewHouse">{{detail.houseTitle}}</text>
+    </text>
+  </view>
+
+  <picker mode="selector" range="{{statuses}}" value="{{detail.status}}" bindchange="onStatusChange">
+    <view class="form-picker">更新跟进状态</view>
+  </picker>
+
+  <view class="action-btn action-btn-primary" bindtap="onCall">
+    <text class="action-btn-text">拨打电话</text>
+  </view>
+</view>
+
+<view class="park-loading" wx:if="{{loading}}">加载中...</view>

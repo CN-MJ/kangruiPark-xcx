@@ -1,0 +1,43 @@
+<view class="page-wrap confirm-page">
+  <view class="confirm-hero exit">
+    <kr-icon name="exit" size="56" color="#ffffff" />
+    <text class="confirm-hero-title">摄像头识别出场</text>
+    <text class="confirm-hero-desc">请核对车辆信息后确认出场</text>
+  </view>
+
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+
+  <view class="card confirm-card" wx:if="{{!loading && event}}">
+    <view class="confirm-plate">{{event.plate_number}}</view>
+    <view class="confirm-meta-row">
+      <text class="confirm-meta-label">识别时间</text>
+      <text class="confirm-meta-value">{{recognitionText}}</text>
+    </view>
+    <view class="confirm-meta-row">
+      <text class="confirm-meta-label">入场时间</text>
+      <text class="confirm-meta-value">{{entryText}}</text>
+    </view>
+    <view class="confirm-meta-row">
+      <text class="confirm-meta-label">停留时长</text>
+      <text class="confirm-meta-value highlight">{{stayText}}</text>
+    </view>
+    <view class="confirm-meta-row" wx:if="{{event.device}}">
+      <text class="confirm-meta-label">识别设备</text>
+      <text class="confirm-meta-value">{{event.device.device_name}}</text>
+    </view>
+  </view>
+
+  <view class="confirm-empty" wx:if="{{!loading && !event}}">
+    <text>暂无待确认的出场事件</text>
+  </view>
+
+  <view class="confirm-actions" wx:if="{{event}}">
+    <view class="action-btn action-btn-exit {{submitting ? 'is-loading' : ''}}" bindtap="onConfirm">
+      <view wx:if="{{submitting}}" class="action-btn-spinner"></view>
+      <text class="action-btn-text">确认出场</text>
+    </view>
+    <view class="action-btn action-btn-outline" bindtap="onCancel">
+      <text class="action-btn-text outline">取消</text>
+    </view>
+  </view>
+</view>

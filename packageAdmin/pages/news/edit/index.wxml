@@ -70,7 +70,7 @@
         <text class="form-label">置顶显示</text>
         <text class="switch-desc">{{isNotice ? '置顶公告将优先在首页滚动展示' : '置顶后将在首页和列表优先展示'}}</text>
       </view>
-      <switch checked="{{isTop}}" color="#3b66f5" bindchange="onTopChange" />
+      <switch checked="{{isTop}}" color="#0f766e" bindchange="onTopChange" />
     </view>
   </view>
 

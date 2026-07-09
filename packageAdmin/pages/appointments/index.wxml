@@ -1,6 +1,8 @@
 <view class="park-page">
   <view class="park-search-bar">
-    <text class="park-search-icon">🔍</text>
+    <view class="park-search-icon">
+      <kr-icon name="search" size="32" color="#94a3b8" />
+    </view>
     <input
       class="park-search-input"
       placeholder="搜索手机号"
@@ -48,7 +50,9 @@
   </view>
 
   <view class="park-empty" wx:if="{{!loading && list.length === 0}}">
-    <text class="park-empty-icon">📋</text>
+    <view class="park-empty-icon">
+      <kr-icon name="order" size="64" color="#cbd5e1" />
+    </view>
     <text class="park-empty-text">暂无预约记录</text>
   </view>
 </view>

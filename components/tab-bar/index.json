@@ -1,4 +1,6 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "kr-icon": "/components/kr-icon/index"
+  }
 }

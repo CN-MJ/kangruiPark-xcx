@@ -1,6 +1,7 @@
 const { API_BASE_URL } = require('./config')
 const { getToken } = require('./parkAuth')
 const { getToken: getMerchantToken } = require('./merchantAuth')
+const { getToken: getUserToken } = require('./userAuth')
 
 const REQUEST_TIMEOUT = 15000
 
@@ -73,9 +74,32 @@ function merchantRequest(url, options = {}) {
   })
 }
 
+function userRequest(url, options = {}) {
+  const { method = 'GET', data = {}, timeout = REQUEST_TIMEOUT } = options
+  const token = getUserToken()
+  return request(url, {
+    method,
+    data,
+    timeout,
+    auth: false,
+    header: {
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  }).catch((err) => {
+    if (err.message && err.message.includes('短信验证')) {
+      const { setPhoneVerified } = require('./user')
+      const userAuth = require('./userAuth')
+      setPhoneVerified(false)
+      userAuth.clearToken()
+    }
+    throw err
+  })
+}
+
 module.exports = {
   request,
   parkRequest,
   merchantRequest,
+  userRequest,
   parseNetworkError,
 }

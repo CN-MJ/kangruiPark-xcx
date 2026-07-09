@@ -2,9 +2,14 @@
   "pages": [
     "pages/index/index",
     "pages/mine/index",
+    "pages/mine/bind-phone",
     "pages/orders/index",
+    "pages/appointment/index",
     "pages/appointment/create",
     "pages/parking/index",
+    "pages/parking/confirm-entry",
+    "pages/parking/confirm-exit",
+    "pages/vehicles/index",
     "pages/news/list",
     "pages/news/detail",
     "pages/feedback/index",
@@ -25,7 +30,9 @@
     ,"pages/activities/detail"
     ,"pages/merchant/login"
     ,"pages/merchant/home"
+    ,"pages/merchant/change-password"
     ,"pages/merchant/appointments"
+    ,"pages/auth/forgot-password"
   ],
   "subPackages": [
     {
@@ -33,6 +40,7 @@
       "name": "admin",
       "pages": [
         "pages/login/index",
+        "pages/change-password/index",
         "pages/home/index",
         "pages/appointments/index",
         "pages/parking/index",
@@ -45,18 +53,23 @@
         "pages/policies/edit",
         "pages/activities/index",
         "pages/activities/edit",
-        "pages/investments/index"
+        "pages/activities/registrations",
+        "pages/investments/index",
+        "pages/investments/detail"
       ]
     }
   ],
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "康瑞园区",
-    "navigationBarBackgroundColor": "#3b66f5",
+    "navigationBarBackgroundColor": "#115e59",
     "backgroundColor": "#f4f6f8",
     "backgroundTextStyle": "light"
   },
   "style": "v2",
+  "usingComponents": {
+    "kr-icon": "/components/kr-icon/index"
+  },
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
 }

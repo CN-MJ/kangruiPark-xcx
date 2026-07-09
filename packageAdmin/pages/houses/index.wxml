@@ -2,15 +2,36 @@
   <view class="action-btn action-btn-primary" bindtap="onCreate">
     <text class="action-btn-text">新增房源</text>
   </view>
+
+  <picker mode="selector" range="{{statusTabs}}" value="{{statusFilterIndex}}" bindchange="onStatusFilter">
+    <view class="park-filter-tab active" style="display:inline-block;margin-bottom:20rpx;">
+      状态：{{statusTabs[statusFilterIndex]}}
+    </view>
+  </picker>
+
   <view class="park-list-card" wx:for="{{list}}" wx:key="id">
-    <text class="park-list-title">{{item.title}}</text>
-    <text class="park-list-meta">面积：{{item.area}} · 价格：{{item.price}}</text>
-    <text class="park-list-meta">状态：{{item.status===1?'在售/在租':'已售/已租'}}</text>
+    <view class="park-list-head-row">
+      <text class="park-list-title">{{item.title}}</text>
+      <text class="park-status-tag {{item.statusClass}}">{{item.statusText}}</text>
+    </view>
+    <text class="park-list-meta">{{item.house_type}} · 面积 {{item.area}} · {{item.price}}</text>
+    <text class="park-list-meta">排序：{{item.sort_order}} · 招商意向 <text class="highlight">{{item.intents_count || 0}}</text> 条</text>
+    <text class="park-list-meta">小程序「园区房源」展示，详情页可提交招商意向</text>
     <view class="park-btn-row">
-      <view class="action-btn-sm" data-id="{{item.id}}" bindtap="onEdit"><text class="action-btn-sm-text">编辑</text></view>
-      <view class="action-btn-sm danger" data-id="{{item.id}}" bindtap="onDelete"><text class="action-btn-sm-text danger">删除</text></view>
+      <view class="action-btn-sm" wx:if="{{item.intents_count > 0}}" data-id="{{item.id}}" data-title="{{item.title}}" bindtap="onViewIntents">
+        <text class="action-btn-sm-text">查看意向</text>
+      </view>
+      <view class="action-btn-sm" data-id="{{item.id}}" bindtap="onEdit">
+        <text class="action-btn-sm-text">编辑</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" bindtap="onDelete">
+        <text class="action-btn-sm-text danger">删除</text>
+      </view>
     </view>
   </view>
-  <view class="park-empty" wx:if="{{!loading && list.length===0}}">暂无房源</view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">
+    <text class="park-empty-text">暂无房源</text>
+  </view>
   <view class="park-loading" wx:if="{{loading}}">加载中...</view>
 </view>

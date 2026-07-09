@@ -1,8 +1,17 @@
 <view class="park-page">
-  <view class="park-hero">
-    <text class="park-hero-title">{{greeting}}，{{parkName}}</text>
-    <text class="park-hero-sub">康瑞园区工作台</text>
-    <text class="park-hero-meta">{{dateText}}</text>
+  <view class="park-header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="park-nav-bar">
+      <view class="park-nav-btn" bindtap="onBack" hover-class="press-opacity">
+        <text class="park-nav-back-icon">‹</text>
+      </view>
+      <text class="park-nav-title">园区工作台</text>
+      <view class="park-nav-btn park-nav-btn--placeholder"></view>
+    </view>
+    <view class="park-hero-body">
+      <text class="park-hero-title">{{greeting}}，{{parkName}}</text>
+      <text class="park-hero-sub">康瑞园区工作台</text>
+      <text class="park-hero-meta">{{dateText}}</text>
+    </view>
   </view>
 
   <view class="park-stats" wx:if="{{stats}}">
@@ -36,7 +45,7 @@
       bindtap="onMenuTap"
     >
       <view class="park-menu-icon-wrap {{item.theme}}">
-        <text>{{item.icon}}</text>
+        <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
       </view>
       <text class="park-menu-name">{{item.title}}</text>
       <text class="park-menu-desc">{{item.desc}}</text>
@@ -53,6 +62,18 @@
       <text class="overview-item">访客人数 <text class="num">{{stats.visitors_count}}</text></text>
       <text class="overview-item">新闻总数 <text class="num">{{stats.news_total}}</text></text>
     </view>
+    <view class="overview-row">
+      <text class="overview-item">在售房源 <text class="num">{{stats.houses_on_market}}</text></text>
+      <text class="overview-item">待跟进意向 <text class="num">{{stats.investments_pending}}</text></text>
+    </view>
+    <view class="overview-row">
+      <text class="overview-item">进行中活动 <text class="num">{{stats.activities_open}}</text></text>
+      <text class="overview-item">展示政策 <text class="num">{{stats.policies_published}}</text></text>
+    </view>
+  </view>
+
+  <view class="action-btn action-btn-ghost" bindtap="onChangePassword">
+    <text class="action-btn-text ghost">修改密码</text>
   </view>
 
   <view class="action-btn action-btn-ghost" bindtap="onLogout">
