@@ -1,21 +1,21 @@
 /**app.wxss**/
 page {
-  --primary: #0f766e;
-  --primary-dark: #115e59;
-  --primary-light: #14b8a6;
-  --text-primary: #1c2b2a;
+  --primary: #0047b3;
+  --primary-dark: #003791;
+  --primary-light: #3d6fd4;
+  --text-primary: #1e293b;
   --text-regular: #334155;
   --text-secondary: #64748b;
   --text-placeholder: #94a3b8;
   --text-disabled: #cbd5e1;
-  --bg-page: #f4f7f6;
+  --bg-page: #f4f6f8;
   --bg-card: #ffffff;
   --radius-sm: 12rpx;
   --radius-md: 20rpx;
   --radius-lg: 24rpx;
-  --shadow-card: 0 8rpx 28rpx rgba(15, 118, 110, 0.08), 0 2rpx 8rpx rgba(15, 118, 110, 0.04);
-  --shadow-soft: 0 6rpx 22rpx rgba(15, 118, 110, 0.06), 0 2rpx 6rpx rgba(15, 118, 110, 0.03);
-  background: #f4f7f6;
+  --shadow-card: 0 8rpx 28rpx rgba(0, 55, 145, 0.08), 0 2rpx 8rpx rgba(0, 55, 145, 0.04);
+  --shadow-soft: 0 6rpx 22rpx rgba(0, 55, 145, 0.06), 0 2rpx 6rpx rgba(0, 55, 145, 0.03);
+  background: #f4f6f8;
   color: #334155;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   box-sizing: border-box;
@@ -136,12 +136,12 @@ view, text, image, input, textarea, button {
 
 .action-btn-primary {
   margin-top: 32rpx;
-  background: #0f766e;
+  background: #0047b3;
 }
 
 .action-btn-plain {
   background: #fff;
-  border: 2rpx solid #0f766e;
+  border: 2rpx solid #0047b3;
 }
 
 .action-btn-ghost {
@@ -163,7 +163,7 @@ view, text, image, input, textarea, button {
 }
 
 .action-btn-text.plain {
-  color: #0f766e;
+  color: #0047b3;
 }
 
 .action-btn-text.ghost {
@@ -196,7 +196,7 @@ view, text, image, input, textarea, button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ecfdf5;
+  background: #eef3fb;
 }
 
 .action-btn-sm.danger {
@@ -210,7 +210,7 @@ view, text, image, input, textarea, button {
 .action-btn-sm-text {
   font-size: 24rpx;
   line-height: 1;
-  color: #0f766e;
+  color: #0047b3;
 }
 
 .action-btn-sm-text.danger {
@@ -257,8 +257,8 @@ view, text, image, input, textarea, button {
 }
 
 .tag-active {
-  background: rgba(15, 118, 110, 0.12);
-  color: #0f766e;
+  background: rgba(0, 55, 145, 0.12);
+  color: #0047b3;
 }
 
 .tag-cancelled {

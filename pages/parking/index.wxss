@@ -1,5 +1,5 @@
 page {
-  background: #f4f7f6;
+  background: #f4f6f8;
 }
 
 .parking-page {
@@ -9,7 +9,7 @@ page {
 }
 
 .parking-hero {
-  background: linear-gradient(135deg, #115e59 0%, #0f766e 60%, #14b8a6 100%);
+  background: linear-gradient(135deg, #003791 0%, #0047b3 60%, #3d6fd4 100%);
   border-radius: 24rpx;
   padding: 32rpx;
   margin-bottom: 24rpx;
@@ -84,13 +84,13 @@ page {
   padding: 24rpx 16rpx;
   background: #fff;
   border-radius: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(15, 118, 110, 0.06);
+  box-shadow: 0 4rpx 16rpx rgba(0, 55, 145, 0.06);
   border: 2rpx solid transparent;
 }
 
 .mode-switch-item.active {
-  border-color: #0f766e;
-  background: #ecfdf5;
+  border-color: #0047b3;
+  background: #eef3fb;
 }
 
 .mode-switch-item.active.exit {
@@ -137,9 +137,9 @@ page {
 .active-record {
   margin: 20rpx 0;
   padding: 24rpx;
-  background: #ecfdf5;
+  background: #eef3fb;
   border-radius: 16rpx;
-  border: 1rpx solid rgba(15, 118, 110, 0.15);
+  border: 1rpx solid rgba(0, 55, 145, 0.15);
 }
 
 .active-label {
@@ -148,7 +148,7 @@ page {
   gap: 8rpx;
   font-size: 26rpx;
   font-weight: 600;
-  color: #0f766e;
+  color: #0047b3;
   margin-bottom: 12rpx;
 }
 
@@ -162,11 +162,11 @@ page {
 .action-btn-outline {
   margin-top: 24rpx;
   background: #fff;
-  border: 2rpx solid #0f766e;
+  border: 2rpx solid #0047b3;
 }
 
 .action-btn-text.outline {
-  color: #0f766e;
+  color: #0047b3;
 }
 
 .action-btn-exit {
@@ -224,8 +224,8 @@ page {
 
 .pending-type {
   font-size: 22rpx;
-  color: #0f766e;
-  background: #ecfdf5;
+  color: #0047b3;
+  background: #eef3fb;
   padding: 4rpx 12rpx;
   border-radius: 999rpx;
 }

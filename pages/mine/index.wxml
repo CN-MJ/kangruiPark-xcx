@@ -1,22 +1,13 @@
 <view class="mine-page">
-  <view class="mine-header">
+  <view class="mine-header {{hasUserAccount ? '' : 'mine-header--clickable'}}" bindtap="onHeaderTap">
     <image class="mine-avatar" src="/images/default-avatar.jpg" mode="aspectFill" />
     <view class="mine-info">
       <view class="name-row">
         <text class="mine-name">{{userName}}</text>
         <text class="role-tag">{{roleText}}</text>
       </view>
-      <text class="mine-phone" bindtap="onBindPhone">{{userPhone}}{{userPhone === '未绑定手机号' ? ' · 点击绑定' : (!phoneVerified ? ' · 点击验证' : '')}}</text>
+      <text class="mine-phone">{{headerPhoneText}}</text>
     </view>
-  </view>
-
-  <!-- 访客：入住签到 → 成为商户 -->
-  <view class="card menu-card highlight-card" wx:if="{{isVisitor}}" bindtap="goCheckin">
-    <view>
-      <text class="menu-title">入住签到</text>
-      <text class="menu-desc">签到后即可成为园区商户</text>
-    </view>
-    <text class="menu-arrow">›</text>
   </view>
 
   <!-- 商户功能 -->
@@ -43,11 +34,11 @@
     <text class="menu-arrow">›</text>
   </view>
 
-  <!-- 园区人员工作台 -->
+  <!-- 园区人员工作台：企业库录入与类型配置在此 -->
   <view class="card menu-card park-card" wx:if="{{!isParkStaff}}" bindtap="goParkLogin">
     <view>
       <text class="menu-title park-title">园区工作台</text>
-      <text class="menu-desc">园区人员登录（发布新闻、处理预约）</text>
+      <text class="menu-desc">企业库录入、类型配置、预约与新闻管理</text>
     </view>
     <text class="menu-arrow">›</text>
   </view>
@@ -65,8 +56,13 @@
     <text class="menu-arrow">›</text>
   </view>
 
-  <view class="version-wrap">
-    <text class="version-text">康瑞园区 v{{appVersion}}</text>
+  <view class="card menu-card" wx:if="{{hasUserAccount}}" bindtap="onLogoutUser">
+    <text class="menu-title logout-title">退出当前账号</text>
+    <text class="menu-arrow">›</text>
+  </view>
+
+  <view class="version-wrap" bindtap="onVersionTap">
+    <text class="version-text">赣南健康城 v{{appVersion}}</text>
   </view>
 
   <tab-bar active="mine" />

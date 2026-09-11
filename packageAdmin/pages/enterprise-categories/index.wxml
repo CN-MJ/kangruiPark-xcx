@@ -1,0 +1,129 @@
+<view class="park-page cat-page">
+  <view class="toolbar">
+    <view class="toolbar-btn primary" bindtap="onSyncDefaults">
+      <text>同步标准 6 大类</text>
+    </view>
+    <view class="toolbar-btn" bindtap="onAddMajor">
+      <text>新增大类</text>
+    </view>
+  </view>
+
+  <view class="form-card" wx:if="{{showForm}}">
+    <text class="form-card-title">{{editingId ? '编辑分类' : '新增分类'}}</text>
+    <text class="form-hint">归属：{{formParentName}}</text>
+
+    <view class="form-item">
+      <text class="form-label">名称</text>
+      <view class="form-field">
+        <input class="form-input" data-key="formName" value="{{formName}}" bindinput="onFormInput" placeholder="请输入分类名称" />
+      </view>
+    </view>
+
+    <view class="form-row">
+      <view class="form-item form-item--half">
+        <text class="form-label">排序</text>
+        <view class="form-field">
+          <input class="form-input" type="number" data-key="formSort" value="{{formSort}}" bindinput="onFormInput" placeholder="数字越小越前" />
+        </view>
+      </view>
+      <view class="form-item form-item--half">
+        <text class="form-label">状态</text>
+        <picker mode="selector" range="{{['停用','启用']}}" value="{{formStatus}}" bindchange="onFormStatusChange">
+          <view class="form-picker">{{formStatus === 1 ? '启用' : '停用'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-actions">
+      <view class="action-btn-sm" bindtap="onCancelForm"><text class="action-btn-sm-text">取消</text></view>
+      <view class="action-btn-sm primary" bindtap="onSaveForm"><text class="action-btn-sm-text primary">保存</text></view>
+    </view>
+  </view>
+
+  <view class="major-card" wx:for="{{majors}}" wx:key="id">
+    <view class="major-head" data-id="{{item.id}}" bindtap="onToggleExpand">
+      <view class="major-index">{{index + 1}}</view>
+      <view class="major-title-wrap">
+        <text class="major-title">{{item.name}}</text>
+        <text class="major-sub">{{item.children.length}} 个小类 · {{item.statusText}}</text>
+      </view>
+      <text class="expand-icon">{{expandedId === item.id ? '收起' : '展开'}}</text>
+    </view>
+
+    <view class="park-btn-row">
+      <view class="action-btn-sm" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="onAddMinor">
+        <text class="action-btn-sm-text">加小类</text>
+      </view>
+      <view
+        class="action-btn-sm"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+        data-sort="{{item.sort_order}}"
+        data-status="{{item.status}}"
+        data-parent-name="一级大类"
+        bindtap="onEdit"
+      >
+        <text class="action-btn-sm-text">编辑</text>
+      </view>
+      <view
+        class="action-btn-sm"
+        data-id="{{item.id}}"
+        data-status="{{item.status}}"
+        data-name="{{item.name}}"
+        data-sort="{{item.sort_order}}"
+        bindtap="onToggleStatus"
+      >
+        <text class="action-btn-sm-text">{{item.status === 1 ? '停用' : '启用'}}</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" bindtap="onDelete">
+        <text class="action-btn-sm-text danger">删除</text>
+      </view>
+    </view>
+
+    <view class="minor-list" wx:if="{{expandedId === item.id}}">
+      <view class="minor-item" wx:for="{{item.children}}" wx:for-item="child" wx:key="id">
+        <view class="minor-main">
+          <text class="minor-dot"></text>
+          <text class="minor-name">{{child.name}}</text>
+          <text class="park-status-tag">{{child.statusText}}</text>
+        </view>
+        <view class="park-btn-row">
+          <view
+            class="action-btn-sm"
+            data-id="{{child.id}}"
+            data-parent-id="{{item.id}}"
+            data-parent-name="{{item.name}}"
+            data-name="{{child.name}}"
+            data-sort="{{child.sort_order}}"
+            data-status="{{child.status}}"
+            bindtap="onEdit"
+          >
+            <text class="action-btn-sm-text">编辑</text>
+          </view>
+          <view
+            class="action-btn-sm"
+            data-id="{{child.id}}"
+            data-parent-id="{{item.id}}"
+            data-status="{{child.status}}"
+            data-name="{{child.name}}"
+            data-sort="{{child.sort_order}}"
+            bindtap="onToggleStatus"
+          >
+            <text class="action-btn-sm-text">{{child.status === 1 ? '停用' : '启用'}}</text>
+          </view>
+          <view class="action-btn-sm danger" data-id="{{child.id}}" bindtap="onDelete">
+            <text class="action-btn-sm-text danger">删除</text>
+          </view>
+        </view>
+      </view>
+      <view class="park-empty compact" wx:if="{{item.children.length === 0}}">
+        <text class="park-empty-text">暂无小类，点击「加小类」添加</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="park-empty" wx:if="{{!loading && majors.length===0}}">
+    <text class="park-empty-text">暂无分类，请先点「同步标准 6 大类」</text>
+  </view>
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+</view>

@@ -18,6 +18,22 @@ function isParkLoggedIn() {
   return !!getToken()
 }
 
+function canAccessParkAdmin() {
+  if (isParkLoggedIn()) return true
+  try {
+    const superAuth = require('./superAuth')
+    return superAuth.isSuperLoggedIn()
+  } catch (e) {
+    return false
+  }
+}
+
+function ensureParkAdmin() {
+  if (canAccessParkAdmin()) return true
+  wx.redirectTo({ url: '/packageAdmin/pages/login/index' })
+  return false
+}
+
 function clearAuth() {
   wx.removeStorageSync(TOKEN_KEY)
   wx.removeStorageSync(USER_KEY)
@@ -28,5 +44,7 @@ module.exports = {
   setAuth,
   getParkUser,
   isParkLoggedIn,
+  canAccessParkAdmin,
+  ensureParkAdmin,
   clearAuth,
 }

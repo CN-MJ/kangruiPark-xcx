@@ -12,7 +12,7 @@ Component({
     },
     color: {
       type: String,
-      value: '#0f766e',
+      value: '#0047b3',
     },
   },
 

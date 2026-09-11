@@ -1,0 +1,158 @@
+<view class="page-wrap edit-page">
+  <view class="card">
+    <text class="section-title">基本信息</text>
+
+    <view class="form-item">
+      <text class="form-label">企业名称 <text class="req">*</text></text>
+      <view class="form-field">
+        <input class="form-input" data-key="name" value="{{name}}" bindinput="onInput" placeholder="请输入企业名称" />
+      </view>
+    </view>
+
+    <view class="form-row">
+      <view class="form-item form-item--half">
+        <text class="form-label">联系人</text>
+        <view class="form-field">
+          <input class="form-input" data-key="contact_name" value="{{contact_name}}" bindinput="onInput" placeholder="选填" />
+        </view>
+      </view>
+      <view class="form-item form-item--half">
+        <text class="form-label">联系电话</text>
+        <view class="form-field">
+          <input class="form-input" type="number" data-key="contact_phone" value="{{contact_phone}}" bindinput="onInput" placeholder="选填" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">分类标签</text>
+
+    <view class="form-item">
+      <text class="form-label">主大类（单选） <text class="req">*</text></text>
+      <picker mode="selector" range="{{majors}}" range-key="name" value="{{majorIndex}}" bindchange="onMajorChange">
+        <view class="form-picker {{majors.length ? '' : 'placeholder'}}">
+          {{majors.length ? majors[majorIndex].name : '请先同步标准分类'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">小类标签（可多选，至少 1 个） <text class="req">*</text></text>
+      <text class="form-tip">先选主大类，再勾选其下小类</text>
+      <view class="chip-wrap">
+        <view
+          class="chip {{item.checked ? 'active' : ''}}"
+          wx:for="{{minorOptions}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onToggleMinor"
+        >{{item.name}}</view>
+        <text class="chip-empty" wx:if="{{!minorOptions.length}}">该大类暂无启用小类</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">业务与地址</text>
+
+    <view class="form-item">
+      <text class="form-label">主营业务简介 <text class="req">*</text></text>
+      <view class="form-field form-field-textarea">
+        <textarea
+          class="form-textarea"
+          data-key="business_intro"
+          value="{{business_intro}}"
+          bindinput="onInput"
+          placeholder="便于访客检索的业务说明"
+          maxlength="2000"
+          auto-height
+        />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">地址</text>
+      <view class="address-row">
+        <view class="form-field address-field">
+          <input class="form-input" data-key="address" value="{{address}}" bindinput="onInput" placeholder="选填，可地图选点" />
+        </view>
+        <view class="loc-btn" bindtap="onChooseLocation">选点</view>
+      </view>
+    </view>
+
+    <view class="form-item form-item--switch">
+      <view>
+        <text class="form-label form-label--inline">支持地图定位展示</text>
+        <text class="form-tip">开启后详情页可打开地图</text>
+      </view>
+      <switch data-key="map_enabled" checked="{{map_enabled}}" bindchange="onSwitch" color="#003791" />
+    </view>
+
+    <view class="form-item" wx:if="{{map_enabled}}">
+      <text class="form-label">经纬度</text>
+      <view class="form-picker">{{latitude || '-'}} ， {{longitude || '-'}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">属性与图片</text>
+
+    <view class="form-row">
+      <view class="form-item form-item--half">
+        <text class="form-label">服务对象</text>
+        <picker mode="selector" range="{{audienceOptions}}" range-key="label" value="{{audienceIndex}}" bindchange="onAudienceChange">
+          <view class="form-picker">{{audienceOptions[audienceIndex].label}}</view>
+        </picker>
+      </view>
+      <view class="form-item form-item--half">
+        <text class="form-label">来源</text>
+        <picker mode="selector" range="{{sourceOptions}}" range-key="label" value="{{sourceIndex}}" bindchange="onSourceChange">
+          <view class="form-picker">{{sourceOptions[sourceIndex].label}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-item form-item--switch">
+      <text class="form-label form-label--inline">是否入驻园区</text>
+      <switch data-key="settle_in_park" checked="{{settle_in_park}}" bindchange="onSwitch" color="#003791" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">上架状态</text>
+      <picker mode="selector" range="{{['下架','上架']}}" value="{{status}}" bindchange="onStatusChange">
+        <view class="form-picker">{{status === 1 ? '上架' : '下架'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">企业图片</text>
+      <text class="form-tip">最多 {{maxImages}} 张；选图仅本地预览，点保存时再上传压缩</text>
+      <view class="image-grid">
+        <view class="image-item" wx:for="{{displayImages}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="image-thumb" />
+          <view class="image-remove" data-index="{{index}}" bindtap="onRemoveImage">×</view>
+        </view>
+        <view class="image-add" wx:if="{{images.length < maxImages && !submitting}}" bindtap="onAddImages">
+          <text class="image-add-text">+</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
+    <view wx:if="{{submitting}}" class="action-btn-spinner"></view>
+    <text class="action-btn-text">{{submitting ? '保存中' : '保存'}}</text>
+  </view>
+
+  <view class="save-mask" wx:if="{{submitting}}" catchtouchmove="preventTouchMove">
+    <view class="save-panel">
+      <text class="save-title">{{saveProgressText}}</text>
+      <view class="save-bar">
+        <view class="save-bar-inner" style="width: {{saveProgress}}%;"></view>
+      </view>
+      <text class="save-percent">{{saveProgress}}%</text>
+      <text class="save-detail" wx:if="{{saveProgressDetail}}">{{saveProgressDetail}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,392 @@
+page {
+  --primary: #003791;
+  --bg: #f2f5fa;
+  background: var(--bg);
+}
+
+.ent-page {
+  min-height: 100vh;
+  padding: 0 24rpx 48rpx;
+  box-sizing: border-box;
+}
+
+.ent-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-top: 20rpx;
+  padding-bottom: 8rpx;
+  background: linear-gradient(180deg, #f2f5fa 70%, rgba(242, 245, 250, 0.92));
+}
+
+.search-bar {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  box-shadow: 0 8rpx 24rpx rgba(15, 40, 100, 0.06);
+}
+
+.search-btn {
+  height: 72rpx;
+  line-height: 72rpx;
+  padding: 0 28rpx;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.filter-bar {
+  margin-bottom: 14rpx;
+}
+
+.cat-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  min-height: 88rpx;
+  padding: 16rpx 24rpx;
+  background: #fff;
+  border-radius: 18rpx;
+  box-shadow: 0 8rpx 24rpx rgba(15, 40, 100, 0.06);
+  border: 2rpx solid transparent;
+}
+
+.cat-trigger.active {
+  border-color: rgba(0, 55, 145, 0.28);
+  background: #f5f8ff;
+}
+
+.cat-trigger-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-trigger-label {
+  display: block;
+  font-size: 22rpx;
+  color: #94a3b8;
+  margin-bottom: 6rpx;
+}
+
+.cat-trigger-value {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-trigger.active .cat-trigger-value {
+  color: var(--primary);
+}
+
+.cat-trigger-arrow {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  color: #94a3b8;
+}
+
+.quick-scroll {
+  width: 100%;
+  white-space: nowrap;
+  margin-bottom: 8rpx;
+}
+
+.quick-row {
+  display: inline-flex;
+  gap: 12rpx;
+  padding: 4rpx 2rpx 8rpx;
+}
+
+.quick-chip {
+  display: inline-block;
+  padding: 12rpx 22rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  color: #64748b;
+  font-size: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(15, 40, 100, 0.06);
+}
+
+.quick-chip.active {
+  background: #e8f0ff;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.filter-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rpx 4rpx 12rpx;
+}
+
+.filter-status-text {
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.filter-clear {
+  font-size: 24rpx;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 8rpx 4rpx;
+}
+
+.ent-card {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 10rpx 28rpx rgba(15, 40, 100, 0.08);
+}
+
+.ent-cover {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+  background: #e2e8f0;
+}
+
+.ent-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ent-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10rpx;
+}
+
+.ent-title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.ent-park {
+  flex-shrink: 0;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  color: #059669;
+  background: #ecfdf5;
+}
+
+.ent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
+.ent-tag {
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  color: #003791;
+  background: #eef3fb;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ent-tag.subject {
+  color: #0f766e;
+  background: #ccfbf1;
+}
+
+.ent-meta {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.ent-scope {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.empty-tip,
+.footer-tip {
+  padding: 40rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #94a3b8;
+}
+
+.press-scale {
+  opacity: 0.9;
+  transform: scale(0.99);
+}
+
+/* —— 分类面板 —— */
+.cat-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: flex-end;
+}
+
+.cat-sheet {
+  width: 100%;
+  height: 72vh;
+  max-height: 980rpx;
+  background: #fff;
+  border-radius: 28rpx 28rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
+}
+
+.cat-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 28rpx 8rpx;
+}
+
+.cat-sheet-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.cat-sheet-actions {
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+}
+
+.cat-sheet-reset {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.cat-sheet-done {
+  font-size: 26rpx;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.cat-sheet-tip {
+  display: block;
+  padding: 0 28rpx 16rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+.cat-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  border-top: 1rpx solid #eef2f7;
+}
+
+.cat-left {
+  width: 240rpx;
+  height: 100%;
+  background: #f5f7fb;
+  flex-shrink: 0;
+}
+
+.cat-major {
+  padding: 24rpx 18rpx;
+  border-left: 6rpx solid transparent;
+}
+
+.cat-major.active {
+  background: #fff;
+  border-left-color: var(--primary);
+}
+
+.cat-major-name {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.35;
+}
+
+.cat-major.active .cat-major-name {
+  color: var(--primary);
+}
+
+.cat-major-tip {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.cat-right {
+  flex: 1;
+  height: 100%;
+  padding: 16rpx 20rpx 32rpx;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.cat-minor {
+  padding: 22rpx 20rpx;
+  margin-bottom: 12rpx;
+  border-radius: 14rpx;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 26rpx;
+  line-height: 1.4;
+}
+
+.cat-minor.active {
+  background: #e8f0ff;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.cat-right-empty {
+  padding: 48rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #94a3b8;
+  line-height: 1.5;
+}

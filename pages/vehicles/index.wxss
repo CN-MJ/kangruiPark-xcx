@@ -40,14 +40,14 @@
 .vehicle-plate {
   font-size: 34rpx;
   font-weight: 700;
-  color: #0f766e;
+  color: #0047b3;
   letter-spacing: 2rpx;
 }
 
 .vehicle-tag {
   font-size: 20rpx;
-  color: #0f766e;
-  background: #ecfdf5;
+  color: #0047b3;
+  background: #eef3fb;
   padding: 4rpx 12rpx;
   border-radius: 999rpx;
 }
@@ -60,7 +60,7 @@
 
 .vehicle-action {
   font-size: 24rpx;
-  color: #0f766e;
+  color: #0047b3;
 }
 
 .vehicle-action.danger {

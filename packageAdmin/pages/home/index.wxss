@@ -3,9 +3,9 @@
 .park-header {
   margin: 0 -24rpx 24rpx;
   padding: 0 32rpx 48rpx;
-  background: linear-gradient(135deg, #115e59 0%, #0f766e 55%, #14b8a6 100%);
+  background: linear-gradient(135deg, #003791 0%, #0047b3 55%, #3d6fd4 100%);
   border-radius: 0 0 36rpx 36rpx;
-  box-shadow: 0 12rpx 40rpx rgba(15, 118, 110, 0.28);
+  box-shadow: 0 12rpx 40rpx rgba(0, 55, 145, 0.28);
 }
 
 .park-nav-bar {
@@ -69,6 +69,6 @@
 
 .overview-item .num {
   font-weight: 700;
-  color: #0f766e;
+  color: #0047b3;
   margin-left: 8rpx;
 }

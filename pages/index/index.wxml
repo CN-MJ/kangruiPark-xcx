@@ -1,66 +1,85 @@
 <view class="home-page">
-  <view class="home-header" style="padding-top: {{statusBarHeight}}px;">
-    <view class="home-header-inner">
-      <view class="home-brand">
-        <text class="home-greeting">{{greeting}}</text>
-        <text class="home-title">{{parkName}}</text>
-        <text class="home-date">{{dateText}}</text>
+  <!-- 蓝色主题头图 -->
+  <view class="home-hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="home-hero-decor"></view>
+
+    <view class="home-date-bar">
+      <text class="home-date">{{dateText}}</text>
+      <text class="home-greeting">{{greeting}}</text>
+    </view>
+
+    <view class="home-logo-slot">
+      <image class="home-logo" src="/images/home_top_logo.png" mode="widthFix" />
+    </view>
+
+    <view class="home-hero-actions">
+      <view
+        class="hero-action"
+        wx:for="{{heroActions}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onHeroTap"
+        hover-class="press-scale"
+      >
+        <view class="hero-action-btn" style="background: {{item.bg}};">
+          <kr-icon name="{{item.icon}}" size="44" color="{{item.iconColor}}" />
+        </view>
+        <text class="hero-action-label">{{item.label}}</text>
       </view>
-      <view class="home-badge">智慧园区</view>
     </view>
   </view>
 
-  <scroll-view class="home-scroll" scroll-y enhanced show-scrollbar="{{false}}">
-    <view class="home-body">
-      <!-- 三大核心功能 -->
-      <view class="core-grid">
+  <scroll-view
+    class="home-scroll"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    lower-threshold="120"
+    bindscrolltolower="onScrollToLower"
+  >
+    <view class="home-sheet">
+      <!-- 次级入口 -->
+      <view class="secondary-row">
         <view
-          class="core-card core-card--{{item.tone}}"
-          wx:for="{{coreServices}}"
+          class="secondary-item"
+          wx:for="{{secondaryEntries}}"
           wx:key="id"
           data-id="{{item.id}}"
-          bindtap="onCoreTap"
+          bindtap="onSecondaryTap"
           hover-class="press-scale"
         >
-          <view class="core-icon">
-            <kr-icon name="{{item.icon}}" size="44" color="{{item.iconColor}}" />
+          <view class="secondary-icon">
+            <kr-icon name="{{item.icon}}" size="40" color="{{item.iconColor}}" />
           </view>
-          <text class="core-title">{{item.title}}</text>
-          <text class="core-desc">{{item.desc}}</text>
+          <text class="secondary-label">{{item.label}}</text>
         </view>
       </view>
 
-      <!-- 停车余位 -->
-      <view class="parking-panel" wx:if="{{parkingStats}}" bindtap="onParkingTap" hover-class="press-scale">
-        <view class="parking-panel-head">
-          <view>
-            <text class="parking-panel-title">停车余位</text>
-            <text class="parking-panel-status">{{parkingStats.statusText}}</text>
-          </view>
-          <view class="parking-panel-right">
-            <text class="pending-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</text>
-            <text class="parking-panel-link">去办理 ›</text>
-          </view>
+      <!-- 停车余位横条 -->
+      <view class="parking-banner" wx:if="{{parkingStats}}" bindtap="onParkingTap" hover-class="press-scale">
+        <view class="parking-banner-main">
+          <text class="parking-banner-title">停车余位</text>
+          <text class="parking-banner-status">{{parkingStats.statusText}}</text>
         </view>
-        <view class="parking-panel-stats">
-          <view class="parking-stat">
-            <text class="parking-stat-num">{{parkingStats.remaining_spots}}</text>
-            <text class="parking-stat-label">剩余</text>
-          </view>
-          <view class="parking-stat">
-            <text class="parking-stat-num muted">{{parkingStats.occupied_count}}</text>
-            <text class="parking-stat-label">已占</text>
-          </view>
-          <view class="parking-stat">
-            <text class="parking-stat-num muted">{{parkingStats.total_spots}}</text>
-            <text class="parking-stat-label">总数</text>
-          </view>
+        <view class="parking-banner-nums">
+          <text class="parking-banner-num">{{parkingStats.remaining_spots}}</text>
+          <text class="parking-banner-unit">剩余 / {{parkingStats.total_spots}}</text>
         </view>
-        <view class="parking-progress">
-          <view class="parking-progress-bar" style="width: {{parkingStats.percent}}%;"></view>
-        </view>
+        <text class="parking-banner-link" wx:if="{{pendingCount > 0}}">待确认 {{pendingCount}}</text>
+        <text class="parking-banner-link" wx:else>去办理 ›</text>
       </view>
 
+      <!-- 公告 -->
+      <view class="notice-bar" wx:if="{{notices.length > 0}}">
+        <text class="notice-tag">公告</text>
+        <swiper class="notice-swiper" vertical autoplay circular interval="4000">
+          <swiper-item wx:for="{{notices}}" wx:key="id" data-id="{{item.id}}" bindtap="onNoticeTap">
+            <text class="notice-text">{{item.title}}</text>
+          </swiper-item>
+        </swiper>
+      </view>
+
+      <!-- 待确认 -->
       <view class="pending-strip" wx:if="{{pendingCount > 0}}">
         <view class="pending-strip-head">
           <text class="pending-strip-title">摄像头待确认</text>
@@ -80,45 +99,30 @@
         </view>
       </view>
 
-      <!-- 公告 -->
-      <view class="notice-panel" wx:if="{{notices.length > 0}}">
-        <text class="notice-panel-tag">公告</text>
-        <swiper class="notice-panel-swiper" vertical autoplay circular interval="4000">
-          <swiper-item wx:for="{{notices}}" wx:key="id" data-id="{{item.id}}" bindtap="onNoticeTap">
-            <text class="notice-panel-text">{{item.title}}</text>
-          </swiper-item>
-        </swiper>
+      <!-- 服务卡片 2x2 -->
+      <view class="service-grid">
+        <view
+          class="service-card service-card--{{item.tone}}"
+          wx:for="{{serviceCards}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onServiceTap"
+          hover-class="press-scale"
+        >
+          <view class="service-card-copy">
+            <text class="service-card-title">{{item.title}}</text>
+            <text class="service-card-desc">{{item.desc}}</text>
+          </view>
+          <view class="service-card-icon">
+            <kr-icon name="{{item.icon}}" size="56" color="{{item.iconColor}}" />
+          </view>
+        </view>
       </view>
 
-      <!-- 快捷入口 -->
+      <!-- 园区动态：直接展示，滑到底加载更多 -->
       <view class="section-block">
         <view class="section-head">
-          <text class="section-title">常用服务</text>
-        </view>
-        <scroll-view class="quick-scroll" scroll-x enhanced show-scrollbar="{{false}}">
-          <view class="quick-row">
-            <view
-              class="quick-chip"
-              wx:for="{{quickEntries}}"
-              wx:key="id"
-              data-id="{{item.id}}"
-              bindtap="onQuickTap"
-              hover-class="press-scale"
-            >
-              <view class="quick-chip-icon">
-                <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
-              </view>
-              <text class="quick-chip-label">{{item.label}}</text>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-
-      <!-- 园区动态 -->
-      <view class="section-block section-block--last">
-        <view class="section-head">
           <text class="section-title">园区动态</text>
-          <text class="section-more" bindtap="onNewsMore">更多</text>
         </view>
         <view class="news-list" wx:if="{{newsList.length > 0}}">
           <view
@@ -136,7 +140,11 @@
             <text class="news-row-tag" wx:if="{{item.isTop}}">置顶</text>
           </view>
         </view>
-        <view class="news-empty" wx:else>暂无动态</view>
+        <view class="news-empty" wx:elif="{{!newsLoading}}">暂无动态</view>
+        <view class="news-footer" wx:if="{{newsList.length > 0}}">
+          <text wx:if="{{newsLoadingMore}}">加载中...</text>
+          <text wx:elif="{{!newsHasMore}}">没有更多了</text>
+        </view>
       </view>
 
       <view class="safe-bottom"></view>

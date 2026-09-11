@@ -15,18 +15,15 @@
     <view class="cover-upload" bindtap="onChooseCover">
       <block wx:if="{{coverLocal}}">
         <image class="cover-img" src="{{coverLocal}}" mode="aspectFill" />
-        <view class="cover-mask" wx:if="{{uploading}}">
-          <text>上传中...</text>
-        </view>
         <view class="cover-change">点击更换</view>
       </block>
       <block wx:else>
         <text class="cover-plus">+</text>
-        <text class="cover-tip">上传封面图</text>
-        <text class="cover-sub">建议 16:9，支持相册或拍照</text>
+        <text class="cover-tip">选择封面图</text>
+        <text class="cover-sub">选图仅预览，保存时再上传</text>
       </block>
     </view>
-    <text class="cover-remove" wx:if="{{coverLocal && !uploading}}" catchtap="onRemoveCover">移除封面</text>
+    <text class="cover-remove" wx:if="{{coverLocal && !loading}}" catchtap="onRemoveCover">移除封面</text>
   </view>
 
   <view class="card edit-card">
@@ -70,17 +67,28 @@
         <text class="form-label">置顶显示</text>
         <text class="switch-desc">{{isNotice ? '置顶公告将优先在首页滚动展示' : '置顶后将在首页和列表优先展示'}}</text>
       </view>
-      <switch checked="{{isTop}}" color="#0f766e" bindchange="onTopChange" />
+      <switch checked="{{isTop}}" color="#0047b3" bindchange="onTopChange" />
     </view>
   </view>
 
   <view class="edit-actions">
-    <view class="action-btn action-btn-plain" bindtap="onPreview">
+    <view class="action-btn action-btn-plain {{loading ? 'is-loading' : ''}}" bindtap="onPreview">
       <text class="action-btn-text plain">预览内容</text>
     </view>
     <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onSubmit">
       <view wx:if="{{loading}}" class="action-btn-spinner"></view>
-      <text class="action-btn-text">{{id ? '保存修改' : (isNotice ? '发布公告' : '发布新闻')}}</text>
+      <text class="action-btn-text">{{loading ? '保存中' : (id ? '保存修改' : (isNotice ? '发布公告' : '发布新闻'))}}</text>
+    </view>
+  </view>
+
+  <view class="save-mask" wx:if="{{loading}}" catchtouchmove="preventTouchMove">
+    <view class="save-panel">
+      <text class="save-title">{{saveProgressText}}</text>
+      <view class="save-bar">
+        <view class="save-bar-inner" style="width: {{saveProgress}}%;"></view>
+      </view>
+      <text class="save-percent">{{saveProgress}}%</text>
+      <text class="save-detail" wx:if="{{saveProgressDetail}}">{{saveProgressDetail}}</text>
     </view>
   </view>
 </view>

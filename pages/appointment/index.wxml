@@ -14,7 +14,7 @@
       hover-class="press-scale"
     >
       <view class="hub-item-icon">
-        <kr-icon name="{{item.icon}}" size="40" color="#0f766e" />
+        <kr-icon name="{{item.icon}}" size="40" color="#0047b3" />
       </view>
       <view class="hub-item-body">
         <text class="hub-item-title">{{item.title}}</text>

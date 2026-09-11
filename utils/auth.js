@@ -2,39 +2,37 @@ const { request } = require('./request')
 const { parkRequest } = require('./request')
 const { merchantRequest } = require('./request')
 
-const PURPOSE = {
-  BIND_PHONE: 'bind_phone',
-  PARK_LOGIN: 'park_login',
-  MERCHANT_LOGIN: 'merchant_login',
-  RESET_PARK: 'password_reset_park',
-  RESET_MERCHANT: 'password_reset_merchant',
+function fetchCaptcha() {
+  return request('/auth/captcha', { method: 'GET' })
 }
 
-function sendSmsCode(phone, purpose) {
-  return request('/auth/sms/send', {
-    method: 'POST',
-    data: { phone, purpose },
+function wxLoginCode() {
+  return new Promise((resolve, reject) => {
+    wx.login({
+      success: (res) => {
+        if (res.code) resolve(res.code)
+        else reject(new Error('微信登录失败'))
+      },
+      fail: () => reject(new Error('微信登录失败')),
+    })
   })
 }
 
-function bindPhone(phone, smsCode, name) {
-  return request('/users/bind-phone', {
-    method: 'POST',
-    data: { phone, sms_code: smsCode, name },
-  })
-}
-
-function resetPassword(accountType, phone, smsCode, newPassword, newPasswordConfirmation) {
-  return request('/auth/password/reset', {
-    method: 'POST',
-    data: {
-      account_type: accountType,
-      phone,
-      sms_code: smsCode,
-      new_password: newPassword,
-      new_password_confirmation: newPasswordConfirmation,
-    },
-  })
+/**
+ * 微信授权手机号登录
+ * @param {string} phoneCode getPhoneNumber 返回的 code；本地 mock 可用 MOCK:138xxxx
+ */
+function wechatPhoneLogin(phoneCode, name) {
+  return wxLoginCode().then((loginCode) =>
+    request('/users/wechat-phone-login', {
+      method: 'POST',
+      data: {
+        login_code: loginCode,
+        phone_code: phoneCode,
+        name: name || undefined,
+      },
+    })
+  )
 }
 
 function changeParkPassword(oldPassword, newPassword, newPasswordConfirmation) {
@@ -60,10 +58,9 @@ function changeMerchantPassword(oldPassword, newPassword, newPasswordConfirmatio
 }
 
 module.exports = {
-  PURPOSE,
-  sendSmsCode,
-  bindPhone,
-  resetPassword,
+  fetchCaptcha,
+  wxLoginCode,
+  wechatPhoneLogin,
   changeParkPassword,
   changeMerchantPassword,
 }

@@ -1,0 +1,47 @@
+<view class="page-wrap" wx:if="{{detail}}">
+  <swiper class="ent-swiper" indicator-dots autoplay wx:if="{{detail.images && detail.images.length}}">
+    <swiper-item wx:for="{{detail.images}}" wx:key="*this">
+      <image
+        class="ent-swiper-image"
+        src="{{item}}"
+        mode="aspectFill"
+        data-url="{{item}}"
+        bindtap="onPreview"
+      />
+    </swiper-item>
+  </swiper>
+  <view class="card" wx:else>
+    <image class="ent-fallback" src="/images/default-cover.jpg" mode="aspectFill" />
+  </view>
+
+  <view class="card">
+    <view class="title-row">
+      <text class="card-title">{{detail.name}}</text>
+      <text class="park-badge" wx:if="{{detail.settle_in_park}}">入驻园区</text>
+    </view>
+
+    <view class="tag-row">
+      <text class="tag" wx:if="{{detail.primary_category}}">{{detail.primary_category.name}}</text>
+      <text class="tag subject" wx:for="{{detail.categories}}" wx:key="id">{{item.name}}</text>
+    </view>
+
+    <view class="meta-grid">
+      <text class="meta-line">服务对象：{{detail.service_audience_text}}</text>
+      <text class="meta-line">来源：{{detail.source_text}}</text>
+      <text class="meta-line" wx:if="{{detail.address}}">地址：{{detail.address}}</text>
+      <text class="meta-line" wx:if="{{detail.contact_name}}">联系人：{{detail.contact_name}}</text>
+      <text class="meta-line" wx:if="{{detail.contact_phone}}">电话：{{detail.contact_phone}}</text>
+    </view>
+
+    <view class="action-row">
+      <view class="mini-btn" wx:if="{{detail.contact_phone}}" bindtap="onCall">拨打电话</view>
+      <view class="mini-btn" wx:if="{{detail.map_enabled}}" bindtap="onOpenMap">查看地图</view>
+    </view>
+
+    <text class="section-label">主营业务简介</text>
+    <text class="scope-text">{{detail.business_intro}}</text>
+  </view>
+</view>
+
+<view class="empty-tip" wx:if="{{loading}}">加载中...</view>
+<view class="empty-tip" wx:elif="{{!detail}}">企业不存在或已下架</view>

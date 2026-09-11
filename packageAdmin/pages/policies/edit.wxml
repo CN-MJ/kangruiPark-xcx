@@ -4,7 +4,7 @@
     <view class="form-item"><text class="form-label">政策级别</text><picker mode="selector" range="{{levels}}" value="{{levelIndex}}" bindchange="onLevelChange"><view class="form-picker">{{levels[levelIndex]}}</view></picker></view>
     <view class="form-item"><text class="form-label">详细内容</text><textarea class="form-textarea" value="{{content}}" data-key="content" bindinput="onInput"></textarea></view>
     <view class="form-item"><text class="form-label">封面图</text><view class="form-picker" bindtap="onChooseCover">{{cover_image ? '已上传，点此更换' : '上传图片'}}</view></view>
-    <view class="form-item"><text class="form-label">显示开关</text><switch checked="{{is_show}}" bindchange="onShowChange" color="#0f766e" /></view>
+    <view class="form-item"><text class="form-label">显示开关</text><switch checked="{{is_show}}" bindchange="onShowChange" color="#0047b3" /></view>
     <view class="form-item"><text class="form-label">排序值</text><input class="form-input" type="number" value="{{sort_order}}" data-key="sort_order" bindinput="onInput" placeholder="越大越靠前" /></view>
     <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit"><text class="action-btn-text">保存</text></view>
   </view>

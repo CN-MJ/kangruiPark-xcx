@@ -1,0 +1,127 @@
+<view class="ent-page">
+  <view class="ent-sticky">
+    <view class="search-bar">
+      <input
+        class="search-input"
+        placeholder="搜索企业名称 / 业务 / 地址"
+        value="{{keyword}}"
+        bindinput="onKeywordInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+
+    <view class="filter-bar">
+      <view class="cat-trigger {{hasCategoryFilter ? 'active' : ''}}" bindtap="openCatPanel">
+        <view class="cat-trigger-main">
+          <text class="cat-trigger-label">分类</text>
+          <text class="cat-trigger-value">{{filterSummary}}</text>
+        </view>
+        <text class="cat-trigger-arrow">▼</text>
+      </view>
+    </view>
+
+    <scroll-view class="quick-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="quick-row">
+        <view class="quick-chip {{settleOnly ? 'active' : ''}}" bindtap="onToggleSettle">入驻园区</view>
+        <view class="quick-chip {{audience === 'c' ? 'active' : ''}}" data-value="c" bindtap="onAudience">面向 C 端</view>
+        <view class="quick-chip {{audience === 'b' ? 'active' : ''}}" data-value="b" bindtap="onAudience">面向 B 端</view>
+        <view class="quick-chip {{audience === 'bc' ? 'active' : ''}}" data-value="bc" bindtap="onAudience">BC 兼顾</view>
+      </view>
+    </scroll-view>
+
+    <view class="filter-status" wx:if="{{hasCategoryFilter || settleOnly || audience}}">
+      <text class="filter-status-text" wx:if="{{resultTotal != null}}">共 {{resultTotal}} 家</text>
+      <view class="filter-clear" wx:if="{{hasCategoryFilter}}" bindtap="onClearCategory">清除分类</view>
+    </view>
+  </view>
+
+  <view
+    class="ent-card"
+    wx:for="{{list}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="onDetail"
+    hover-class="press-scale"
+  >
+    <image class="ent-cover" src="{{item.cover || '/images/default-cover.jpg'}}" mode="aspectFill" />
+    <view class="ent-body">
+      <view class="ent-title-row">
+        <text class="ent-title">{{item.name}}</text>
+        <text class="ent-park" wx:if="{{item.settle_in_park}}">入驻</text>
+      </view>
+      <view class="ent-tags">
+        <text class="ent-tag" wx:if="{{item.primary_category}}">{{item.primary_category.name}}</text>
+        <text class="ent-tag subject" wx:for="{{item.tagsPreview}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+      <text class="ent-meta">{{item.service_audience_text}}</text>
+      <text class="ent-scope">{{item.scopePreview}}</text>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:if="{{!loading && list.length === 0}}">暂无符合条件的企业</view>
+  <view class="footer-tip" wx:if="{{list.length > 0}}">
+    <text wx:if="{{loadingMore}}">加载中...</text>
+    <text wx:elif="{{!hasMore}}">没有更多了</text>
+  </view>
+  <view class="empty-tip" wx:if="{{loading && list.length === 0}}">加载中...</view>
+
+  <!-- 分类筛选面板：左大类 + 右小类 -->
+  <view class="cat-mask" wx:if="{{catPanelOpen}}" catchtouchmove="preventMove" bindtap="closeCatPanel">
+    <view class="cat-sheet" catchtap="preventMove">
+      <view class="cat-sheet-head">
+        <text class="cat-sheet-title">按企业分类筛选</text>
+        <view class="cat-sheet-actions">
+          <text class="cat-sheet-reset" bindtap="onClearCategory">重置</text>
+          <text class="cat-sheet-done" bindtap="closeCatPanel">完成</text>
+        </view>
+      </view>
+      <text class="cat-sheet-tip">先选左侧 6 大类，再选右侧小类；点「全部小类」查看该大类全部企业</text>
+
+      <view class="cat-body">
+        <scroll-view class="cat-left" scroll-y enhanced show-scrollbar="{{false}}">
+          <view
+            class="cat-major {{panelMajorId === 0 ? 'active' : ''}}"
+            data-id="0"
+            bindtap="onPanelMajor"
+          >
+            <text class="cat-major-name">全部</text>
+            <text class="cat-major-tip">不限大类</text>
+          </view>
+          <view
+            class="cat-major {{panelMajorId === item.id ? 'active' : ''}}"
+            wx:for="{{panelMajors}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="onPanelMajor"
+          >
+            <text class="cat-major-name">{{item.shortName}}</text>
+            <text class="cat-major-tip" wx:if="{{item.tipName}}">{{item.tipName}}</text>
+          </view>
+        </scroll-view>
+
+        <scroll-view class="cat-right" scroll-y enhanced show-scrollbar="{{false}}">
+          <block wx:if="{{panelMajor}}">
+            <view
+              class="cat-minor {{categoryId === 0 && activeMajorId === panelMajorId ? 'active' : ''}}"
+              bindtap="onPanelAllMinors"
+            >全部小类</view>
+            <view
+              class="cat-minor {{categoryId === item.id ? 'active' : ''}}"
+              wx:for="{{panelMinors}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              data-name="{{item.name}}"
+              bindtap="onPanelMinor"
+            >{{item.name}}</view>
+          </block>
+          <view class="cat-right-empty" wx:else>
+            <text>选择「全部」查看所有企业</text>
+            <text>或点左侧大类，再选小类精准筛选</text>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+</view>

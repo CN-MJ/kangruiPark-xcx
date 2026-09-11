@@ -1,7 +1,7 @@
 <view class="page-wrap vehicles-page">
   <view class="card verify-card" wx:if="{{needVerify}}">
     <view class="card-title">需要验证手机号</view>
-    <text class="bind-tip">绑定车辆前请先完成手机号短信验证</text>
+    <text class="bind-tip">绑定车辆前请先微信授权手机号登录</text>
     <view class="action-btn action-btn-primary" bindtap="goBindPhone">
       <text class="action-btn-text">去验证手机号</text>
     </view>

@@ -2,13 +2,13 @@
   <view class="tab-bar-inner">
     <view class="tab-item {{active === 'index' ? 'tab-item--active' : ''}}" data-tab="index" bindtap="onTap">
       <view class="tab-icon">
-        <kr-icon name="home" size="44" color="{{active === 'index' ? '#0f766e' : '#b0b8b7'}}" />
+        <kr-icon name="home" size="44" color="{{active === 'index' ? '#0047b3' : '#b0b8b7'}}" />
       </view>
       <text class="tab-text">首页</text>
     </view>
     <view class="tab-item {{active === 'mine' ? 'tab-item--active' : ''}}" data-tab="mine" bindtap="onTap">
       <view class="tab-icon">
-        <kr-icon name="mine" size="44" color="{{active === 'mine' ? '#0f766e' : '#b0b8b7'}}" />
+        <kr-icon name="mine" size="44" color="{{active === 'mine' ? '#0047b3' : '#b0b8b7'}}" />
       </view>
       <text class="tab-text">我的</text>
     </view>

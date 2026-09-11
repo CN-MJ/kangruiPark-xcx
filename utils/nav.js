@@ -11,6 +11,8 @@ const ROUTES = {
   parking: '/pages/parking/index',
   venue: '/pages/appointment/create?type=venue',
   enterprise: '/pages/enterprise/index',
+  enterprises: '/pages/enterprises/index',
+  enterprise_detail: '/pages/enterprises/detail',
   appointment_query: '/pages/orders/index',
   appointment_hub: '/pages/appointment/index',
   parking_query: '/pages/parking/index',

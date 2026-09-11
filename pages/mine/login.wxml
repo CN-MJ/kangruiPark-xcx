@@ -1,0 +1,28 @@
+<view class="page-wrap">
+  <view class="card login-card">
+    <view class="card-title">微信授权登录</view>
+    <text class="login-tip">授权手机号后可使用：我的订单、车辆管理、停车确认等个人功能。浏览资讯、企业库、房源、政策等无需登录。企业录入请使用园区工作台。</text>
+
+    <button
+      class="wx-login-btn {{submitting ? 'is-loading' : ''}}"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="onGetPhoneNumber"
+      disabled="{{submitting}}"
+      hover-class="wx-login-btn--press"
+    >
+      <view class="wx-login-inner">
+        <view class="wx-login-icon">
+          <text class="wx-login-icon-text">微</text>
+        </view>
+        <text class="wx-login-label">微信授权手机号登录</text>
+      </view>
+    </button>
+
+    <view class="mock-box" wx:if="{{mockHint}}">
+      <text class="mock-tip">本地开发未配置微信 Secret 时，可模拟授权登录。每次自动使用新号：{{nextMockPhone}}</text>
+      <view class="mock-btn {{submitting ? 'is-loading' : ''}}" bindtap="onMockLogin" hover-class="press-opacity">
+        <text class="mock-btn-text">开发模拟授权登录</text>
+      </view>
+    </view>
+  </view>
+</view>

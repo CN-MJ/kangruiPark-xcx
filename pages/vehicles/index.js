@@ -18,12 +18,12 @@ Page({
     if (!requirePhoneVerified({ redirect: false })) {
       this.setData({ loading: false, list: [], needVerify: true })
       wx.showModal({
-        title: '需要验证手机号',
-        content: '绑定车辆前请先完成手机号短信验证',
-        confirmText: '去验证',
+        title: '需要微信授权',
+        content: '绑定车辆前请先微信授权手机号登录',
+        confirmText: '去登录',
         success: (res) => {
           if (res.confirm) {
-            wx.navigateTo({ url: '/pages/mine/bind-phone' })
+            wx.navigateTo({ url: '/pages/mine/login' })
           }
         },
       })
@@ -106,6 +106,6 @@ Page({
   },
 
   goBindPhone() {
-    wx.navigateTo({ url: '/pages/mine/bind-phone' })
+    wx.navigateTo({ url: '/pages/mine/login' })
   },
 })

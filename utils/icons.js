@@ -39,7 +39,7 @@ const PATHS = {
 function getIconSrc(name, color) {
   const paths = PATHS[name]
   if (!paths) return ''
-  return buildSvg(paths, color || '#0f766e')
+  return buildSvg(paths, color || '#0047b3')
 }
 
 module.exports = {

@@ -27,6 +27,30 @@
   color: #999;
 }
 
+.status-box {
+  margin: 0 0 32rpx;
+  padding: 24rpx;
+  text-align: left;
+  background: #f3f6fc;
+  border-radius: 12rpx;
+  border: 1rpx solid #a8c0ef;
+}
+
+.status-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #0047b3;
+  margin-bottom: 8rpx;
+}
+
+.status-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.5;
+}
+
 .checkin-card .form-item {
   text-align: left;
 }

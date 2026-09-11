@@ -1,6 +1,6 @@
 @import '../../styles/park.wxss';
 
-page { background: #f4f7f6; }
+page { background: #f4f6f8; }
 
 .form-picker {
   margin-top: 12rpx;

@@ -1,0 +1,12 @@
+<view class="page-wrap">
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <view class="card-title">{{item.name || '未命名'}}</view>
+    <text class="order-meta">手机：{{item.phone}}</text>
+    <text class="order-meta">角色：{{item.roleText}} · 验证：{{item.phone_verified ? '是' : '否'}}</text>
+    <picker mode="selector" range="{{roles}}" data-id="{{item.id}}" bindchange="onRoleChange">
+      <view class="form-picker">修改角色</view>
+    </picker>
+  </view>
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">暂无用户</view>
+</view>

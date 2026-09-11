@@ -41,7 +41,7 @@
   <view class="mode-switch">
     <view class="mode-switch-item {{mode === 'entry' ? 'active' : ''}}" data-mode="entry" bindtap="onModeChange">
       <view class="mode-switch-icon">
-        <kr-icon name="entry" size="40" color="{{mode === 'entry' ? '#0f766e' : '#64748b'}}" />
+        <kr-icon name="entry" size="40" color="{{mode === 'entry' ? '#0047b3' : '#64748b'}}" />
       </view>
       <text class="mode-switch-label">车辆入场</text>
     </view>

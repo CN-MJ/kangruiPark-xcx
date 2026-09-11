@@ -1,5 +1,5 @@
 const { parkRequest } = require('../../../../utils/request')
-const { uploadImage } = require('../../../../utils/upload')
+const { uploadImage, isRemoteImageUrl } = require('../../../../utils/upload')
 const parkAuth = require('../../../../utils/parkAuth')
 
 const TYPE_OPTIONS = [
@@ -21,11 +21,13 @@ Page({
     coverLocal: '',
     isTop: false,
     loading: false,
-    uploading: false,
+    saveProgress: 0,
+    saveProgressText: '',
+    saveProgressDetail: '',
   },
 
   onLoad(options) {
-    if (!parkAuth.isParkLoggedIn()) {
+    if (!parkAuth.canAccessParkAdmin()) {
       wx.redirectTo({ url: '/packageAdmin/pages/login/index' })
       return
     }
@@ -51,6 +53,14 @@ Page({
     })
   },
 
+  setSaveProgress(text, detail, progress) {
+    this.setData({
+      saveProgressText: text || '',
+      saveProgressDetail: detail || '',
+      saveProgress: Math.max(0, Math.min(100, Math.round(progress || 0))),
+    })
+  },
+
   loadDetail(id) {
     parkRequest(`/park/news/${id}`)
       .then((res) => {
@@ -72,6 +82,7 @@ Page({
   },
 
   onTypeChange(e) {
+    if (this.data.loading) return
     const index = Number(e.detail.value)
     const type = TYPE_OPTIONS[index].value
     this.setType(type)
@@ -90,6 +101,7 @@ Page({
   },
 
   onChooseCover() {
+    if (this.data.loading) return
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -97,21 +109,13 @@ Page({
       sourceType: ['album', 'camera'],
       success: (res) => {
         const filePath = res.tempFiles[0].tempFilePath
-        this.setData({ coverLocal: filePath, uploading: true })
-        uploadImage(filePath)
-          .then((url) => {
-            this.setData({ coverImage: url, coverLocal: url, uploading: false })
-            wx.showToast({ title: '封面上传成功', icon: 'success' })
-          })
-          .catch((err) => {
-            this.setData({ uploading: false })
-            wx.showToast({ title: err.message || '上传失败', icon: 'none' })
-          })
+        this.setData({ coverLocal: filePath, coverImage: '' })
       },
     })
   },
 
   onRemoveCover() {
+    if (this.data.loading) return
     this.setData({ coverImage: '', coverLocal: '' })
   },
 
@@ -120,6 +124,7 @@ Page({
   },
 
   onPreview() {
+    if (this.data.loading) return
     const { title, content } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请先填写标题', icon: 'none' })
@@ -133,14 +138,12 @@ Page({
     })
   },
 
+  preventTouchMove() {},
+
   onSubmit() {
     if (this.data.loading) return
 
-    const { id, type, title, content, coverImage, isTop, uploading } = this.data
-    if (uploading) {
-      wx.showToast({ title: '封面上传中，请稍候', icon: 'none' })
-      return
-    }
+    const { id, type, title, content, coverLocal, isTop } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请填写标题', icon: 'none' })
       return
@@ -150,29 +153,50 @@ Page({
       return
     }
 
-    const payload = {
-      title: title.trim(),
-      type,
-      content: content.trim(),
-      cover_image: type === 'notice' ? null : (coverImage || null),
-      is_top: isTop,
-    }
-
     this.setData({ loading: true })
-    const req = id
-      ? parkRequest(`/park/news/${id}`, { method: 'PUT', data: payload })
-      : parkRequest('/park/news', { method: 'POST', data: payload })
+    this.setSaveProgress('准备保存', '校验表单内容…', 5)
 
-    req
+    const needUpload = type !== 'notice' && coverLocal && !isRemoteImageUrl(coverLocal)
+    const uploadStep = needUpload
+      ? Promise.resolve()
+          .then(() => {
+            this.setSaveProgress('正在上传封面', '较大图片会先压缩…', 20)
+            return uploadImage(coverLocal, { purpose: 'news' })
+          })
+          .then((url) => {
+            this.setData({ coverImage: url, coverLocal: url })
+            this.setSaveProgress('封面上传完成', '准备提交表单…', 60)
+            return url
+          })
+      : Promise.resolve(type === 'notice' ? null : (coverLocal || this.data.coverImage || null))
+
+    uploadStep
+      .then((coverUrl) => {
+        this.setSaveProgress('正在保存内容', '提交表单数据…', 75)
+        const payload = {
+          title: title.trim(),
+          type,
+          content: content.trim(),
+          cover_image: type === 'notice' ? null : (coverUrl || null),
+          is_top: isTop,
+        }
+        return id
+          ? parkRequest(`/park/news/${id}`, { method: 'PUT', data: payload })
+          : parkRequest('/park/news', { method: 'POST', data: payload })
+      })
       .then((res) => {
+        this.setSaveProgress('保存完成', '即将返回…', 100)
         wx.showToast({ title: res.msg || '保存成功', icon: 'success' })
         setTimeout(() => wx.navigateBack(), 800)
       })
       .catch((err) => {
+        this.setData({
+          loading: false,
+          saveProgress: 0,
+          saveProgressText: '',
+          saveProgressDetail: '',
+        })
         wx.showToast({ title: err.message || '保存失败', icon: 'none' })
-      })
-      .finally(() => {
-        this.setData({ loading: false })
       })
   },
 })

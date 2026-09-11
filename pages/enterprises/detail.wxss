@@ -1,0 +1,124 @@
+page {
+  background: #f2f5fa;
+}
+
+.page-wrap {
+  padding-bottom: 48rpx;
+}
+
+.ent-swiper {
+  width: 100%;
+  height: 420rpx;
+}
+
+.ent-swiper-image {
+  width: 100%;
+  height: 420rpx;
+}
+
+.ent-fallback {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 16rpx;
+}
+
+.card {
+  margin: 24rpx;
+  padding: 28rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 10rpx 28rpx rgba(15, 40, 100, 0.08);
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+}
+
+.card-title {
+  flex: 1;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.park-badge {
+  flex-shrink: 0;
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: #059669;
+  background: #ecfdf5;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.tag {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: #003791;
+  background: #eef3fb;
+}
+
+.tag.subject {
+  color: #0f766e;
+  background: #ccfbf1;
+}
+
+.section-label {
+  display: block;
+  margin-top: 28rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #334155;
+}
+
+.scope-text {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  color: #475569;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.meta-grid {
+  margin-top: 24rpx;
+}
+
+.meta-line {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.action-row {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.mini-btn {
+  padding: 14rpx 28rpx;
+  border-radius: 12rpx;
+  background: #eef3fb;
+  color: #003791;
+  font-size: 26rpx;
+}
+
+.empty-tip {
+  padding: 80rpx 24rpx;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 28rpx;
+}

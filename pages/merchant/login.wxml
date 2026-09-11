@@ -3,16 +3,23 @@
     <view class="card-title">商户登录</view>
     <view class="form-item">
       <text class="form-label">手机号</text>
-      <input class="form-input" bindinput="onPhoneInput" placeholder="请输入商户联系人手机号" />
+      <input class="form-input" bindinput="onPhoneInput" placeholder="请输入商户联系人手机号" value="{{phone}}" />
     </view>
     <view class="form-item">
       <text class="form-label">登录密码</text>
-      <input class="form-input" password bindinput="onPasswordInput" placeholder="请输入登录密码" />
+      <input class="form-input" password bindinput="onPasswordInput" placeholder="请输入登录密码" value="{{password}}" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">图形验证码</text>
+      <view class="captcha-row">
+        <input class="form-input captcha-input" maxlength="6" bindinput="onCaptchaInput" placeholder="请输入验证码" value="{{captchaCode}}" />
+        <image class="captcha-img" src="{{captchaImage}}" mode="aspectFit" bindtap="refreshCaptcha"></image>
+      </view>
     </view>
     <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onSubmit">
       <text class="action-btn-text">登录</text>
     </view>
     <view class="forgot-link" bindtap="onForgotPassword">忘记密码？</view>
-    <text class="login-tip">测试：13800001001 / 密码 123456</text>
+    <text class="login-tip">测试：13800001001 / 密码 123456（点图刷新验证码）</text>
   </view>
 </view>

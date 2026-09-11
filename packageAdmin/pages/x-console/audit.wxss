@@ -1,0 +1,5 @@
+.park-empty {
+  text-align: center;
+  padding: 80rpx 0;
+  color: #94a3b8;
+}

@@ -1,0 +1,68 @@
+@import '../../styles/park.wxss';
+
+.overview-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.overview-row:last-child {
+  border-bottom: none;
+}
+
+.overview-item {
+  flex: 1;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.overview-item .num {
+  font-weight: 700;
+  color: #0047b3;
+  margin-left: 8rpx;
+}
+
+.park-header {
+  margin: 0 -24rpx 24rpx;
+  padding: 0 32rpx 48rpx;
+  background: linear-gradient(135deg, #003791 0%, #0047b3 55%, #3d6fd4 100%);
+  border-radius: 0 0 36rpx 36rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0, 55, 145, 0.28);
+}
+
+.park-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+}
+
+.park-nav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.park-nav-btn--placeholder {
+  visibility: hidden;
+}
+
+.park-nav-back-icon {
+  font-size: 52rpx;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+}
+
+.park-nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+.park-hero-body {
+  padding-top: 8rpx;
+}

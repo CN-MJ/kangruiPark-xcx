@@ -22,8 +22,8 @@
   height: 88rpx;
   line-height: 88rpx;
   border-radius: 12rpx;
-  background: #ecfdf5;
-  color: #0f766e;
+  background: #eef3fb;
+  color: #0047b3;
   font-size: 24rpx;
 }
 

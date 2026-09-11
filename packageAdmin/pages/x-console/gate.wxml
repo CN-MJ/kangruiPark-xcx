@@ -1,0 +1,27 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="card-title">安全验证</view>
+    <text class="gate-tip">当前账号：{{phone}}</text>
+
+    <view class="form-item">
+      <text class="form-label">登录密码</text>
+      <view class="form-field">
+        <input class="form-input" password placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">图形验证码</text>
+      <view class="captcha-row">
+        <view class="form-field code-field">
+          <input class="form-input" maxlength="6" placeholder="请输入验证码" value="{{captchaCode}}" bindinput="onCaptchaInput" />
+        </view>
+        <image class="captcha-img" src="{{captchaImage}}" mode="aspectFit" bindtap="refreshCaptcha"></image>
+      </view>
+    </view>
+
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
+      <text class="action-btn-text">确认进入</text>
+    </view>
+  </view>
+</view>

@@ -13,7 +13,7 @@
 }
 
 .confirm-hero.entry {
-  background: linear-gradient(135deg, #115e59, #0f766e);
+  background: linear-gradient(135deg, #003791, #0047b3);
 }
 
 .confirm-hero-title {
@@ -35,7 +35,7 @@
 .confirm-plate {
   font-size: 48rpx;
   font-weight: 700;
-  color: #0f766e;
+  color: #0047b3;
   letter-spacing: 4rpx;
   margin-bottom: 24rpx;
 }

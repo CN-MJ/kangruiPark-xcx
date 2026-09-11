@@ -1,14 +1,14 @@
 .login-page {
   min-height: 100vh;
-  background: #f4f7f6;
+  background: #f4f6f8;
   box-sizing: border-box;
 }
 
 .login-hero {
   padding: 48rpx 32rpx 72rpx;
-  background: linear-gradient(135deg, #115e59 0%, #0f766e 55%, #14b8a6 100%);
+  background: linear-gradient(135deg, #003791 0%, #0047b3 55%, #3d6fd4 100%);
   border-radius: 0 0 48rpx 48rpx;
-  box-shadow: 0 12rpx 40rpx rgba(15, 118, 110, 0.28);
+  box-shadow: 0 12rpx 40rpx rgba(0, 55, 145, 0.28);
 }
 
 .login-hero-inner {
@@ -116,5 +116,23 @@
   margin-top: 24rpx;
   text-align: center;
   font-size: 26rpx;
-  color: #0f766e;
+  color: #0047b3;
+}
+
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.captcha-field {
+  flex: 1;
+}
+
+.captcha-img {
+  width: 220rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  background: #eef3fb;
+  flex-shrink: 0;
 }

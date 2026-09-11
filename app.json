@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/mine/index",
+    "pages/mine/login",
     "pages/mine/bind-phone",
     "pages/orders/index",
     "pages/appointment/index",
@@ -18,6 +19,8 @@
     "pages/contact/index",
     "pages/nav/index",
     "pages/enterprise/index",
+    "pages/enterprises/index",
+    "pages/enterprises/detail",
     "pages/property/index",
     "pages/more/index"
     ,"pages/houses/index"
@@ -47,6 +50,9 @@
         "pages/news/list/index",
         "pages/news/edit/index",
         "pages/merchants/index",
+        "pages/enterprises/index",
+        "pages/enterprises/edit",
+        "pages/enterprise-categories/index",
         "pages/houses/index",
         "pages/houses/edit",
         "pages/policies/index",
@@ -55,14 +61,19 @@
         "pages/activities/edit",
         "pages/activities/registrations",
         "pages/investments/index",
-        "pages/investments/detail"
+        "pages/investments/detail",
+        "pages/x-console/gate",
+        "pages/x-console/home",
+        "pages/x-console/users",
+        "pages/x-console/audit",
+        "pages/logs/index"
       ]
     }
   ],
   "window": {
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "康瑞园区",
-    "navigationBarBackgroundColor": "#115e59",
+    "navigationBarTitleText": "赣南健康城",
+    "navigationBarBackgroundColor": "#003791",
     "backgroundColor": "#f4f6f8",
     "backgroundTextStyle": "light"
   },

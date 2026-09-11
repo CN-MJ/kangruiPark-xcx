@@ -1,0 +1,70 @@
+<view class="park-page log-page">
+  <view class="log-toolbar">
+    <text class="log-toolbar-title">操作日志（只读）</text>
+    <text class="log-toolbar-meta">共 {{total}} 条</text>
+  </view>
+
+  <view class="log-list" wx:if="{{list.length > 0}}">
+    <view class="log-row" wx:for="{{list}}" wx:key="id">
+      <view class="log-row-top">
+        <text class="log-kind log-kind--{{item.kind}}">[{{item.kindText}}]</text>
+        <text class="log-time">{{item.timeText}}</text>
+      </view>
+      <text class="log-action">{{item.actionText}}</text>
+      <text class="log-sub">操作人 {{item.phoneText}}<text wx:if="{{item.ip}}"> · {{item.ip}}</text></text>
+      <text class="log-sub" wx:if="{{item.targetText}}">对象 {{item.targetText}}</text>
+
+      <view class="log-changes" wx:if="{{item.changeLines.length}}">
+        <text class="log-block-title">字段变更</text>
+        <text class="log-change-line" wx:for="{{item.changeLines}}" wx:for-item="line" wx:key="key">{{line.text}}</text>
+      </view>
+
+      <view class="log-detail-toggle" wx:if="{{item.hasDetail}}" data-id="{{item.id}}" bindtap="onToggle">
+        <text>{{item.expanded ? '收起完整数据' : '查看修改前/后完整数据'}}</text>
+      </view>
+
+      <view class="log-detail" wx:if="{{item.expanded}}">
+        <text class="log-note" wx:if="{{item.noteText}}">{{item.noteText}}</text>
+        <view wx:if="{{item.beforeText}}">
+          <text class="log-block-title">{{item.beforeLabel}}</text>
+          <text class="log-block-body">{{item.beforeText}}</text>
+        </view>
+        <view wx:if="{{item.afterText}}" class="{{item.beforeText ? 'log-block-gap' : ''}}">
+          <text class="log-block-title">{{item.afterLabel}}</text>
+          <text class="log-block-body">{{item.afterText}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="log-empty" wx:if="{{!loading && list.length === 0}}">暂无日志</view>
+  <view class="log-loading" wx:if="{{loading}}">加载中...</view>
+
+  <view class="log-pager" wx:if="{{total > 0}}">
+    <view class="log-pager-info">第 {{currentPage}} / {{lastPage}} 页</view>
+    <view class="log-pager-bar">
+      <view
+        class="log-pager-btn {{canPrev ? '' : 'is-disabled'}}"
+        bindtap="onPrev"
+        hover-class="{{canPrev ? 'press-opacity' : ''}}"
+      >上一页</view>
+      <view class="log-pager-pages">
+        <block wx:for="{{pageItems}}" wx:key="key">
+          <text class="log-pager-ellipsis" wx:if="{{item.type === 'ellipsis'}}">…</text>
+          <view
+            class="log-pager-num {{item.active ? 'is-active' : ''}}"
+            wx:else
+            data-num="{{item.num}}"
+            bindtap="onPageTap"
+            hover-class="press-opacity"
+          >{{item.num}}</view>
+        </block>
+      </view>
+      <view
+        class="log-pager-btn {{canNext ? '' : 'is-disabled'}}"
+        bindtap="onNext"
+        hover-class="{{canNext ? 'press-opacity' : ''}}"
+      >下一页</view>
+    </view>
+  </view>
+</view>

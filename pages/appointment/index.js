@@ -6,7 +6,7 @@ const SERVICES = [
     title: '访客预约',
     desc: '拜访园区入驻企业，需商户确认',
     icon: 'visitor',
-    tone: 'teal',
+    tone: 'blue',
   },
   {
     id: 'venue',

@@ -57,7 +57,25 @@ function request(url, options = {}) {
 }
 
 function parkRequest(url, options = {}) {
-  return request(url, { ...options, auth: true })
+  const { method = 'GET', data = {}, timeout = REQUEST_TIMEOUT, header: customHeader = {} } = options
+  let token = getToken()
+  try {
+    const superAuth = require('./superAuth')
+    if (superAuth.isSuperLoggedIn()) {
+      token = superAuth.getToken()
+    }
+  } catch (e) {}
+
+  return request(url, {
+    method,
+    data,
+    timeout,
+    auth: false,
+    header: {
+      ...customHeader,
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  })
 }
 
 function merchantRequest(url, options = {}) {
@@ -86,7 +104,7 @@ function userRequest(url, options = {}) {
       Authorization: token ? `Bearer ${token}` : '',
     },
   }).catch((err) => {
-    if (err.message && err.message.includes('短信验证')) {
+    if (err.message && (err.message.includes('微信授权') || err.message.includes('手机号'))) {
       const { setPhoneVerified } = require('./user')
       const userAuth = require('./userAuth')
       setPhoneVerified(false)
@@ -96,10 +114,26 @@ function userRequest(url, options = {}) {
   })
 }
 
+function superRequest(url, options = {}) {
+  const { method = 'GET', data = {}, timeout = REQUEST_TIMEOUT } = options
+  const { getToken: getSuperToken } = require('./superAuth')
+  const token = getSuperToken()
+  return request(url, {
+    method,
+    data,
+    timeout,
+    auth: false,
+    header: {
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  })
+}
+
 module.exports = {
   request,
   parkRequest,
   merchantRequest,
   userRequest,
+  superRequest,
   parseNetworkError,
 }

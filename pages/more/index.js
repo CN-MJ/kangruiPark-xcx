@@ -16,6 +16,7 @@ const SECTIONS = [
     title: '企业增值',
     items: [
       { id: 'enterprise', label: '企业增值', icon: 'enterprise', bg: '#f3eeff' },
+      { id: 'enterprises', label: '企业库', icon: 'merchants', bg: '#e8f0ff' },
       { id: 'repair', label: 'IT报修', icon: 'repair', bg: '#e8f6ff' },
       { id: 'activity', label: '活动报备', icon: 'appointment', bg: '#fff8e8' },
       { id: 'news_list', label: '园区资讯', icon: 'news', bg: '#eef4ff' },
@@ -27,7 +28,7 @@ const SECTIONS = [
     items: [
       { id: 'nav', label: '综合导航', icon: 'nav', bg: '#ffece8' },
       { id: 'news_list', label: '新闻公告', icon: 'news', bg: '#fff3e8' },
-      { id: 'checkin', label: '园区签到', icon: 'checkin', bg: '#e8faf2' },
+      { id: 'enterprises', label: '企业库', icon: 'merchants', bg: '#e8eef9' },
       { id: 'order', label: '我的订单', icon: 'order', bg: '#eef4ff' },
     ],
   },
@@ -35,7 +36,7 @@ const SECTIONS = [
     id: 'booking',
     title: '预约服务',
     items: [
-      { id: 'venue', label: '场馆预定', icon: 'venue', bg: '#e8faf2' },
+      { id: 'venue', label: '场馆预定', icon: 'venue', bg: '#e8eef9' },
       { id: 'visitor', label: '访客预约', icon: 'visitor', bg: '#e8f6ff' },
       { id: 'activity', label: '活动报备', icon: 'clipboard', bg: '#f3eeff' },
       { id: 'appointment_query', label: '预约查询', icon: 'search', bg: '#fff8e8' },

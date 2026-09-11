@@ -18,7 +18,8 @@ Page({
     dateText: '',
     parkName: '',
     stats: null,
-    loading: true,
+    loading: false,
+    statsError: '',
     menus: [
       {
         title: '预约管理',
@@ -42,11 +43,18 @@ Page({
         theme: 'orange',
       },
       {
-        title: '商户管理',
-        desc: '入住签到与人员',
-        url: '/packageAdmin/pages/merchants/index',
+        title: '企业库',
+        desc: '走访企业录入与管理',
+        url: '/packageAdmin/pages/enterprises/index',
         icon: 'merchants',
         theme: 'purple',
+      },
+      {
+        title: '企业类型',
+        desc: '健康服务大类与小类',
+        url: '/packageAdmin/pages/enterprise-categories/index',
+        icon: 'policy',
+        theme: 'blue',
       },
       {
         title: '房源管理',
@@ -85,16 +93,18 @@ Page({
   },
 
   onShow() {
-    if (!parkAuth.isParkLoggedIn()) {
+    if (!parkAuth.canAccessParkAdmin()) {
       wx.redirectTo({ url: '/packageAdmin/pages/login/index' })
       return
     }
 
-    const user = parkAuth.getParkUser()
+    const superAuth = require('../../../utils/superAuth')
+    const user = parkAuth.getParkUser() || superAuth.getUser()
     this.setData({
       greeting: getGreeting(),
       dateText: formatDate(new Date()),
       parkName: user ? user.name : '园区人员',
+      isSuperMode: superAuth.isSuperLoggedIn(),
     })
     this.loadStats()
   },
@@ -104,13 +114,19 @@ Page({
   },
 
   loadStats() {
-    this.setData({ loading: true })
+    this.setData({ loading: true, statsError: '', stats: null })
     return parkRequest('/park/dashboard')
       .then((res) => {
-        this.setData({ stats: res.data, loading: false })
+        this.setData({ stats: res.data || {}, loading: false, statsError: '' })
       })
-      .catch(() => {
-        this.setData({ loading: false })
+      .catch((err) => {
+        const message = (err && err.message) || '统计加载失败'
+        this.setData({
+          loading: false,
+          stats: null,
+          statsError: message,
+        })
+        wx.showToast({ title: message, icon: 'none', duration: 3000 })
       })
   },
 
@@ -129,10 +145,32 @@ Page({
   },
 
   onChangePassword() {
+    const superAuth = require('../../../utils/superAuth')
+    if (superAuth.isSuperLoggedIn() && !parkAuth.isParkLoggedIn()) {
+      wx.showToast({ title: '超管模式请在账号侧管理密码', icon: 'none' })
+      return
+    }
     wx.navigateTo({ url: '/packageAdmin/pages/change-password/index' })
   },
 
   onLogout() {
+    const superAuth = require('../../../utils/superAuth')
+    if (superAuth.isSuperLoggedIn() && !parkAuth.isParkLoggedIn()) {
+      wx.showModal({
+        title: '退出控制台',
+        content: '确定退出系统管理控制台吗？',
+        success: (res) => {
+          if (!res.confirm) return
+          const { superRequest } = require('../../../utils/request')
+          superRequest('/super/logout', { method: 'POST' }).finally(() => {
+            superAuth.clearToken()
+            wx.reLaunch({ url: '/pages/mine/index' })
+          })
+        },
+      })
+      return
+    }
+
     wx.showModal({
       title: '退出登录',
       content: '确定退出园区工作台吗？',

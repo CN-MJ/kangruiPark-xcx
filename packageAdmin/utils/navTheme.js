@@ -1,4 +1,4 @@
-const PARK_NAV_BG = '#115e59'
+const PARK_NAV_BG = '#003791'
 
 function applyParkNavTheme() {
   wx.setNavigationBarColor({

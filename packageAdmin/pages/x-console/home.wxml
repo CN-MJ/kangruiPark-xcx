@@ -1,0 +1,78 @@
+<view class="park-page">
+  <view class="park-header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="park-nav-bar">
+      <view class="park-nav-btn" bindtap="onBack" hover-class="press-opacity">
+        <text class="park-nav-back-icon">‹</text>
+      </view>
+      <text class="park-nav-title">系统管理控制台</text>
+      <view class="park-nav-btn park-nav-btn--placeholder"></view>
+    </view>
+    <view class="park-hero-body">
+      <text class="park-hero-title">{{greeting}}，{{parkName}}</text>
+      <text class="park-hero-sub">全量管理 · 每次修改自动留痕</text>
+      <text class="park-hero-meta">{{dateText}}</text>
+    </view>
+  </view>
+
+  <view class="park-stats" wx:if="{{stats}}">
+    <view class="park-stat-card blue">
+      <text class="park-stat-num blue">{{stats.appointments_active}}</text>
+      <text class="park-stat-label">有效预约</text>
+    </view>
+    <view class="park-stat-card green">
+      <text class="park-stat-num green">{{stats.parking_remaining}}</text>
+      <text class="park-stat-label">剩余车位</text>
+    </view>
+    <view class="park-stat-card orange">
+      <text class="park-stat-num orange">{{stats.merchants_count}}</text>
+      <text class="park-stat-label">入驻商户</text>
+    </view>
+    <view class="park-stat-card purple">
+      <text class="park-stat-num purple">{{stats.today_checkins}}</text>
+      <text class="park-stat-label">今日签到</text>
+    </view>
+  </view>
+
+  <view class="park-loading" wx:if="{{loading && !stats}}">加载中...</view>
+
+  <text class="park-section-title">管理功能</text>
+  <view class="park-menu-grid">
+    <view
+      class="park-menu-item"
+      wx:for="{{menus}}"
+      wx:key="url"
+      data-url="{{item.url}}"
+      bindtap="onMenuTap"
+    >
+      <view class="park-menu-icon-wrap {{item.theme}}">
+        <kr-icon name="{{item.icon}}" size="40" color="#0047b3" />
+      </view>
+      <text class="park-menu-name">{{item.title}}</text>
+      <text class="park-menu-desc">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{stats}}">
+    <text class="card-title">数据概览</text>
+    <view class="overview-row">
+      <text class="overview-item">今日预约 <text class="num">{{stats.appointments_today}}</text></text>
+      <text class="overview-item">在场车辆 <text class="num">{{stats.parking_occupied}}</text></text>
+    </view>
+    <view class="overview-row">
+      <text class="overview-item">访客人数 <text class="num">{{stats.visitors_count}}</text></text>
+      <text class="overview-item">新闻总数 <text class="num">{{stats.news_total}}</text></text>
+    </view>
+    <view class="overview-row">
+      <text class="overview-item">在售房源 <text class="num">{{stats.houses_on_market}}</text></text>
+      <text class="overview-item">待跟进意向 <text class="num">{{stats.investments_pending}}</text></text>
+    </view>
+    <view class="overview-row">
+      <text class="overview-item">进行中活动 <text class="num">{{stats.activities_open}}</text></text>
+      <text class="overview-item">展示政策 <text class="num">{{stats.policies_published}}</text></text>
+    </view>
+  </view>
+
+  <view class="action-btn action-btn-ghost" bindtap="onLogout">
+    <text class="action-btn-text ghost">退出控制台</text>
+  </view>
+</view>

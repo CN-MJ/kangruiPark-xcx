@@ -4,6 +4,7 @@ const ROLE_KEY = 'user_role'
 const ROLE_TEXT_KEY = 'user_role_text'
 const CHECKED_IN_KEY = 'user_checked_in_at'
 const PHONE_VERIFIED_KEY = 'user_phone_verified'
+const APPLY_STATUS_KEY = 'user_merchant_apply_status'
 
 const ROLE_VISITOR = 'visitor'
 const ROLE_MERCHANT = 'merchant'
@@ -41,6 +42,10 @@ function setPhoneVerified(verified) {
   wx.setStorageSync(PHONE_VERIFIED_KEY, !!verified)
 }
 
+function getMerchantApplyStatus() {
+  return wx.getStorageSync(APPLY_STATUS_KEY) || 'none'
+}
+
 function isMerchant() {
   return getRole() === ROLE_MERCHANT
 }
@@ -57,6 +62,9 @@ function saveUserProfile(user) {
   if (user.role_text) wx.setStorageSync(ROLE_TEXT_KEY, user.role_text)
   if (user.checked_in_at) wx.setStorageSync(CHECKED_IN_KEY, user.checked_in_at)
   if (user.phone_verified !== undefined) setPhoneVerified(user.phone_verified)
+  if (user.merchant_apply_status !== undefined) {
+    wx.setStorageSync(APPLY_STATUS_KEY, user.merchant_apply_status || 'none')
+  }
   if (user.token) {
     const userAuth = require('./userAuth')
     userAuth.setToken(user.token)
@@ -80,18 +88,34 @@ function requirePhoneVerified(options = {}) {
 
   if (redirect) {
     wx.showModal({
-      title: '需要验证手机号',
-      content: '请先完成手机号短信验证，才能使用此功能',
-      confirmText: '去绑定',
+      title: '需要微信授权',
+      content: '请先微信授权手机号登录后，才能使用此功能',
+      confirmText: '去登录',
       success: (res) => {
         if (res.confirm) {
-          wx.navigateTo({ url: '/pages/mine/bind-phone' })
+          wx.navigateTo({ url: '/pages/mine/login' })
         }
       },
     })
   }
 
   return false
+}
+
+function clearUserProfile() {
+  wx.removeStorageSync(PHONE_KEY)
+  wx.removeStorageSync(NAME_KEY)
+  wx.removeStorageSync(ROLE_KEY)
+  wx.removeStorageSync(ROLE_TEXT_KEY)
+  wx.removeStorageSync(CHECKED_IN_KEY)
+  wx.removeStorageSync(PHONE_VERIFIED_KEY)
+  wx.removeStorageSync(APPLY_STATUS_KEY)
+  const userAuth = require('./userAuth')
+  userAuth.clearToken()
+  try {
+    const superAuth = require('./superAuth')
+    superAuth.clearToken()
+  } catch (e) {}
 }
 
 module.exports = {
@@ -106,8 +130,10 @@ module.exports = {
   getRoleText,
   isPhoneVerified,
   setPhoneVerified,
+  getMerchantApplyStatus,
   isMerchant,
   isVisitor,
   saveUserProfile,
   requirePhoneVerified,
+  clearUserProfile,
 }

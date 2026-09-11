@@ -18,7 +18,7 @@ Page({
 
   onShow() {
     applyParkNavTheme()
-    if (!parkAuth.isParkLoggedIn()) {
+    if (!parkAuth.canAccessParkAdmin()) {
       wx.redirectTo({ url: '/packageAdmin/pages/login/index' })
       return
     }

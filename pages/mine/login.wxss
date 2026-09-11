@@ -1,0 +1,109 @@
+.login-card {
+  padding-bottom: 40rpx;
+}
+
+.login-tip {
+  display: block;
+  margin: -8rpx 0 36rpx;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.wx-login-btn {
+  margin: 0;
+  padding: 0;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 12rpx 28rpx rgba(7, 193, 96, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wx-login-btn::after {
+  border: none;
+}
+
+.wx-login-btn--press {
+  opacity: 0.88;
+  transform: scale(0.99);
+}
+
+.wx-login-btn.is-loading {
+  opacity: 0.7;
+}
+
+.wx-login-btn[disabled] {
+  opacity: 0.7;
+}
+
+.wx-login-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.wx-login-icon {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wx-login-icon-text {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.wx-login-label {
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+.mock-box {
+  margin-top: 40rpx;
+  padding-top: 28rpx;
+  border-top: 1rpx solid #e2e8f0;
+}
+
+.mock-tip {
+  display: block;
+  margin-bottom: 20rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.mock-btn {
+  height: 80rpx;
+  border-radius: 16rpx;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-btn.is-loading {
+  opacity: 0.7;
+}
+
+.mock-btn-text {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.press-opacity {
+  opacity: 0.72;
+}

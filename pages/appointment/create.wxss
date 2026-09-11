@@ -1,13 +1,13 @@
 page {
-  background: #f4f7f6;
+  background: #f4f6f8;
 }
 
 .form-tip {
   margin-bottom: 24rpx;
   padding: 20rpx 24rpx;
-  background: #ecfdf5;
+  background: #eef3fb;
   border-radius: 12rpx;
   font-size: 24rpx;
-  color: #0f766e;
+  color: #0047b3;
   line-height: 1.5;
 }

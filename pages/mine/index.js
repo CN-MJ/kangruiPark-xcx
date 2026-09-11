@@ -9,10 +9,15 @@ const {
   isPhoneVerified,
   saveUserProfile,
   requirePhoneVerified,
+  clearUserProfile,
 } = require('../../utils/user')
-const { request } = require('../../utils/request')
+const { request, userRequest } = require('../../utils/request')
+const userAuth = require('../../utils/userAuth')
+const superAuth = require('../../utils/superAuth')
 
 const APP_VERSION = '1.0.0'
+const VERSION_TAP_NEED = 7
+const VERSION_TAP_WINDOW_MS = 2500
 
 Page({
   data: {
@@ -24,6 +29,8 @@ Page({
     isParkStaff: false,
     parkStaffName: '',
     phoneVerified: false,
+    hasUserAccount: false,
+    headerPhoneText: '未登录 · 点击登录',
     appVersion: APP_VERSION,
   },
 
@@ -34,19 +41,32 @@ Page({
   refreshProfile() {
     const phone = getPhone()
     const parkUser = parkAuth.getParkUser()
+    const verified = isPhoneVerified()
+    const loggedIn = !!phone && userAuth.isLoggedIn() && verified
+
+    let headerPhoneText = '未登录 · 点击登录'
+    if (loggedIn) {
+      headerPhoneText = phone
+    } else if (phone && !verified) {
+      headerPhoneText = `${phone} · 点击授权登录`
+    } else if (phone) {
+      headerPhoneText = `${phone} · 点击登录`
+    }
 
     this.setData({
-      userName: getName() || '园区访客',
+      userName: loggedIn ? (getName() || '园区访客') : '园区访客',
       userPhone: phone || '未绑定手机号',
-      roleText: getRoleText(),
-      isVisitor: isVisitor(),
-      isMerchant: isMerchant(),
+      roleText: loggedIn ? getRoleText() : '访客',
+      isVisitor: loggedIn ? isVisitor() : true,
+      isMerchant: loggedIn ? isMerchant() : false,
       isParkStaff: parkAuth.isParkLoggedIn(),
       parkStaffName: parkUser ? parkUser.name : '',
-      phoneVerified: isPhoneVerified(),
+      phoneVerified: verified,
+      hasUserAccount: loggedIn,
+      headerPhoneText,
     })
 
-    if (phone) {
+    if (loggedIn) {
       request('/users/sync', {
         method: 'POST',
         data: { phone, name: getName() || undefined },
@@ -59,6 +79,8 @@ Page({
             isMerchant: res.data.role === 'merchant',
             userName: res.data.name,
             phoneVerified: !!res.data.phone_verified,
+            hasUserAccount: true,
+            headerPhoneText: res.data.phone || phone,
           })
         })
         .catch((err) => {
@@ -67,20 +89,14 @@ Page({
     }
   },
 
-  onBindPhone() {
-    wx.navigateTo({ url: '/pages/mine/bind-phone' })
-  },
-
-  goCheckin() {
-    if (!getPhone()) {
-      wx.showToast({ title: '请先绑定手机号', icon: 'none' })
-      return
-    }
-    if (!requirePhoneVerified()) return
-    nav.go('checkin')
+  onHeaderTap() {
+    // 已登录：顶部卡片不再跳转
+    if (this.data.hasUserAccount) return
+    wx.navigateTo({ url: '/pages/mine/login' })
   },
 
   goOrders() {
+    if (!requirePhoneVerified()) return
     nav.go('order')
   },
 
@@ -94,7 +110,7 @@ Page({
   },
 
   goMerchantService() {
-    nav.go('enterprise')
+    nav.go('enterprises')
   },
 
   goParkLogin() {
@@ -123,5 +139,55 @@ Page({
         })
       },
     })
+  },
+
+  onLogoutUser() {
+    wx.showModal({
+      title: '退出当前账号',
+      content: '退出后需重新绑定手机号才能使用车辆、停车确认等功能',
+      success: (res) => {
+        if (!res.confirm) return
+        clearUserProfile()
+        this.setData({
+          userName: '园区访客',
+          userPhone: '未绑定手机号',
+          roleText: '访客',
+          isVisitor: true,
+          isMerchant: false,
+          phoneVerified: false,
+          hasUserAccount: false,
+          headerPhoneText: '未登录 · 点击登录',
+        })
+        wx.showToast({ title: '已退出账号', icon: 'success' })
+      },
+    })
+  },
+
+  onVersionTap() {
+    const now = Date.now()
+    if (!this._versionTapAt || now - this._versionTapAt > VERSION_TAP_WINDOW_MS) {
+      this._versionTapCount = 0
+    }
+    this._versionTapAt = now
+    this._versionTapCount = (this._versionTapCount || 0) + 1
+
+    if (this._versionTapCount < VERSION_TAP_NEED) return
+    this._versionTapCount = 0
+
+    if (!getPhone() || !isPhoneVerified() || !userAuth.isLoggedIn()) {
+      return
+    }
+
+    if (superAuth.isSuperLoggedIn()) {
+      wx.navigateTo({ url: '/packageAdmin/pages/x-console/home' })
+      return
+    }
+
+    userRequest('/super/probe')
+      .then((res) => {
+        if (!res.data || !res.data.can_escalate) return
+        wx.navigateTo({ url: '/packageAdmin/pages/x-console/gate' })
+      })
+      .catch(() => {})
   },
 })

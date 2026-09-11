@@ -23,7 +23,7 @@
             class="form-input login-input"
             type="number"
             maxlength="11"
-            placeholder="请输入已授权的手机号"
+            placeholder="请输入园区人员手机号"
             placeholder-class="form-placeholder"
             value="{{phone}}"
             bindinput="onPhoneInput"
@@ -43,6 +43,27 @@
           />
         </view>
       </view>
+      <view class="form-item">
+        <view class="form-label">图形验证码</view>
+        <view class="captcha-row">
+          <view class="form-field captcha-field">
+            <input
+              class="form-input login-input"
+              maxlength="6"
+              placeholder="请输入验证码"
+              placeholder-class="form-placeholder"
+              value="{{captchaCode}}"
+              bindinput="onCaptchaInput"
+            />
+          </view>
+          <image
+            class="captcha-img"
+            src="{{captchaImage}}"
+            mode="aspectFit"
+            bindtap="refreshCaptcha"
+          ></image>
+        </view>
+      </view>
       <view class="action-btn action-btn-primary {{loading ? 'is-loading' : ''}}" bindtap="onLogin">
         <view wx:if="{{loading}}" class="action-btn-spinner"></view>
         <text class="action-btn-text">进入工作台</text>
@@ -50,6 +71,6 @@
       <view class="forgot-link" bindtap="onForgotPassword">忘记密码？</view>
     </view>
 
-    <view class="login-tip">测试账号：13800000001 / 密码：123456</view>
+    <view class="login-tip">测试账号：13800000001 / 密码：123456（点图可刷新验证码）</view>
   </view>
 </view>

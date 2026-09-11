@@ -18,6 +18,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
+    "urlCheck": false,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
@@ -36,6 +37,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx92bdd3bb559be8b2",
+  "appid": "wx39a8d9793e036455",
   "simulatorPluginLibVersion": {}
 }

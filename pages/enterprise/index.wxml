@@ -1,7 +1,7 @@
 <view class="page-wrap">
   <view class="card">
     <text class="intro-title">赋能企业运营增值</text>
-    <text class="intro-desc">康瑞园区为企业客户提供一站式增值服务，助力企业降本增效。</text>
+    <text class="intro-desc">赣南健康城为企业客户提供一站式增值服务，助力企业降本增效。</text>
     <view class="service-item" wx:for="{{services}}" wx:key="*this">
       <text class="service-dot">·</text>
       <text class="service-text">{{item}}</text>
