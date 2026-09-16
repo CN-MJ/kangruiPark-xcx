@@ -11,80 +11,100 @@ function getGreeting() {
   return '晚上好'
 }
 
+const ALL_MENUS = [
+  {
+    title: '预约管理',
+    desc: '查看与处理访客预约',
+    url: '/packageAdmin/pages/appointments/index',
+    icon: 'order',
+    theme: 'blue',
+    permission: 'appointments',
+  },
+  {
+    title: '停车管理',
+    desc: '车辆进出与余位',
+    url: '/packageAdmin/pages/parking/index',
+    icon: 'parking',
+    theme: 'green',
+    permission: 'parking',
+  },
+  {
+    title: '新闻管理',
+    desc: '园区动态与首页公告',
+    url: '/packageAdmin/pages/news/list/index',
+    icon: 'news',
+    theme: 'orange',
+    permission: 'news',
+  },
+  {
+    title: '健康企业汇',
+    desc: '走访企业录入与管理',
+    url: '/packageAdmin/pages/enterprises/index',
+    icon: 'merchants',
+    theme: 'purple',
+    permission: 'enterprises',
+  },
+  {
+    title: '企业类型',
+    desc: '健康服务大类与小类',
+    url: '/packageAdmin/pages/enterprise-categories/index',
+    icon: 'policy',
+    theme: 'blue',
+    permission: 'categories',
+  },
+  {
+    title: '房源管理',
+    desc: '招商房源 · 关联意向',
+    url: '/packageAdmin/pages/houses/index',
+    icon: 'house',
+    theme: 'blue',
+    permission: 'houses',
+  },
+  {
+    title: '政策管理',
+    desc: '政策发布 · 政策直达',
+    url: '/packageAdmin/pages/policies/index',
+    icon: 'policy',
+    theme: 'green',
+    permission: 'policies',
+  },
+  {
+    title: '服务团队',
+    desc: '证件照 · 姓名职务电话',
+    url: '/packageAdmin/pages/service-teams/index',
+    icon: 'team',
+    theme: 'blue',
+    permission: 'service_teams',
+  },
+  {
+    title: '活动管理',
+    desc: '活动发布 · 报名管理',
+    url: '/packageAdmin/pages/activities/index',
+    icon: 'activity',
+    theme: 'orange',
+    permission: 'activities',
+  },
+  {
+    title: '招商意向',
+    desc: '线索跟进 · 关联房源',
+    url: '/packageAdmin/pages/investments/index',
+    icon: 'investment',
+    theme: 'purple',
+    permission: 'investments',
+  },
+]
+
 Page({
   data: {
     statusBarHeight: 20,
     greeting: '',
     dateText: '',
     parkName: '',
+    parkRoleText: '',
     stats: null,
     loading: false,
     statsError: '',
-    menus: [
-      {
-        title: '预约管理',
-        desc: '查看与处理访客预约',
-        url: '/packageAdmin/pages/appointments/index',
-        icon: 'order',
-        theme: 'blue',
-      },
-      {
-        title: '停车管理',
-        desc: '车辆进出与余位',
-        url: '/packageAdmin/pages/parking/index',
-        icon: 'parking',
-        theme: 'green',
-      },
-      {
-        title: '新闻管理',
-        desc: '园区动态与首页公告',
-        url: '/packageAdmin/pages/news/list/index',
-        icon: 'news',
-        theme: 'orange',
-      },
-      {
-        title: '企业库',
-        desc: '走访企业录入与管理',
-        url: '/packageAdmin/pages/enterprises/index',
-        icon: 'merchants',
-        theme: 'purple',
-      },
-      {
-        title: '企业类型',
-        desc: '健康服务大类与小类',
-        url: '/packageAdmin/pages/enterprise-categories/index',
-        icon: 'policy',
-        theme: 'blue',
-      },
-      {
-        title: '房源管理',
-        desc: '招商房源 · 关联意向',
-        url: '/packageAdmin/pages/houses/index',
-        icon: 'house',
-        theme: 'blue',
-      },
-      {
-        title: '政策管理',
-        desc: '政策发布 · 政策直达',
-        url: '/packageAdmin/pages/policies/index',
-        icon: 'policy',
-        theme: 'green',
-      },
-      {
-        title: '活动管理',
-        desc: '活动发布 · 报名管理',
-        url: '/packageAdmin/pages/activities/index',
-        icon: 'activity',
-        theme: 'orange',
-      },
-      {
-        title: '招商意向',
-        desc: '线索跟进 · 关联房源',
-        url: '/packageAdmin/pages/investments/index',
-        icon: 'investment',
-        theme: 'purple',
-      },
-    ],
+    menus: [],
   },
 
   onLoad() {
@@ -98,19 +118,43 @@ Page({
       return
     }
 
-    const superAuth = require('../../../utils/superAuth')
-    const user = parkAuth.getParkUser() || superAuth.getUser()
-    this.setData({
-      greeting: getGreeting(),
-      dateText: formatDate(new Date()),
-      parkName: user ? user.name : '园区人员',
-      isSuperMode: superAuth.isSuperLoggedIn(),
-    })
+    this.refreshProfileAndMenus()
     this.loadStats()
   },
 
+  refreshProfileAndMenus() {
+    const superAuth = require('../../../utils/superAuth')
+    const acting = parkAuth.isSuperActingAsPark()
+    const applyLocal = () => {
+      const user = parkAuth.getParkUser() || superAuth.getUser()
+      this.setData({
+        greeting: getGreeting(),
+        dateText: formatDate(new Date()),
+        parkName: user ? user.name : '园区人员',
+        parkRoleText: acting
+          ? '超管代管'
+          : ((user && user.park_role_text) || ''),
+        isSuperMode: superAuth.isSuperLoggedIn(),
+        menus: ALL_MENUS.filter((item) => parkAuth.hasPermission(item.permission)),
+      })
+    }
+
+    applyLocal()
+
+    return parkRequest('/park/me')
+      .then((res) => {
+        const user = res.data
+        if (user && parkAuth.isParkLoggedIn()) {
+          parkAuth.setAuth(parkAuth.getToken(), user)
+        }
+        applyLocal()
+      })
+      .catch(() => applyLocal())
+  },
+
   onPullDownRefresh() {
-    this.loadStats().finally(() => wx.stopPullDownRefresh())
+    Promise.all([this.refreshProfileAndMenus(), this.loadStats()])
+      .finally(() => wx.stopPullDownRefresh())
   },
 
   loadStats() {
@@ -131,7 +175,11 @@ Page({
   },
 
   onMenuTap(e) {
-    const { url } = e.currentTarget.dataset
+    const { url, permission } = e.currentTarget.dataset
+    if (permission && !parkAuth.hasPermission(permission)) {
+      wx.showToast({ title: '无权访问该功能', icon: 'none' })
+      return
+    }
     wx.navigateTo({ url })
   },
 
@@ -155,15 +203,17 @@ Page({
 
   onLogout() {
     const superAuth = require('../../../utils/superAuth')
-    if (superAuth.isSuperLoggedIn() && !parkAuth.isParkLoggedIn()) {
+    // 超管代管进入工作台首页：退出即结束超管会话，保留微信登录
+    if (parkAuth.isSuperActingAsPark()) {
       wx.showModal({
-        title: '退出控制台',
-        content: '确定退出系统管理控制台吗？',
+        title: '结束代管',
+        content: '当前为超管代管工作台。退出后将结束控制台会话，微信个人登录会保留。',
         success: (res) => {
           if (!res.confirm) return
           const { superRequest } = require('../../../utils/request')
           superRequest('/super/logout', { method: 'POST' }).finally(() => {
             superAuth.clearToken()
+            parkAuth.clearAuth()
             wx.reLaunch({ url: '/pages/mine/index' })
           })
         },
@@ -173,7 +223,7 @@ Page({
 
     wx.showModal({
       title: '退出登录',
-      content: '确定退出园区工作台吗？',
+      content: '确定退出园区工作台吗？不影响微信个人登录。',
       success: (res) => {
         if (!res.confirm) return
         parkRequest('/park/logout', { method: 'POST' }).finally(() => {

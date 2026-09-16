@@ -33,6 +33,7 @@ const PATHS = {
   entry: '<path d="M19 17H5"/><path d="m12 6-7 5 7 5"/><path d="M5 11V6a2 2 0 0 1 2-2h10"/>',
   exit: '<path d="M5 17h14"/><path d="m12 7 7 5-7 5"/><path d="M19 13v5a2 2 0 0 1-2 2H7"/>',
   merchants: '<path d="M3 21h18"/><path d="M6 21V7l6-4 6 4v14"/><path d="M10 21v-6h4v6"/>',
+  team: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c1.2-3.2 3.5-4.8 6-4.8S13.8 15.8 15 19"/><path d="M14.5 19c.5-2 1.8-3.2 3.5-3.2 1.1 0 2 .4 2.7 1.1"/>',
   clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1"/>',
 }
 

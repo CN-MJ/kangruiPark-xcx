@@ -1,6 +1,8 @@
 const { request } = require('../../../utils/request')
 const { fetchCaptcha } = require('../../../utils/auth')
 const parkAuth = require('../../../utils/parkAuth')
+const userAuth = require('../../../utils/userAuth')
+const { isPhoneVerified, isPark } = require('../../../utils/user')
 const { applyParkNavTheme } = require('../../utils/navTheme')
 
 Page({
@@ -15,6 +17,34 @@ Page({
 
   onShow() {
     applyParkNavTheme()
+    if (!isPhoneVerified() || !userAuth.isLoggedIn()) {
+      wx.showModal({
+        title: '需要微信授权',
+        content: '请先微信授权手机号登录后，再使用园区账号密码进入工作台',
+        confirmText: '去授权',
+        showCancel: false,
+        success: () => {
+          wx.reLaunch({ url: '/pages/mine/login' })
+        },
+      })
+      return
+    }
+    if (!isPark()) {
+      wx.showModal({
+        title: '无权进入',
+        content: '当前微信账号不是园区人员，无法登录工作台',
+        confirmText: '知道了',
+        showCancel: false,
+        success: () => {
+          wx.switchTab({ url: '/pages/mine/index' })
+        },
+      })
+      return
+    }
+    if (parkAuth.isParkLoggedIn()) {
+      wx.redirectTo({ url: '/packageAdmin/pages/home/index' })
+      return
+    }
     this.refreshCaptcha()
   },
 
@@ -94,7 +124,7 @@ Page({
   onForgotPassword() {
     wx.showModal({
       title: '找回密码',
-      content: '已取消短信找回。请登录后在工作台修改密码，或联系系统管理员重置。',
+      content: '园区工作台不支持自助短信找回。请登录后在工作台修改密码，或联系系统管理员重置。',
       showCancel: false,
     })
   },

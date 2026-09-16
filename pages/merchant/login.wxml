@@ -1,5 +1,13 @@
 <view class="page-wrap">
-  <view class="card">
+  <view class="card" wx:if="{{checked && !workbenchEnabled}}">
+    <view class="card-title">商户工作台已停用</view>
+    <text class="login-tip">企业信息统一由园区工作台「健康企业汇」维护。访客可在健康企业汇浏览筛选企业。</text>
+    <view class="action-btn action-btn-primary" bindtap="goEnterprises">
+      <text class="action-btn-text">去健康企业汇看看</text>
+    </view>
+  </view>
+
+  <view class="card" wx:elif="{{workbenchEnabled}}">
     <view class="card-title">商户登录</view>
     <view class="form-item">
       <text class="form-label">手机号</text>
@@ -20,6 +28,9 @@
       <text class="action-btn-text">登录</text>
     </view>
     <view class="forgot-link" bindtap="onForgotPassword">忘记密码？</view>
-    <text class="login-tip">测试：13800001001 / 密码 123456（点图刷新验证码）</text>
+  </view>
+
+  <view class="card" wx:else>
+    <text class="login-tip">加载中…</text>
   </view>
 </view>

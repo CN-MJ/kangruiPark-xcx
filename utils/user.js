@@ -54,6 +54,10 @@ function isVisitor() {
   return getRole() === ROLE_VISITOR
 }
 
+function isPark() {
+  return getRole() === ROLE_PARK
+}
+
 function saveUserProfile(user) {
   if (!user) return
   if (user.phone) setPhone(user.phone)
@@ -103,6 +107,7 @@ function requirePhoneVerified(options = {}) {
 }
 
 function clearUserProfile() {
+  // 退出微信账号时一并清超管与园区工作台会话
   wx.removeStorageSync(PHONE_KEY)
   wx.removeStorageSync(NAME_KEY)
   wx.removeStorageSync(ROLE_KEY)
@@ -115,6 +120,10 @@ function clearUserProfile() {
   try {
     const superAuth = require('./superAuth')
     superAuth.clearToken()
+  } catch (e) {}
+  try {
+    const parkAuth = require('./parkAuth')
+    parkAuth.clearAuth()
   } catch (e) {}
 }
 
@@ -133,6 +142,7 @@ module.exports = {
   getMerchantApplyStatus,
   isMerchant,
   isVisitor,
+  isPark,
   saveUserProfile,
   requirePhoneVerified,
   clearUserProfile,

@@ -26,7 +26,7 @@
         <text class="park-list-meta">{{item.primary_category.name || '-'}} · {{item.service_audience_text}}</text>
       </view>
     </view>
-    <text class="park-list-meta">{{item.source_text}} · {{item.settleText}}</text>
+    <text class="park-list-meta">{{item.district || '未识别县区'}} · {{item.source_text}} · {{item.settleText}}</text>
     <text class="park-list-meta" wx:if="{{item.tagsText}}">小类：{{item.tagsText}}</text>
     <text class="park-list-meta park-list-scope">{{item.business_intro}}</text>
     <view class="park-btn-row">

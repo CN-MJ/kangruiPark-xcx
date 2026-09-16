@@ -6,12 +6,13 @@ const {
   getRoleText,
   isMerchant,
   isVisitor,
+  isPark,
   isPhoneVerified,
   saveUserProfile,
   requirePhoneVerified,
   clearUserProfile,
 } = require('../../utils/user')
-const { request, userRequest } = require('../../utils/request')
+const { request, userRequest, parkRequest } = require('../../utils/request')
 const userAuth = require('../../utils/userAuth')
 const superAuth = require('../../utils/superAuth')
 
@@ -26,6 +27,7 @@ Page({
     roleText: '访客',
     isVisitor: true,
     isMerchant: false,
+    isParkAccount: false,
     isParkStaff: false,
     parkStaffName: '',
     phoneVerified: false,
@@ -53,14 +55,21 @@ Page({
       headerPhoneText = `${phone} · 点击登录`
     }
 
+    const parkAccount = loggedIn && isPark()
+    // 访客不应残留工作台会话
+    if (loggedIn && !parkAccount && parkAuth.isParkLoggedIn()) {
+      parkAuth.clearAuth()
+    }
+
     this.setData({
       userName: loggedIn ? (getName() || '园区访客') : '园区访客',
       userPhone: phone || '未绑定手机号',
       roleText: loggedIn ? getRoleText() : '访客',
       isVisitor: loggedIn ? isVisitor() : true,
       isMerchant: loggedIn ? isMerchant() : false,
-      isParkStaff: parkAuth.isParkLoggedIn(),
-      parkStaffName: parkUser ? parkUser.name : '',
+      isParkAccount: parkAccount,
+      isParkStaff: parkAccount && parkAuth.isParkLoggedIn(),
+      parkStaffName: parkAccount && parkUser ? parkUser.name : '',
       phoneVerified: verified,
       hasUserAccount: loggedIn,
       headerPhoneText,
@@ -73,10 +82,17 @@ Page({
       })
         .then((res) => {
           saveUserProfile(res.data)
+          const syncedPark = res.data.role === 'park'
+          if (!syncedPark && parkAuth.isParkLoggedIn()) {
+            parkAuth.clearAuth()
+          }
           this.setData({
             roleText: res.data.role_text,
             isVisitor: res.data.role === 'visitor',
             isMerchant: res.data.role === 'merchant',
+            isParkAccount: syncedPark,
+            isParkStaff: syncedPark && parkAuth.isParkLoggedIn(),
+            parkStaffName: syncedPark && parkAuth.getParkUser() ? parkAuth.getParkUser().name : '',
             userName: res.data.name,
             phoneVerified: !!res.data.phone_verified,
             hasUserAccount: true,
@@ -109,15 +125,25 @@ Page({
     nav.go('contact')
   },
 
-  goMerchantService() {
+  goEnterprises() {
     nav.go('enterprises')
   },
 
   goParkLogin() {
+    if (!requirePhoneVerified()) return
+    if (!isPark()) {
+      wx.showToast({ title: '仅园区人员可进入工作台', icon: 'none' })
+      return
+    }
     wx.navigateTo({ url: '/packageAdmin/pages/login/index' })
   },
 
   goParkHome() {
+    if (!requirePhoneVerified()) return
+    if (!isPark()) {
+      wx.showToast({ title: '仅园区人员可进入工作台', icon: 'none' })
+      return
+    }
     if (!parkAuth.isParkLoggedIn()) {
       this.goParkLogin()
       return
@@ -128,14 +154,13 @@ Page({
   onLogoutPark() {
     wx.showModal({
       title: '退出园区工作台',
-      content: '确定退出吗？',
+      content: '仅退出工作台账号，不影响微信个人登录',
       success: (res) => {
         if (!res.confirm) return
-        const { parkRequest } = require('../../utils/request')
         parkRequest('/park/logout', { method: 'POST' }).finally(() => {
           parkAuth.clearAuth()
           this.setData({ isParkStaff: false, parkStaffName: '' })
-          wx.showToast({ title: '已退出', icon: 'success' })
+          wx.showToast({ title: '已退出工作台', icon: 'success' })
         })
       },
     })
@@ -143,22 +168,31 @@ Page({
 
   onLogoutUser() {
     wx.showModal({
-      title: '退出当前账号',
-      content: '退出后需重新绑定手机号才能使用车辆、停车确认等功能',
+      title: '退出微信账号',
+      content: '退出后需重新授权手机号，园区工作台也会一并退出。',
       success: (res) => {
         if (!res.confirm) return
-        clearUserProfile()
-        this.setData({
-          userName: '园区访客',
-          userPhone: '未绑定手机号',
-          roleText: '访客',
-          isVisitor: true,
-          isMerchant: false,
-          phoneVerified: false,
-          hasUserAccount: false,
-          headerPhoneText: '未登录 · 点击登录',
-        })
-        wx.showToast({ title: '已退出账号', icon: 'success' })
+        const finish = () => {
+          clearUserProfile()
+          this.setData({
+            userName: '园区访客',
+            userPhone: '未绑定手机号',
+            roleText: '访客',
+            isVisitor: true,
+            isMerchant: false,
+            isParkStaff: false,
+            parkStaffName: '',
+            phoneVerified: false,
+            hasUserAccount: false,
+            headerPhoneText: '未登录 · 点击登录',
+          })
+          wx.showToast({ title: '已退出账号', icon: 'success' })
+        }
+        const tasks = [userRequest('/users/logout', { method: 'POST' }).catch(() => {})]
+        if (parkAuth.isParkLoggedIn() || parkAuth.isSuperActingAsPark()) {
+          tasks.push(parkRequest('/park/logout', { method: 'POST' }).catch(() => {}))
+        }
+        Promise.all(tasks).finally(finish)
       },
     })
   },

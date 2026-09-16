@@ -10,12 +10,7 @@
     </view>
   </view>
 
-  <!-- 商户功能 -->
-  <view class="card menu-card" wx:if="{{isMerchant}}" bindtap="goMerchantService">
-    <text class="menu-title">商户服务</text>
-    <text class="menu-arrow">›</text>
-  </view>
-
+  <!-- 个人功能 -->
   <view class="card menu-card" bindtap="goOrders">
     <text class="menu-title">我的订单</text>
     <text class="menu-arrow">›</text>
@@ -29,35 +24,45 @@
     <text class="menu-arrow">›</text>
   </view>
 
+  <view class="card menu-card" bindtap="goEnterprises">
+    <view>
+      <text class="menu-title">健康企业汇</text>
+      <text class="menu-desc">浏览园区健康服务企业</text>
+    </view>
+    <text class="menu-arrow">›</text>
+  </view>
+
   <view class="card menu-card" bindtap="goContact">
     <text class="menu-title">联系物业</text>
     <text class="menu-arrow">›</text>
   </view>
 
-  <!-- 园区人员工作台：企业库录入与类型配置在此 -->
-  <view class="card menu-card park-card" wx:if="{{!isParkStaff}}" bindtap="goParkLogin">
-    <view>
-      <text class="menu-title park-title">园区工作台</text>
-      <text class="menu-desc">企业库录入、类型配置、预约与新闻管理</text>
+  <!-- 园区工作台：仅园区人员账号（role=park）可见，进入后再用账号密码 -->
+  <block wx:if="{{hasUserAccount && isParkAccount}}">
+    <view class="card menu-card park-card" wx:if="{{!isParkStaff}}" bindtap="goParkLogin">
+      <view>
+        <text class="menu-title park-title">园区工作台</text>
+        <text class="menu-desc">园区人员专用 · 账号密码登录</text>
+      </view>
+      <text class="menu-arrow">›</text>
     </view>
-    <text class="menu-arrow">›</text>
-  </view>
 
-  <view class="card menu-card park-card" wx:if="{{isParkStaff}}" bindtap="goParkHome">
-    <view>
-      <text class="menu-title park-title">进入园区工作台</text>
-      <text class="menu-desc">已登录：{{parkStaffName}}</text>
+    <view class="card menu-card park-card" wx:if="{{isParkStaff}}" bindtap="goParkHome">
+      <view>
+        <text class="menu-title park-title">进入园区工作台</text>
+        <text class="menu-desc">已登录：{{parkStaffName}}</text>
+      </view>
+      <text class="menu-arrow">›</text>
     </view>
-    <text class="menu-arrow">›</text>
-  </view>
 
-  <view class="card menu-card" wx:if="{{isParkStaff}}" bindtap="onLogoutPark">
-    <text class="menu-title logout-title">退出园区工作台</text>
-    <text class="menu-arrow">›</text>
-  </view>
+    <view class="card menu-card" wx:if="{{isParkStaff}}" bindtap="onLogoutPark">
+      <text class="menu-title logout-title">退出园区工作台</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </block>
 
   <view class="card menu-card" wx:if="{{hasUserAccount}}" bindtap="onLogoutUser">
-    <text class="menu-title logout-title">退出当前账号</text>
+    <text class="menu-title logout-title">退出微信账号</text>
     <text class="menu-arrow">›</text>
   </view>
 

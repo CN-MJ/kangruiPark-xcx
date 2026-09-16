@@ -1,0 +1,42 @@
+<view class="park-page">
+  <view class="action-btn action-btn-primary" bindtap="onCreate">
+    <text class="action-btn-text">新增成员</text>
+  </view>
+
+  <view class="st-search">
+    <input
+      class="st-search-input"
+      placeholder="搜索姓名 / 职务 / 电话"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+      confirm-type="search"
+      bindconfirm="onSearch"
+    />
+    <view class="st-search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <view class="park-list-card st-card" wx:for="{{list}}" wx:key="id">
+    <image class="st-avatar" src="{{item.photoLocal}}" mode="aspectFill" />
+    <view class="st-main">
+      <view class="park-list-head-row">
+        <text class="park-list-title">{{item.name}}</text>
+        <text class="park-status-tag {{item.is_show ? 'open' : 'off'}}">{{item.is_show ? '展示中' : '已隐藏'}}</text>
+      </view>
+      <text class="park-list-meta">{{item.title}}</text>
+      <text class="park-list-meta">{{item.phone || '未填电话'}} · 排序 {{item.sort_order}}</text>
+      <view class="park-btn-row">
+        <view class="action-btn-sm" data-id="{{item.id}}" bindtap="onEdit">
+          <text class="action-btn-sm-text">编辑</text>
+        </view>
+        <view class="action-btn-sm danger" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="onDelete">
+          <text class="action-btn-sm-text danger">删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="park-empty" wx:if="{{!loading && list.length===0}}">
+    <text class="park-empty-text">暂无服务团队成员</text>
+  </view>
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+</view>

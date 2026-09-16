@@ -10,10 +10,26 @@ Page({
     captchaImage: '',
     captchaCode: '',
     loading: false,
+    workbenchEnabled: false,
+    checked: false,
   },
 
   onShow() {
-    this.refreshCaptcha()
+    this.checkWorkbench()
+  },
+
+  checkWorkbench() {
+    request('/users/login-options')
+      .then((res) => {
+        const enabled = !!(res.data && res.data.merchant_workbench_enabled)
+        this.setData({ workbenchEnabled: enabled, checked: true })
+        if (enabled) {
+          this.refreshCaptcha()
+        }
+      })
+      .catch(() => {
+        this.setData({ workbenchEnabled: false, checked: true })
+      })
   },
 
   onPhoneInput(e) {
@@ -41,8 +57,16 @@ Page({
       .catch(() => wx.showToast({ title: '验证码加载失败', icon: 'none' }))
   },
 
+  goEnterprises() {
+    wx.navigateTo({ url: '/pages/enterprises/index' })
+  },
+
   onSubmit() {
     if (this.data.loading) return
+    if (!this.data.workbenchEnabled) {
+      wx.showToast({ title: '商户工作台已停用', icon: 'none' })
+      return
+    }
 
     const phone = this.data.phone.trim()
     const password = this.data.password
@@ -84,7 +108,7 @@ Page({
   onForgotPassword() {
     wx.showModal({
       title: '找回密码',
-      content: '已取消短信找回。请登录后修改密码，或联系园区管理员重置。',
+      content: '商户工作台已停用。如需处理业务请联系园区管理员。',
       showCancel: false,
     })
   },

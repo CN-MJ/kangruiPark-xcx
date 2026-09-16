@@ -1,34 +1,4 @@
 <view class="home-page">
-  <!-- 蓝色主题头图 -->
-  <view class="home-hero" style="padding-top: {{statusBarHeight}}px;">
-    <view class="home-hero-decor"></view>
-
-    <view class="home-date-bar">
-      <text class="home-date">{{dateText}}</text>
-      <text class="home-greeting">{{greeting}}</text>
-    </view>
-
-    <view class="home-logo-slot">
-      <image class="home-logo" src="/images/home_top_logo.png" mode="widthFix" />
-    </view>
-
-    <view class="home-hero-actions">
-      <view
-        class="hero-action"
-        wx:for="{{heroActions}}"
-        wx:key="id"
-        data-id="{{item.id}}"
-        bindtap="onHeroTap"
-        hover-class="press-scale"
-      >
-        <view class="hero-action-btn" style="background: {{item.bg}};">
-          <kr-icon name="{{item.icon}}" size="44" color="{{item.iconColor}}" />
-        </view>
-        <text class="hero-action-label">{{item.label}}</text>
-      </view>
-    </view>
-  </view>
-
   <scroll-view
     class="home-scroll"
     scroll-y
@@ -37,6 +7,33 @@
     lower-threshold="120"
     bindscrolltolower="onScrollToLower"
   >
+    <!-- 顶部蓝区：随页面一起滚动 -->
+    <view class="home-hero" style="padding-top: {{statusBarHeight}}px;">
+      <view class="home-hero-decor"></view>
+      <view class="home-date-bar">
+        <text class="home-date">{{dateText}}</text>
+        <text class="home-greeting">{{greeting}}</text>
+      </view>
+      <view class="home-logo-slot">
+        <image class="home-logo" src="/images/home_top_logo.png" mode="widthFix" />
+      </view>
+      <view class="home-hero-actions">
+        <view
+          class="hero-action"
+          wx:for="{{heroActions}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onHeroTap"
+          hover-class="press-scale"
+        >
+          <view class="hero-action-btn" style="background: {{item.bg}};">
+            <kr-icon name="{{item.icon}}" size="44" color="{{item.iconColor}}" />
+          </view>
+          <text class="hero-action-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
     <view class="home-sheet">
       <!-- 次级入口 -->
       <view class="secondary-row">
@@ -55,18 +52,137 @@
         </view>
       </view>
 
-      <!-- 停车余位横条 -->
-      <view class="parking-banner" wx:if="{{parkingStats}}" bindtap="onParkingTap" hover-class="press-scale">
-        <view class="parking-banner-main">
-          <text class="parking-banner-title">停车余位</text>
-          <text class="parking-banner-status">{{parkingStats.statusText}}</text>
+      <!-- 健康企业汇（公告上方） -->
+      <view class="ent-home-card">
+        <view class="ent-home-hero">
+          <view class="ent-home-hero-glow"></view>
+          <view class="ent-home-head" bindtap="onEnterpriseHomeTap" hover-class="press-scale">
+            <view class="ent-home-head-main">
+              <text class="ent-home-kicker">全龄段大健康产业</text>
+              <text class="ent-home-title">健康企业汇</text>
+              <text class="ent-home-stats" wx:if="{{!enterpriseHome.loading}}">
+                <text wx:if="{{enterpriseHome.district}}">{{enterpriseHome.district}} · </text>
+                {{enterpriseHome.total}} 家企业 · {{enterpriseHome.majorCount}} 大类 · {{enterpriseHome.minorCount}} 小类
+                <text wx:if="{{enterpriseHome.settleTotal > 0}}"> · 入驻 {{enterpriseHome.settleTotal}}</text>
+              </text>
+              <text class="ent-home-stats" wx:else>正在整理产业图谱...</text>
+            </view>
+            <view class="ent-home-more-btn">
+              <text class="ent-home-more">逛全部</text>
+            </view>
+          </view>
+
+          <view class="ent-home-audience" wx:if="{{enterpriseHome.audiences.length}}">
+            <view
+              class="ent-home-aud"
+              wx:for="{{enterpriseHome.audiences}}"
+              wx:key="value"
+              data-value="{{item.value}}"
+              bindtap="onEnterpriseAudienceTap"
+              hover-class="press-scale"
+            >
+              <text class="ent-home-aud-num">{{item.count}}</text>
+              <text class="ent-home-aud-label">{{item.label}}</text>
+            </view>
+          </view>
+
+          <view class="ent-home-district" wx:if="{{enterpriseHome.districts.length}}">
+            <text class="ent-home-district-label">按区县看</text>
+            <scroll-view class="ent-home-district-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+              <view class="ent-home-district-row">
+                <view
+                  class="ent-home-district-chip {{enterpriseHome.district === '' ? 'active' : ''}}"
+                  data-name=""
+                  bindtap="onEnterpriseDistrictTap"
+                >全部</view>
+                <view
+                  class="ent-home-district-chip {{enterpriseHome.district === item ? 'active' : ''}}"
+                  wx:for="{{enterpriseHome.districts}}"
+                  wx:key="*this"
+                  data-name="{{item}}"
+                  bindtap="onEnterpriseDistrictTap"
+                >{{item}}</view>
+              </view>
+            </scroll-view>
+          </view>
         </view>
-        <view class="parking-banner-nums">
-          <text class="parking-banner-num">{{parkingStats.remaining_spots}}</text>
-          <text class="parking-banner-unit">剩余 / {{parkingStats.total_spots}}</text>
+
+        <view class="ent-home-section">
+          <view class="ent-home-section-head">
+            <text class="ent-home-section-title">产业类型</text>
+            <text class="ent-home-section-desc">六大板块，覆盖服务、制造、流通与配套</text>
+          </view>
+          <view class="ent-home-major-grid" wx:if="{{enterpriseHome.majors.length}}">
+            <view
+              class="ent-home-major-tile"
+              style="background: {{item.bg}};"
+              wx:for="{{enterpriseHome.majors}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onEnterpriseMajorTap"
+              hover-class="press-scale"
+            >
+              <view class="ent-home-major-dot" style="background: {{item.accent}};"></view>
+              <text class="ent-home-major-name" style="color: {{item.accent}};">{{item.name}}</text>
+              <text class="ent-home-major-tip" wx:if="{{item.tip}}">{{item.tip}}</text>
+              <text class="ent-home-major-meta">{{item.minorCount}} 个方向</text>
+              <view class="ent-home-major-tags" wx:if="{{item.sampleMinors.length}}">
+                <text
+                  class="ent-home-major-tag"
+                  wx:for="{{item.sampleMinors}}"
+                  wx:for-item="tag"
+                  wx:key="*this"
+                >{{tag}}</text>
+              </view>
+            </view>
+          </view>
         </view>
-        <text class="parking-banner-link" wx:if="{{pendingCount > 0}}">待确认 {{pendingCount}}</text>
-        <text class="parking-banner-link" wx:else>去办理 ›</text>
+
+        <view class="ent-home-section ent-home-section--list">
+          <view class="ent-home-section-head ent-home-section-head--row">
+            <view>
+              <text class="ent-home-section-title">多样企业</text>
+              <text class="ent-home-section-desc">按大类抽样，看看园区里都有什么</text>
+            </view>
+            <text class="ent-home-link" bindtap="onEnterpriseHomeTap">更多 ›</text>
+          </view>
+
+          <scroll-view class="ent-home-list" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{enterpriseHome.list.length}}">
+            <view class="ent-home-list-row">
+              <view
+                class="ent-home-item"
+                wx:for="{{enterpriseHome.list}}"
+                wx:key="id"
+                data-id="{{item.id}}"
+                bindtap="onEnterpriseItemTap"
+                hover-class="press-scale"
+              >
+                <view class="ent-home-cover-wrap">
+                  <image class="ent-home-cover" src="{{item.cover}}" mode="aspectFill" />
+                  <view class="ent-home-cover-mask"></view>
+                  <text class="ent-home-cover-cat" wx:if="{{item.categoryName}}">{{item.categoryName}}</text>
+                  <text class="ent-home-cover-settle" wx:if="{{item.settleInPark}}">园区入驻</text>
+                </view>
+                <view class="ent-home-item-body">
+                  <text class="ent-home-name">{{item.name}}</text>
+                  <view class="ent-home-chip-row" wx:if="{{item.tags.length}}">
+                    <text
+                      class="ent-home-chip {{tag.tone}}"
+                      wx:for="{{item.tags}}"
+                      wx:for-item="tag"
+                      wx:key="text"
+                    >{{tag.text}}</text>
+                  </view>
+                  <text class="ent-home-intro" wx:if="{{item.introPreview}}">{{item.introPreview}}</text>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+
+          <view class="ent-home-empty" wx:elif="{{!enterpriseHome.loading}}" bindtap="onEnterpriseHomeTap">
+            暂无企业，点击进入健康企业汇浏览分类
+          </view>
+        </view>
       </view>
 
       <!-- 公告 -->
@@ -119,7 +235,7 @@
         </view>
       </view>
 
-      <!-- 园区动态：直接展示，滑到底加载更多 -->
+      <!-- 园区动态 -->
       <view class="section-block">
         <view class="section-head">
           <text class="section-title">园区动态</text>

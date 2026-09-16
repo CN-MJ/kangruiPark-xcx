@@ -1,0 +1,27 @@
+<view class="st-page">
+  <view class="st-head">
+    <text class="st-title">服务团队</text>
+    <text class="st-desc">园区服务人员，点击卡片可拨打电话</text>
+  </view>
+
+  <view class="st-grid" wx:if="{{list.length}}">
+    <view
+      class="st-card"
+      wx:for="{{list}}"
+      wx:key="id"
+      data-phone="{{item.phone}}"
+      bindtap="onCall"
+      hover-class="press-scale"
+    >
+      <image class="st-photo" src="{{item.photoLocal}}" mode="aspectFill" />
+      <view class="st-info">
+        <text class="st-name">{{item.name}}</text>
+        <text class="st-role">{{item.title}}</text>
+        <text class="st-phone">{{item.phone || '暂无电话'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="st-empty" wx:elif="{{!loading}}">暂无服务团队信息</view>
+  <view class="st-empty" wx:else>加载中...</view>
+</view>

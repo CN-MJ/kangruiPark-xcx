@@ -5,11 +5,11 @@
         <text class="login-logo-icon">🏛</text>
       </view>
       <view class="login-title">园区工作台</view>
-      <view class="login-sub">园区人员专用入口</view>
+      <view class="login-sub">需先微信授权 · 再用园区账号密码登录</view>
       <view class="login-features">
-        <view class="feature-tag">发布新闻</view>
-        <view class="feature-tag">处理预约</view>
-        <view class="feature-tag">停车管理</view>
+        <view class="feature-tag">健康企业汇</view>
+        <view class="feature-tag">类型配置</view>
+        <view class="feature-tag">新闻预约</view>
       </view>
     </view>
   </view>
@@ -71,6 +71,6 @@
       <view class="forgot-link" bindtap="onForgotPassword">忘记密码？</view>
     </view>
 
-    <view class="login-tip">测试账号：13800000001 / 密码：123456（点图可刷新验证码）</view>
+    <view class="login-tip">密码丢失请联系系统管理员重置。验证码点右侧图片可刷新。</view>
   </view>
 </view>

@@ -1,12 +1,42 @@
 <view class="page-wrap">
-  <view class="card" wx:for="{{list}}" wx:key="id">
-    <view class="card-title">{{item.name || '未命名'}}</view>
-    <text class="order-meta">手机：{{item.phone}}</text>
-    <text class="order-meta">角色：{{item.roleText}} · 验证：{{item.phone_verified ? '是' : '否'}}</text>
-    <picker mode="selector" range="{{roles}}" data-id="{{item.id}}" bindchange="onRoleChange">
-      <view class="form-picker">修改角色</view>
-    </picker>
+  <view class="hint-card">
+    <text class="hint-text">可设置账号类型、园区工作台岗位（park_role）。改岗位/密码后对方需重新登录。</text>
   </view>
+
+  <view class="card user-card" wx:for="{{list}}" wx:key="id">
+    <view class="user-head">
+      <text class="card-title">{{item.name || '未命名'}}</text>
+      <text class="escalate-tag" wx:if="{{item.can_escalate}}">可升权</text>
+    </view>
+    <text class="order-meta">手机：{{item.phone}}</text>
+    <text class="order-meta">类型：{{item.roleText}} · 验证：{{item.phone_verified ? '是' : '否'}}</text>
+    <text class="order-meta" wx:if="{{item.role === 'park'}}">岗位：{{item.park_role_text || '-'}}</text>
+
+    <picker mode="selector" range="{{roles}}" value="{{item.roleIndex}}" data-id="{{item.id}}" bindchange="onRoleChange">
+      <view class="form-picker">账号类型：{{item.roleText}} ›</view>
+    </picker>
+
+    <picker
+      wx:if="{{item.role === 'park' && parkRoleLabels.length}}"
+      mode="selector"
+      range="{{parkRoleLabels}}"
+      value="{{item.parkRoleIndex}}"
+      data-id="{{item.id}}"
+      bindchange="onParkRoleChange"
+    >
+      <view class="form-picker">工作台岗位：{{item.park_role_text || '未设置'}} ›</view>
+    </picker>
+
+    <view class="switch-row">
+      <text class="switch-label">允许超管升权</text>
+      <switch checked="{{item.can_escalate}}" data-id="{{item.id}}" bindchange="onToggleEscalate" color="#003791" />
+    </view>
+
+    <view class="form-picker danger" data-id="{{item.id}}" data-phone="{{item.phone}}" bindtap="onResetPassword">
+      重置登录密码
+    </view>
+  </view>
+
   <view class="park-loading" wx:if="{{loading}}">加载中...</view>
   <view class="park-empty" wx:if="{{!loading && list.length===0}}">暂无用户</view>
 </view>

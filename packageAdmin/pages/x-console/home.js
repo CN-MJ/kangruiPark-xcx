@@ -42,11 +42,18 @@ Page({
         theme: 'orange',
       },
       {
-        title: '商户管理',
-        desc: '入驻审核与人员',
-        url: '/packageAdmin/pages/merchants/index',
+        title: '健康企业汇',
+        desc: '走访企业录入与管理',
+        url: '/packageAdmin/pages/enterprises/index',
         icon: 'merchants',
         theme: 'purple',
+      },
+      {
+        title: '企业类型',
+        desc: '大类小类配置',
+        url: '/packageAdmin/pages/enterprise-categories/index',
+        icon: 'policy',
+        theme: 'blue',
       },
       {
         title: '房源管理',
@@ -61,6 +68,13 @@ Page({
         url: '/packageAdmin/pages/policies/index',
         icon: 'policy',
         theme: 'green',
+      },
+      {
+        title: '服务团队',
+        desc: '证件照 · 姓名职务电话',
+        url: '/packageAdmin/pages/service-teams/index',
+        icon: 'team',
+        theme: 'blue',
       },
       {
         title: '活动管理',
@@ -78,7 +92,7 @@ Page({
       },
       {
         title: '用户管理',
-        desc: '全部账号角色调整',
+        desc: '账号类型 · 工作台岗位 · 重置密码',
         url: '/packageAdmin/pages/x-console/users',
         icon: 'merchants',
         theme: 'blue',
@@ -149,7 +163,7 @@ Page({
   onLogout() {
     wx.showModal({
       title: '退出控制台',
-      content: '确定退出系统管理控制台吗？',
+      content: '仅退出超管控制台，微信个人登录会保留。',
       success: (res) => {
         if (!res.confirm) return
         superRequest('/super/logout', { method: 'POST' }).finally(() => {

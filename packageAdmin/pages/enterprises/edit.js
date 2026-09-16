@@ -5,6 +5,7 @@ const {
   ENTERPRISE_MAX_COUNT,
 } = require('../../../utils/upload')
 const { resolveMediaList, materializeMediaList } = require('../../../utils/media')
+const { DISTRICT_NAMES, resolveDistrict } = require('../../../utils/ganzhouDistrict')
 
 const AUDIENCE_OPTIONS = [
   { value: 'c', label: '面向百姓C端' },
@@ -17,6 +18,10 @@ const SOURCE_OPTIONS = [
   { value: 'self', label: '自主入驻' },
 ]
 
+const DISTRICT_OPTIONS = [{ name: '', label: '根据定位自动识别' }].concat(
+  DISTRICT_NAMES.map((name) => ({ name, label: name })),
+)
+
 Page({
   data: {
     id: '',
@@ -25,6 +30,10 @@ Page({
     contact_phone: '',
     business_intro: '',
     address: '',
+    district: '',
+    districtOptions: DISTRICT_OPTIONS,
+    districtIndex: 0,
+    districtHint: '',
     latitude: '',
     longitude: '',
     map_enabled: false,
@@ -80,6 +89,7 @@ Page({
               audienceIndex,
               sourceIndex,
             })
+            this.applyDistrict(d.district || '', d.address || '', d.latitude, d.longitude, true)
             this.refreshMinors(majorIndex, d.category_ids || [])
             return materializeMediaList(remoteImages).then((localImages) => {
               if (localImages && localImages.length) {
@@ -117,7 +127,46 @@ Page({
   },
 
   onInput(e) {
-    this.setData({ [e.currentTarget.dataset.key]: e.detail.value })
+    const key = e.currentTarget.dataset.key
+    const value = e.detail.value
+    this.setData({ [key]: value })
+    if (key === 'address' && this.data.districtIndex === 0) {
+      this.applyDistrict('', value, this.data.latitude, this.data.longitude, false)
+    }
+  },
+
+  applyDistrict(savedDistrict, address, latitude, longitude, preferSaved) {
+    const auto = resolveDistrict(address, latitude, longitude)
+    let district = ''
+    let districtIndex = 0
+    if (preferSaved && savedDistrict && DISTRICT_NAMES.indexOf(savedDistrict) !== -1) {
+      district = savedDistrict
+      districtIndex = DISTRICT_OPTIONS.findIndex((d) => d.name === savedDistrict)
+      if (districtIndex < 0) districtIndex = 0
+    } else if (this.data.districtIndex > 0) {
+      district = this.data.districtOptions[this.data.districtIndex].name
+      districtIndex = this.data.districtIndex
+    } else {
+      district = auto
+      districtIndex = 0
+    }
+    this.setData({
+      district,
+      districtIndex,
+      districtHint: auto ? `根据定位识别：${auto}` : '未能从地址/坐标识别县区，可手动选择',
+    })
+  },
+
+  onDistrictChange(e) {
+    const districtIndex = Number(e.detail.value)
+    const selected = this.data.districtOptions[districtIndex] || DISTRICT_OPTIONS[0]
+    this.setData({
+      districtIndex,
+      district: selected.name || '',
+    })
+    if (districtIndex === 0) {
+      this.applyDistrict('', this.data.address, this.data.latitude, this.data.longitude, false)
+    }
   },
 
   onMajorChange(e) {
@@ -161,12 +210,21 @@ Page({
     if (this.data.submitting) return
     wx.chooseLocation({
       success: (res) => {
+        const address = res.address || res.name || this.data.address
         this.setData({
-          address: res.address || res.name || this.data.address,
+          address,
           latitude: String(res.latitude),
           longitude: String(res.longitude),
           map_enabled: true,
         })
+        if (this.data.districtIndex === 0) {
+          this.applyDistrict('', address, res.latitude, res.longitude, false)
+        } else {
+          const auto = resolveDistrict(address, res.latitude, res.longitude)
+          this.setData({
+            districtHint: auto ? `根据定位识别：${auto}` : '未能从地址/坐标识别县区，可手动选择',
+          })
+        }
       },
     })
   },
@@ -259,6 +317,11 @@ Page({
           category_ids: selectedMinorIds,
           business_intro: businessIntro,
           address: this.data.address.trim(),
+          district: this.data.districtIndex > 0 ? this.data.district : (resolveDistrict(
+            this.data.address,
+            this.data.latitude,
+            this.data.longitude,
+          ) || null),
           map_enabled: this.data.map_enabled,
           latitude: this.data.latitude ? Number(this.data.latitude) : null,
           longitude: this.data.longitude ? Number(this.data.longitude) : null,

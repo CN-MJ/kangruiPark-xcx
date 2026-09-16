@@ -58,13 +58,20 @@ function request(url, options = {}) {
 
 function parkRequest(url, options = {}) {
   const { method = 'GET', data = {}, timeout = REQUEST_TIMEOUT, header: customHeader = {} } = options
+  const header = { ...customHeader }
   let token = getToken()
-  try {
-    const superAuth = require('./superAuth')
-    if (superAuth.isSuperLoggedIn()) {
-      token = superAuth.getToken()
-    }
-  } catch (e) {}
+
+  // 有园区 token：绝不使用超管 token（避免静默冒充）
+  // 无园区 token 且已升权：显式代管头访问园区接口
+  if (!token) {
+    try {
+      const superAuth = require('./superAuth')
+      if (superAuth.isSuperLoggedIn()) {
+        token = superAuth.getToken()
+        header['X-Park-Act-As'] = '1'
+      }
+    } catch (e) {}
+  }
 
   return request(url, {
     method,
@@ -72,7 +79,7 @@ function parkRequest(url, options = {}) {
     timeout,
     auth: false,
     header: {
-      ...customHeader,
+      ...header,
       Authorization: token ? `Bearer ${token}` : '',
     },
   })

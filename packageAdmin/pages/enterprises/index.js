@@ -1,5 +1,6 @@
 const { parkRequest } = require('../../../utils/request')
 const { resolveMediaUrl, materializeMediaUrl } = require('../../../utils/media')
+const parkAuth = require('../../../utils/parkAuth')
 
 Page({
   data: {
@@ -11,6 +12,7 @@ Page({
   },
 
   onShow() {
+    if (!parkAuth.requirePermission('enterprises', { redirectHome: true })) return
     this.loadList({ reset: true })
   },
 

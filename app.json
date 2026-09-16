@@ -29,6 +29,7 @@
     ,"pages/investment/success"
     ,"pages/policies/index"
     ,"pages/policies/detail"
+    ,"pages/service-team/index"
     ,"pages/activities/index"
     ,"pages/activities/detail"
     ,"pages/merchant/login"
@@ -57,6 +58,8 @@
         "pages/houses/edit",
         "pages/policies/index",
         "pages/policies/edit",
+        "pages/service-teams/index",
+        "pages/service-teams/edit",
         "pages/activities/index",
         "pages/activities/edit",
         "pages/activities/registrations",

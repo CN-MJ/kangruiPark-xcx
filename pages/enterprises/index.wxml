@@ -13,9 +13,9 @@
     </view>
 
     <view class="filter-bar">
-      <view class="cat-trigger {{hasCategoryFilter ? 'active' : ''}}" bindtap="openCatPanel">
+      <view class="cat-trigger {{hasCategoryFilter || district ? 'active' : ''}}" bindtap="openCatPanel">
         <view class="cat-trigger-main">
-          <text class="cat-trigger-label">分类</text>
+          <text class="cat-trigger-label">分类 / 区县</text>
           <text class="cat-trigger-value">{{filterSummary}}</text>
         </view>
         <text class="cat-trigger-arrow">▼</text>
@@ -31,9 +31,9 @@
       </view>
     </scroll-view>
 
-    <view class="filter-status" wx:if="{{hasCategoryFilter || settleOnly || audience}}">
+    <view class="filter-status" wx:if="{{hasCategoryFilter || settleOnly || audience || district}}">
       <text class="filter-status-text" wx:if="{{resultTotal != null}}">共 {{resultTotal}} 家</text>
-      <view class="filter-clear" wx:if="{{hasCategoryFilter}}" bindtap="onClearCategory">清除分类</view>
+      <view class="filter-clear" wx:if="{{hasCategoryFilter || district}}" bindtap="onClearCategory">清除筛选</view>
     </view>
   </view>
 
@@ -52,6 +52,7 @@
         <text class="ent-park" wx:if="{{item.settle_in_park}}">入驻</text>
       </view>
       <view class="ent-tags">
+        <text class="ent-tag district" wx:if="{{item.district}}">{{item.district}}</text>
         <text class="ent-tag" wx:if="{{item.primary_category}}">{{item.primary_category.name}}</text>
         <text class="ent-tag subject" wx:for="{{item.tagsPreview}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
       </view>
@@ -71,13 +72,33 @@
   <view class="cat-mask" wx:if="{{catPanelOpen}}" catchtouchmove="preventMove" bindtap="closeCatPanel">
     <view class="cat-sheet" catchtap="preventMove">
       <view class="cat-sheet-head">
-        <text class="cat-sheet-title">按企业分类筛选</text>
+        <text class="cat-sheet-title">分类与区县筛选</text>
         <view class="cat-sheet-actions">
           <text class="cat-sheet-reset" bindtap="onClearCategory">重置</text>
           <text class="cat-sheet-done" bindtap="closeCatPanel">完成</text>
         </view>
       </view>
-      <text class="cat-sheet-tip">先选左侧 6 大类，再选右侧小类；点「全部小类」查看该大类全部企业</text>
+      <text class="cat-sheet-tip">可先选赣州区县，再选左侧大类与右侧小类</text>
+
+      <view class="district-panel">
+        <text class="district-panel-label">区县</text>
+        <scroll-view class="district-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+          <view class="district-row">
+            <view
+              class="district-chip {{district === '' ? 'active' : ''}}"
+              data-name=""
+              bindtap="onDistrict"
+            >全部</view>
+            <view
+              class="district-chip {{district === item ? 'active' : ''}}"
+              wx:for="{{districtOptions}}"
+              wx:key="*this"
+              data-name="{{item}}"
+              bindtap="onDistrict"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
 
       <view class="cat-body">
         <scroll-view class="cat-left" scroll-y enhanced show-scrollbar="{{false}}">

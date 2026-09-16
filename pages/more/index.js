@@ -7,7 +7,8 @@ const SECTIONS = [
     items: [
       { id: 'property', label: '物业服务', icon: 'property', bg: '#fff0e8' },
       { id: 'parking', label: '停车服务', icon: 'parking', bg: '#e8f6ff' },
-      { id: 'contact', label: '联系物业', icon: 'contact', bg: '#eef4ff' },
+      { id: 'service_team', label: '服务团队', icon: 'team', bg: '#eef4ff' },
+      { id: 'contact', label: '联系物业', icon: 'contact', bg: '#e8f0ff' },
       { id: 'feedback', label: '投诉建议', icon: 'feedback', bg: '#f3eeff' },
     ],
   },
@@ -16,7 +17,7 @@ const SECTIONS = [
     title: '企业增值',
     items: [
       { id: 'enterprise', label: '企业增值', icon: 'enterprise', bg: '#f3eeff' },
-      { id: 'enterprises', label: '企业库', icon: 'merchants', bg: '#e8f0ff' },
+      { id: 'enterprises', label: '健康企业汇', icon: 'merchants', bg: '#e8f0ff' },
       { id: 'repair', label: 'IT报修', icon: 'repair', bg: '#e8f6ff' },
       { id: 'activity', label: '活动报备', icon: 'appointment', bg: '#fff8e8' },
       { id: 'news_list', label: '园区资讯', icon: 'news', bg: '#eef4ff' },
@@ -28,7 +29,7 @@ const SECTIONS = [
     items: [
       { id: 'nav', label: '综合导航', icon: 'nav', bg: '#ffece8' },
       { id: 'news_list', label: '新闻公告', icon: 'news', bg: '#fff3e8' },
-      { id: 'enterprises', label: '企业库', icon: 'merchants', bg: '#e8eef9' },
+      { id: 'enterprises', label: '健康企业汇', icon: 'merchants', bg: '#e8eef9' },
       { id: 'order', label: '我的订单', icon: 'order', bg: '#eef4ff' },
     ],
   },

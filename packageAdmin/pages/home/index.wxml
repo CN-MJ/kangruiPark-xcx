@@ -9,7 +9,7 @@
     </view>
     <view class="park-hero-body">
       <text class="park-hero-title">{{greeting}}，{{parkName}}</text>
-      <text class="park-hero-sub">园区工作台</text>
+      <text class="park-hero-sub">{{parkRoleText ? parkRoleText + ' · ' : ''}}园区工作台</text>
       <text class="park-hero-meta">{{dateText}}</text>
     </view>
   </view>
@@ -49,6 +49,7 @@
       wx:for="{{menus}}"
       wx:key="url"
       data-url="{{item.url}}"
+      data-permission="{{item.permission}}"
       bindtap="onMenuTap"
     >
       <view class="park-menu-icon-wrap {{item.theme}}">
@@ -74,7 +75,7 @@
       <text class="overview-item">待跟进意向 <text class="num">{{stats.investments_pending}}</text></text>
     </view>
     <view class="overview-row">
-      <text class="overview-item">企业库 <text class="num">{{stats.enterprises_total}}</text></text>
+      <text class="overview-item">健康企业汇 <text class="num">{{stats.enterprises_total}}</text></text>
       <text class="overview-item">入驻园区 <text class="num">{{stats.merchants_count}}</text></text>
     </view>
     <view class="overview-row">

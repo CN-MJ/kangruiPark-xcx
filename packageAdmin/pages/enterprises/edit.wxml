@@ -81,6 +81,14 @@
       </view>
     </view>
 
+    <view class="form-item">
+      <text class="form-label">所属县区</text>
+      <picker mode="selector" range="{{districtOptions}}" range-key="label" value="{{districtIndex}}" bindchange="onDistrictChange">
+        <view class="form-picker">{{districtIndex > 0 ? district : (district || '根据定位自动识别')}}</view>
+      </picker>
+      <text class="form-tip">{{districtHint || '优先根据企业地址/地图选点自动确认赣州县区'}}</text>
+    </view>
+
     <view class="form-item form-item--switch">
       <view>
         <text class="form-label form-label--inline">支持地图定位展示</text>

@@ -1,4 +1,5 @@
 const { parkRequest } = require('../../../utils/request')
+const parkAuth = require('../../../utils/parkAuth')
 
 Page({
   data: {
@@ -16,6 +17,7 @@ Page({
   },
 
   onShow() {
+    if (!parkAuth.requirePermission('categories', { redirectHome: true })) return
     this.loadTree()
   },
 

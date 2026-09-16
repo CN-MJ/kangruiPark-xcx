@@ -28,6 +28,7 @@
     <view class="meta-grid">
       <text class="meta-line">服务对象：{{detail.service_audience_text}}</text>
       <text class="meta-line">来源：{{detail.source_text}}</text>
+      <text class="meta-line" wx:if="{{detail.district}}">县区：{{detail.district}}</text>
       <text class="meta-line" wx:if="{{detail.address}}">地址：{{detail.address}}</text>
       <text class="meta-line" wx:if="{{detail.contact_name}}">联系人：{{detail.contact_name}}</text>
       <text class="meta-line" wx:if="{{detail.contact_phone}}">电话：{{detail.contact_phone}}</text>

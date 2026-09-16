@@ -1,7 +1,7 @@
 <view class="page-wrap">
   <view class="card login-card">
     <view class="card-title">微信授权登录</view>
-    <text class="login-tip">授权手机号后可使用：我的订单、车辆管理、停车确认等个人功能。浏览资讯、企业库、房源、政策等无需登录。企业录入请使用园区工作台。</text>
+    <text class="login-tip">授权手机号后可使用：我的订单、车辆管理、停车确认等个人功能。园区人员账号登录后才会出现「园区工作台」（仍需账号密码）。浏览资讯、健康企业汇、房源、政策等无需登录。</text>
 
     <button
       class="wx-login-btn {{submitting ? 'is-loading' : ''}}"
@@ -19,9 +19,30 @@
     </button>
 
     <view class="mock-box" wx:if="{{mockHint}}">
-      <text class="mock-tip">本地开发未配置微信 Secret 时，可模拟授权登录。每次自动使用新号：{{nextMockPhone}}</text>
+      <text class="mock-tip">开发多账号测试（后续删除）：先选账号类型，再模拟微信授权。园区岗位进工作台仍要密码。</text>
+      <view class="mock-presets">
+        <view
+          class="mock-preset {{selectedPresetId === item.id ? 'is-active' : ''}}"
+          wx:for="{{mockPresets}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onSelectPreset"
+        >
+          <text class="mock-preset-label">{{item.label}}</text>
+          <text class="mock-preset-phone">{{item.phone}}</text>
+        </view>
+      </view>
+      <text class="mock-hint-line">{{selectedHint}}</text>
+      <input
+        class="mock-input"
+        type="number"
+        maxlength="11"
+        placeholder="或手动输入其它手机号"
+        value="{{mockPhone}}"
+        bindinput="onMockPhoneInput"
+      />
       <view class="mock-btn {{submitting ? 'is-loading' : ''}}" bindtap="onMockLogin" hover-class="press-opacity">
-        <text class="mock-btn-text">开发模拟授权登录</text>
+        <text class="mock-btn-text">模拟授权登录</text>
       </view>
     </view>
   </view>

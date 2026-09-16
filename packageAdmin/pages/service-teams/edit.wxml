@@ -1,0 +1,34 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">证件照</text>
+      <view class="st-photo-box" bindtap="onChoosePhoto">
+        <image wx:if="{{photoLocal}}" class="st-photo" src="{{photoLocal}}" mode="aspectFill" />
+        <text wx:else class="st-photo-placeholder">上传证件照</text>
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">姓名</text>
+      <input class="form-input" value="{{name}}" data-key="name" bindinput="onInput" placeholder="请输入姓名" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">职务</text>
+      <input class="form-input" value="{{title}}" data-key="title" bindinput="onInput" placeholder="如：客服主管" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">电话</text>
+      <input class="form-input" type="number" value="{{phone}}" data-key="phone" bindinput="onInput" placeholder="联系电话" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">显示开关</text>
+      <switch checked="{{is_show}}" bindchange="onShowChange" color="#003791" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">排序值</text>
+      <input class="form-input" type="number" value="{{sort_order}}" data-key="sort_order" bindinput="onInput" placeholder="越小越靠前，如 1、2、3" />
+    </view>
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
+      <text class="action-btn-text">保存</text>
+    </view>
+  </view>
+</view>

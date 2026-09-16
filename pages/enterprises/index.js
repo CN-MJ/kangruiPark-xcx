@@ -1,5 +1,6 @@
 const { request } = require('../../utils/request')
 const { resolveMediaUrl, materializeMediaUrl } = require('../../utils/media')
+const { DISTRICT_NAMES } = require('../../utils/ganzhouDistrict')
 
 function splitMajorName(name) {
   const text = String(name || '')
@@ -8,6 +9,23 @@ function splitMajorName(name) {
     return { short: matched[1], tip: matched[2], full: text }
   }
   return { short: text, tip: '', full: text }
+}
+
+/** 解码页面入参（微信 navigateTo 中文有时仍带 %XX） */
+function decodeQueryValue(value) {
+  if (value == null || value === '') return ''
+  let text = String(value)
+  for (let i = 0; i < 3; i += 1) {
+    if (!/%[0-9A-Fa-f]{2}/.test(text)) break
+    try {
+      const next = decodeURIComponent(text.replace(/\+/g, ' '))
+      if (next === text) break
+      text = next
+    } catch (e) {
+      break
+    }
+  }
+  return text
 }
 
 Page({
@@ -22,6 +40,8 @@ Page({
     hasCategoryFilter: false,
     settleOnly: false,
     audience: '',
+    district: '',
+    districtOptions: DISTRICT_NAMES,
     keyword: '',
     list: [],
     page: 1,
@@ -38,9 +58,24 @@ Page({
   onLoad(options) {
     if (options.major_id) this.setData({ activeMajorId: Number(options.major_id) })
     if (options.category_id) this.setData({ categoryId: Number(options.category_id) })
+    if (options.audience) this.setData({ audience: decodeQueryValue(options.audience) })
+    if (options.district) this.setData({ district: decodeQueryValue(options.district) })
+    if (options.settle_in_park === '1' || options.settle_in_park === 1) {
+      this.setData({ settleOnly: true })
+    }
+    this.loadDistricts()
     this.loadCategories().then(() => this.loadList({ reset: true }))
   },
 
+  loadDistricts() {
+    request('/enterprise-districts')
+      .then((res) => {
+        const list = (res.data && res.data.list) || []
+        const names = list.map((item) => item.name).filter(Boolean)
+        if (names.length) this.setData({ districtOptions: names })
+      })
+      .catch(() => {})
+  },
   loadCategories() {
     return request('/enterprise-categories')
       .then((res) => {
@@ -75,15 +110,16 @@ Page({
   },
 
   refreshFilterSummary() {
-    const { activeMajor, categoryName, categoryId } = this.data
-    let filterSummary = '全部分类'
+    const { activeMajor, categoryName, categoryId, district } = this.data
+    const parts = []
+    if (district) parts.push(district)
     if (activeMajor && categoryId && categoryName) {
-      filterSummary = `${activeMajor.shortName || activeMajor.name} · ${categoryName}`
+      parts.push(`${activeMajor.shortName || activeMajor.name} · ${categoryName}`)
     } else if (activeMajor) {
-      filterSummary = `${activeMajor.shortName || activeMajor.name} · 全部小类`
+      parts.push(`${activeMajor.shortName || activeMajor.name} · 全部小类`)
     }
     this.setData({
-      filterSummary,
+      filterSummary: parts.length ? parts.join(' / ') : '全部区县 · 全部分类',
       hasCategoryFilter: !!(activeMajor || categoryId),
     })
   },
@@ -160,13 +196,14 @@ Page({
   },
 
   onClearCategory() {
-    this.applyCategoryFilter(0, 0, null, '')
     this.setData({
+      district: '',
       panelMajorId: 0,
       panelMajor: null,
       panelMinors: [],
       panelCategoryId: 0,
     })
+    this.applyCategoryFilter(0, 0, null, '')
   },
 
   onToggleSettle() {
@@ -177,6 +214,14 @@ Page({
   onAudience(e) {
     const value = e.currentTarget.dataset.value
     this.setData({ audience: this.data.audience === value ? '' : value })
+    this.loadList({ reset: true })
+  },
+
+  onDistrict(e) {
+    const name = e.currentTarget.dataset.name || ''
+    const district = this.data.district === name ? '' : name
+    this.setData({ district })
+    this.refreshFilterSummary()
     this.loadList({ reset: true })
   },
 
@@ -222,6 +267,7 @@ Page({
     if (this.data.categoryId) data.category_id = this.data.categoryId
     if (this.data.settleOnly) data.settle_in_park = 1
     if (this.data.audience) data.service_audience = this.data.audience
+    if (this.data.district) data.district = this.data.district
     if (this.data.keyword.trim()) data.keyword = this.data.keyword.trim()
 
     return request('/enterprises', { data })

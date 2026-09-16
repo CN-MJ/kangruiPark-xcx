@@ -1,3 +1,35 @@
+.hint-card {
+  margin-bottom: 20rpx;
+  padding: 20rpx 24rpx;
+  background: #fffbeb;
+  border-radius: 16rpx;
+}
+
+.hint-text {
+  font-size: 24rpx;
+  color: #92400e;
+  line-height: 1.45;
+}
+
+.user-card {
+  margin-bottom: 20rpx;
+}
+
+.user-head {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.escalate-tag {
+  font-size: 20rpx;
+  color: #b45309;
+  background: #ffedd5;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
 .form-picker {
   margin-top: 16rpx;
   padding: 20rpx;
@@ -7,8 +39,33 @@
   font-size: 26rpx;
 }
 
+.form-picker.danger {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.switch-row {
+  margin-top: 16rpx;
+  padding: 12rpx 4rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.switch-label {
+  font-size: 26rpx;
+  color: #334155;
+}
+
 .park-empty {
   text-align: center;
   padding: 80rpx 0;
   color: #94a3b8;
+}
+
+.order-meta {
+  display: block;
+  font-size: 24rpx;
+  color: #64748b;
+  margin-top: 6rpx;
 }

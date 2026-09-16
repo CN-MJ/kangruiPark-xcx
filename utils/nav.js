@@ -25,6 +25,7 @@ const ROUTES = {
   houses: '/pages/houses/index',
   investment: '/pages/investment/index',
   policies: '/pages/policies/index',
+  service_team: '/pages/service-team/index',
   activities: '/pages/activities/index',
   merchant_login: '/pages/merchant/login',
 }
@@ -36,12 +37,25 @@ function go(action, options = {}) {
     return
   }
 
-  let url = baseUrl
-  if (options.id) {
-    url = `${baseUrl}?id=${options.id}`
+  const [path, existingQuery = ''] = baseUrl.split('?')
+  const params = {}
+  if (existingQuery) {
+    existingQuery.split('&').forEach((pair) => {
+      const [k, v] = pair.split('=')
+      if (k) params[k] = decodeURIComponent(v || '')
+    })
   }
+  Object.keys(options || {}).forEach((key) => {
+    const value = options[key]
+    if (value === undefined || value === null || value === '') return
+    params[key] = value
+  })
 
-  wx.navigateTo({ url })
+  const qs = Object.keys(params)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+    .join('&')
+
+  wx.navigateTo({ url: qs ? `${path}?${qs}` : path })
 }
 
 module.exports = {
