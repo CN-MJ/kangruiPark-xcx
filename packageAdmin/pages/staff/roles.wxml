@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="hint-card">
+    <text class="hint-text">勾选该角色能进入的工作台菜单。管理员不能删除。已有人使用的角色，需先改他们的角色再删。</text>
+  </view>
+
+  <view class="add-btn" bindtap="onCreate" wx:if="{{!editing}}">新增角色</view>
+
+  <block wx:if="{{!editing}}">
+    <view class="role-row" wx:for="{{roles}}" wx:key="key">
+      <view class="role-main" data-key="{{item.key}}" bindtap="onEdit">
+        <text class="role-name">{{item.name}}</text>
+        <text class="role-sub">{{item.user_count}}人 · {{item.menu_text || '仅工作台首页'}}</text>
+      </view>
+      <text class="row-link" data-key="{{item.key}}" bindtap="onEdit">权限</text>
+      <text class="row-link danger" wx:if="{{item.key !== 'admin'}}" data-key="{{item.key}}" data-name="{{item.name}}" bindtap="onDelete">删除</text>
+    </view>
+    <view class="park-empty" wx:if="{{!loading && roles.length === 0}}">还没有角色</view>
+    <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+  </block>
+
+  <view class="editor" wx:if="{{editing}}">
+    <text class="editor-title">{{editingKey === 'new' ? '新增角色' : '配置权限'}}</text>
+    <input class="name-input" placeholder="角色名称" value="{{editingName}}" bindinput="onNameInput" maxlength="20" />
+    <checkbox-group bindchange="onMenusChange">
+      <label class="check-row" wx:for="{{menuItems}}" wx:key="key">
+        <checkbox value="{{item.key}}" checked="{{item.checked}}" disabled="{{item.locked}}" color="#003791" />
+        <text>{{item.label}}</text>
+      </label>
+    </checkbox-group>
+    <view class="editor-ops">
+      <view class="add-btn" bindtap="onSave">保存</view>
+      <view class="add-btn ghost" bindtap="onCancel">取消</view>
+    </view>
+  </view>
+</view>

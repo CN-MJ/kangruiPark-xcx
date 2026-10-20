@@ -92,10 +92,17 @@ Page({
       },
       {
         title: '用户管理',
-        desc: '账号类型 · 工作台岗位 · 重置密码',
-        url: '/packageAdmin/pages/x-console/users',
+        desc: '申请审核 · 分配角色',
+        url: '/packageAdmin/pages/staff/index',
         icon: 'merchants',
         theme: 'blue',
+      },
+      {
+        title: '角色管理',
+        desc: '配置每个角色能进入的工作台菜单',
+        url: '/packageAdmin/pages/staff/roles',
+        icon: 'policy',
+        theme: 'green',
       },
       {
         title: '日志',

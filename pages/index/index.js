@@ -2,7 +2,7 @@ const { request } = require('../../utils/request')
 const { formatDateTime, formatDate } = require('../../utils/format')
 const { getPendingEvents } = require('../../utils/vehicle')
 const { requirePhoneVerified } = require('../../utils/user')
-const { resolveMediaUrl, materializeMediaUrl } = require('../../utils/media')
+const { resolveMediaUrl } = require('../../utils/media')
 const { DISTRICT_NAMES } = require('../../utils/ganzhouDistrict')
 const nav = require('../../utils/nav')
 
@@ -46,7 +46,6 @@ function mapEnterpriseCard(item) {
   return {
     id: item.id,
     name: item.name,
-    coverRemote,
     cover: coverRemote || '/images/default-cover.jpg',
     categoryName,
     primaryCategoryId: item.primary_category ? item.primary_category.id : 0,
@@ -242,18 +241,6 @@ Page({
       })
   },
 
-  hydrateEnterpriseCovers(items) {
-    items.forEach((item, index) => {
-      const remote = item.coverRemote
-      if (!remote) return
-      materializeMediaUrl(remote).then((local) => {
-        const current = this.data.enterpriseHome.list[index]
-        if (!current || !local || local === current.cover) return
-        this.setData({ [`enterpriseHome.list[${index}].cover`]: local })
-      })
-    })
-  },
-
   loadEnterpriseHome() {
     const district = (this.data.enterpriseHome && this.data.enterpriseHome.district) || ''
     const filter = {}
@@ -333,7 +320,6 @@ Page({
             loading: false,
           },
         })
-        this.hydrateEnterpriseCovers(mapped)
       })
       .catch(() => {
         this.setData({

@@ -2,8 +2,6 @@ const { wechatPhoneLogin } = require('../../utils/auth')
 const { saveUserProfile } = require('../../utils/user')
 const { request } = require('../../utils/request')
 
-// TODO(dev-only): 多账号测试用，上线前整段 mock 入口删除
-// 与 UserSeeder 种子账号对齐
 const MOCK_PRESETS = [
   {
     id: 'visitor',
@@ -37,11 +35,11 @@ const MOCK_PRESETS = [
   },
 ]
 
-function isDevToolEnv() {
+function isDeveloperTool() {
   try {
     const info = wx.getAccountInfoSync()
     const env = (info.miniProgram && info.miniProgram.envVersion) || ''
-    return env === 'develop' || env === 'trial'
+    return env === 'develop'
   } catch (e) {
     return false
   }
@@ -62,7 +60,7 @@ Page({
   },
 
   refreshMockHint() {
-    if (!isDevToolEnv()) {
+    if (!isDeveloperTool()) {
       this.setData({ mockHint: false })
       return
     }

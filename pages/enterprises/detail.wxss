@@ -9,11 +9,11 @@ page {
 .ent-swiper {
   width: 100%;
   height: 420rpx;
+  background: #e8eef5;
 }
 
-.ent-swiper-image {
-  width: 100%;
-  height: 420rpx;
+.ent-swiper--wait {
+  background: #e8eef5;
 }
 
 .ent-fallback {

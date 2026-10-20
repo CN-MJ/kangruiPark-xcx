@@ -19,7 +19,7 @@
     </button>
 
     <view class="mock-box" wx:if="{{mockHint}}">
-      <text class="mock-tip">开发多账号测试（后续删除）：先选账号类型，再模拟微信授权。园区岗位进工作台仍要密码。</text>
+      <text class="mock-tip">仅开发者工具可见。先选账号类型，再模拟微信授权。体验版和正式版不会出现。</text>
       <view class="mock-presets">
         <view
           class="mock-preset {{selectedPresetId === item.id ? 'is-active' : ''}}"

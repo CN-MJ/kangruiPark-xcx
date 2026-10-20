@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request')
-const { resolveMediaList, materializeMediaList } = require('../../utils/media')
+const { resolveMediaList } = require('../../utils/media')
 
 Page({
   data: {
@@ -20,17 +20,14 @@ Page({
     request(`/enterprises/${id}`)
       .then((res) => {
         const detail = res.data || {}
-        const remoteImages = resolveMediaList(detail.images || [])
-        detail.images = remoteImages
-        detail.cover = remoteImages[0] || detail.cover || ''
+        const rawImages = (Array.isArray(detail.images) && detail.images.length)
+          ? detail.images
+          : (detail.cover ? [detail.cover] : [])
+        const remoteImages = resolveMediaList(rawImages)
+        detail.images = remoteImages.map((src, index) => ({ id: index, src }))
+        detail.cover = remoteImages[0] || ''
+        detail.galleryLoading = false
         this.setData({ detail, loading: false })
-        return materializeMediaList(remoteImages).then((localImages) => {
-          if (!localImages.length) return
-          this.setData({
-            'detail.images': localImages,
-            'detail.cover': localImages[0] || '',
-          })
-        })
       })
       .catch((err) => {
         this.setData({ loading: false })
@@ -39,9 +36,9 @@ Page({
   },
 
   onPreview(e) {
-    const { url } = e.currentTarget.dataset
-    const urls = (this.data.detail && this.data.detail.images) || []
-    if (!urls.length) return
+    const urls = (this.data.detail && this.data.detail.images || []).map((item) => item.src).filter(Boolean)
+    const url = e.currentTarget.dataset.url
+    if (!urls.length || !url) return
     wx.previewImage({ current: url, urls })
   },
 

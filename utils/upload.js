@@ -71,6 +71,87 @@ function compressToLimit(filePath, maxBytes, softBytes) {
   })
 }
 
+function uploadUserAvatar(filePath) {
+  const { getToken } = require('./userAuth')
+  const token = getToken()
+  if (!token) {
+    return Promise.reject(new Error('请先登录'))
+  }
+
+  return compressToLimit(filePath, ENTERPRISE_MAX_BYTES, ENTERPRISE_SOFT_BYTES).then((path) => new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url: `${API_BASE_URL}/users/avatar`,
+      filePath: path,
+      name: 'file',
+      timeout: UPLOAD_TIMEOUT,
+      header: {
+        Authorization: `Bearer ${token}`,
+      },
+      success(res) {
+        try {
+          const data = JSON.parse(res.data)
+          if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
+            const raw = (data.data && data.data.path) || ''
+            resolve(raw)
+            return
+          }
+          reject(new Error((data && data.msg) || '上传失败'))
+        } catch (e) {
+          reject(new Error('上传失败'))
+        }
+      },
+      fail(err) {
+        reject(parseNetworkError(err))
+      },
+    })
+  }))
+}
+
+function downloadUserAvatar() {
+  const { getToken } = require('./userAuth')
+  const token = getToken()
+  if (!token) {
+    return Promise.reject(new Error('请先登录'))
+  }
+
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: `${API_BASE_URL}/users/avatar`,
+      method: 'GET',
+      responseType: 'arraybuffer',
+      timeout: UPLOAD_TIMEOUT,
+      header: {
+        Authorization: `Bearer ${token}`,
+      },
+      success(res) {
+        if (res.statusCode === 404) {
+          resolve('')
+          return
+        }
+        if (res.statusCode < 200 || res.statusCode >= 300 || !res.data) {
+          reject(new Error('头像加载失败'))
+          return
+        }
+        const header = res.header || {}
+        const type = String(header['Content-Type'] || header['content-type'] || '')
+        let ext = '.jpg'
+        if (type.indexOf('png') !== -1) ext = '.png'
+        else if (type.indexOf('webp') !== -1) ext = '.webp'
+        const filePath = `${wx.env.USER_DATA_PATH}/user_avatar_${Date.now()}${ext}`
+        wx.getFileSystemManager().writeFile({
+          filePath,
+          data: res.data,
+          success: () => resolve(filePath),
+          fail: () => reject(new Error('头像保存失败')),
+        })
+      },
+      fail(err) {
+        reject(parseNetworkError(err))
+      },
+    })
+  })
+}
+
 function uploadImage(filePath, options = {}) {
   const token = getToken()
   if (!token) {
@@ -196,6 +277,8 @@ function uploadLocalImages(paths, options = {}) {
 
 module.exports = {
   uploadImage,
+  uploadUserAvatar,
+  downloadUserAvatar,
   chooseEnterpriseImages,
   uploadLocalImages,
   isRemoteImageUrl,

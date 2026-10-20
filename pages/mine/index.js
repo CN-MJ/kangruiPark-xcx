@@ -3,16 +3,21 @@ const parkAuth = require('../../utils/parkAuth')
 const {
   getPhone,
   getName,
+  getHasAvatar,
   getRoleText,
   isMerchant,
   isVisitor,
   isPark,
   isPhoneVerified,
+  getStaffApplyStatus,
+  getStaffRejectReason,
   saveUserProfile,
   requirePhoneVerified,
   clearUserProfile,
 } = require('../../utils/user')
 const { request, userRequest, parkRequest } = require('../../utils/request')
+const { downloadUserAvatar } = require('../../utils/upload')
+const { isRemoteHttpUrl } = require('../../utils/media')
 const userAuth = require('../../utils/userAuth')
 const superAuth = require('../../utils/superAuth')
 
@@ -23,6 +28,7 @@ const VERSION_TAP_WINDOW_MS = 2500
 Page({
   data: {
     userName: '',
+    userAvatar: '',
     userPhone: '',
     roleText: '访客',
     isVisitor: true,
@@ -32,6 +38,8 @@ Page({
     parkStaffName: '',
     phoneVerified: false,
     hasUserAccount: false,
+    staffApplyStatus: 'none',
+    staffApplyDesc: '提交后由管理员分配岗位',
     headerPhoneText: '未登录 · 点击登录',
     appVersion: APP_VERSION,
   },
@@ -63,6 +71,7 @@ Page({
 
     this.setData({
       userName: loggedIn ? (getName() || '园区访客') : '园区访客',
+      userAvatar: this.previewAvatar(loggedIn && getHasAvatar()),
       userPhone: phone || '未绑定手机号',
       roleText: loggedIn ? getRoleText() : '访客',
       isVisitor: loggedIn ? isVisitor() : true,
@@ -72,8 +81,11 @@ Page({
       parkStaffName: parkAccount && parkUser ? parkUser.name : '',
       phoneVerified: verified,
       hasUserAccount: loggedIn,
+      staffApplyStatus: loggedIn ? getStaffApplyStatus() : 'none',
+      staffApplyDesc: this.staffApplyDesc(loggedIn ? getStaffApplyStatus() : 'none', getStaffRejectReason()),
       headerPhoneText,
     })
+    this.applyAvatar(loggedIn && getHasAvatar())
 
     if (loggedIn) {
       request('/users/sync', {
@@ -96,8 +108,11 @@ Page({
             userName: res.data.name,
             phoneVerified: !!res.data.phone_verified,
             hasUserAccount: true,
+            staffApplyStatus: res.data.staff_apply_status || 'none',
+            staffApplyDesc: this.staffApplyDesc(res.data.staff_apply_status || 'none', res.data.staff_reject_reason || ''),
             headerPhoneText: res.data.phone || phone,
           })
+          this.applyAvatar(!!res.data.has_avatar)
         })
         .catch((err) => {
           wx.showToast({ title: err.message || '网络异常', icon: 'none' })
@@ -105,10 +120,40 @@ Page({
     }
   },
 
+  previewAvatar(hasAvatar) {
+    const current = this.data.userAvatar || ''
+    if (hasAvatar && current && !isRemoteHttpUrl(current)) return current
+    return ''
+  },
+
+  applyAvatar(hasAvatar) {
+    const token = (this._avatarToken || 0) + 1
+    this._avatarToken = token
+    if (!hasAvatar) {
+      this.setData({ userAvatar: '' })
+      return
+    }
+    downloadUserAvatar().then((local) => {
+      if (this._avatarToken !== token) return
+      this.setData({ userAvatar: local || '' })
+    }).catch(() => {
+      if (this._avatarToken !== token) return
+      this.setData({ userAvatar: '' })
+    })
+  },
+
   onHeaderTap() {
-    // 已登录：顶部卡片不再跳转
-    if (this.data.hasUserAccount) return
+    if (this.data.hasUserAccount) {
+      wx.navigateTo({ url: '/pages/mine/profile' })
+      return
+    }
     wx.navigateTo({ url: '/pages/mine/login' })
+  },
+
+  onAvatarError() {
+    const current = this.data.userAvatar || ''
+    if (!current || !isRemoteHttpUrl(current)) return
+    this.setData({ userAvatar: '' })
   },
 
   goOrders() {
@@ -123,6 +168,42 @@ Page({
 
   goContact() {
     nav.go('contact')
+  },
+
+  staffApplyDesc(status, reason) {
+    if (status === 'pending') return '审核中，请等待管理员处理'
+    if (status === 'rejected') return reason ? `未通过：${reason}，点击可重新申请` : '未通过，点击可重新申请'
+    return '提交后由管理员分配岗位'
+  },
+
+  onApplyStaff() {
+    if (!requirePhoneVerified()) return
+    if (isPark()) return
+    if (getStaffApplyStatus() === 'pending') {
+      wx.showToast({ title: '申请正在审核中', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '申请成为工作人员',
+      editable: true,
+      placeholderText: '选填说明，例如负责的事项',
+      success: (res) => {
+        if (!res.confirm) return
+        userRequest('/users/staff-apply', {
+          method: 'POST',
+          data: { note: (res.content || '').trim() },
+        }).then((ret) => {
+          saveUserProfile(ret.data)
+          this.setData({
+            staffApplyStatus: (ret.data && ret.data.staff_apply_status) || 'pending',
+            staffApplyDesc: this.staffApplyDesc('pending', ''),
+          })
+          wx.showToast({ title: ret.msg || '已提交', icon: 'none' })
+        }).catch((err) => {
+          wx.showToast({ title: err.message || '提交失败', icon: 'none' })
+        })
+      },
+    })
   },
 
   goEnterprises() {
@@ -176,6 +257,7 @@ Page({
           clearUserProfile()
           this.setData({
             userName: '园区访客',
+            userAvatar: '',
             userPhone: '未绑定手机号',
             roleText: '访客',
             isVisitor: true,

@@ -1,12 +1,13 @@
 <view class="mine-page">
-  <view class="mine-header {{hasUserAccount ? '' : 'mine-header--clickable'}}" bindtap="onHeaderTap">
-    <image class="mine-avatar" src="/images/default-avatar.jpg" mode="aspectFill" />
+  <view class="mine-header mine-header--clickable" bindtap="onHeaderTap">
+    <image class="mine-avatar" src="{{userAvatar || '/images/default-avatar.jpg'}}" mode="aspectFill" binderror="onAvatarError" />
     <view class="mine-info">
       <view class="name-row">
         <text class="mine-name">{{userName}}</text>
         <text class="role-tag">{{roleText}}</text>
       </view>
       <text class="mine-phone">{{headerPhoneText}}</text>
+      <text class="mine-edit-hint" wx:if="{{hasUserAccount}}">点击编辑资料</text>
     </view>
   </view>
 
@@ -34,6 +35,14 @@
 
   <view class="card menu-card" bindtap="goContact">
     <text class="menu-title">联系物业</text>
+    <text class="menu-arrow">›</text>
+  </view>
+
+  <view class="card menu-card" wx:if="{{hasUserAccount && !isParkAccount}}" bindtap="onApplyStaff">
+    <view>
+      <text class="menu-title">申请成为工作人员</text>
+      <text class="menu-desc">{{staffApplyDesc}}</text>
+    </view>
     <text class="menu-arrow">›</text>
   </view>
 

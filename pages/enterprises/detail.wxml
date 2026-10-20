@@ -1,11 +1,18 @@
 <view class="page-wrap" wx:if="{{detail}}">
-  <swiper class="ent-swiper" indicator-dots autoplay wx:if="{{detail.images && detail.images.length}}">
-    <swiper-item wx:for="{{detail.images}}" wx:key="*this">
+  <swiper
+    class="ent-swiper"
+    style="height:420rpx;"
+    indicator-dots="{{detail.images.length > 1}}"
+    autoplay="{{detail.images.length > 1}}"
+    circular="{{detail.images.length > 1}}"
+    wx:if="{{detail.images && detail.images.length}}"
+  >
+    <swiper-item wx:for="{{detail.images}}" wx:key="id">
       <image
-        class="ent-swiper-image"
-        src="{{item}}"
+        src="{{item.src}}"
         mode="aspectFill"
-        data-url="{{item}}"
+        style="width:100%;height:420rpx;display:block;"
+        data-url="{{item.src}}"
         bindtap="onPreview"
       />
     </swiper-item>

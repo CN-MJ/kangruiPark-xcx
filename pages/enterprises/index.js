@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request')
-const { resolveMediaUrl, materializeMediaUrl } = require('../../utils/media')
+const { resolveMediaUrl } = require('../../utils/media')
 const { DISTRICT_NAMES } = require('../../utils/ganzhouDistrict')
 
 function splitMajorName(name) {
@@ -241,19 +241,6 @@ Page({
     this.loadList({ reset: true }).finally(() => wx.stopPullDownRefresh())
   },
 
-  hydrateCovers(items, startIndex) {
-    items.forEach((item, offset) => {
-      const index = startIndex + offset
-      const remote = item.coverRemote || item.cover
-      if (!remote) return
-      materializeMediaUrl(remote).then((local) => {
-        const current = this.data.list[index]
-        if (!current || !local || local === current.cover) return
-        this.setData({ [`list[${index}].cover`]: local })
-      })
-    })
-  },
-
   loadList({ reset = false } = {}) {
     if (this.data.loading || this.data.loadingMore) return Promise.resolve()
     if (!reset && !this.data.hasMore) return Promise.resolve()
@@ -279,7 +266,7 @@ Page({
           return {
             ...item,
             coverRemote,
-            cover: coverRemote,
+            cover: coverRemote || '/images/default-cover.jpg',
             scopePreview: (item.business_intro || '').slice(0, 60),
             tagsPreview: (item.categories || []).slice(0, 3).map((c) => c.name),
           }
@@ -297,7 +284,6 @@ Page({
           loadingMore: false,
           resultTotal: pagination.total != null ? pagination.total : this.data.resultTotal,
         })
-        this.hydrateCovers(mapped, startIndex)
       })
       .catch((err) => {
         this.setData({ loading: false, loadingMore: false })

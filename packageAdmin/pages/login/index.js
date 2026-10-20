@@ -2,7 +2,7 @@ const { request } = require('../../../utils/request')
 const { fetchCaptcha } = require('../../../utils/auth')
 const parkAuth = require('../../../utils/parkAuth')
 const userAuth = require('../../../utils/userAuth')
-const { isPhoneVerified, isPark } = require('../../../utils/user')
+const { isPhoneVerified, isPark, getPhone } = require('../../../utils/user')
 const { applyParkNavTheme } = require('../../utils/navTheme')
 
 Page({
@@ -44,6 +44,9 @@ Page({
     if (parkAuth.isParkLoggedIn()) {
       wx.redirectTo({ url: '/packageAdmin/pages/home/index' })
       return
+    }
+    if (!this.data.phone) {
+      this.setData({ phone: getPhone() })
     }
     this.refreshCaptcha()
   },

@@ -44,6 +44,13 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.mine-edit-hint {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .menu-card {
   display: flex;
   align-items: center;

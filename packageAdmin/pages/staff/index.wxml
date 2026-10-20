@@ -1,0 +1,61 @@
+<view class="page">
+  <view class="search-row">
+    <input class="search-input" placeholder="搜索姓名或手机号" value="{{keyword}}" bindinput="onKeywordInput" confirm-type="search" bindconfirm="onSearch" />
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <scroll-view class="filter-scroll" scroll-x>
+    <view class="filter-row">
+      <view
+        class="filter-chip {{activeFilter === item.key ? 'on' : ''}}"
+        wx:for="{{filters}}"
+        wx:key="key"
+        data-key="{{item.key}}"
+        bindtap="onFilterTap"
+      >
+        {{item.label}}{{item.key === 'pending' && pendingCount ? ' ' + pendingCount : ''}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <picker wx:if="{{activeFilter === 'park'}}" mode="selector" range="{{parkRoleLabels}}" value="{{parkRoleFilterIndex}}" bindchange="onParkRoleFilter">
+    <view class="filter-picker">角色：{{parkRoleLabels[parkRoleFilterIndex]}} ›</view>
+  </picker>
+
+  <view class="user-row" wx:for="{{list}}" wx:key="id">
+    <view class="user-top">
+      <text class="user-name">{{item.name || '未命名'}}</text>
+      <text class="user-phone">{{item.phone}}</text>
+      <text class="mini-tag" wx:if="{{item.isPending}}">待审</text>
+    </view>
+    <text class="user-note" wx:if="{{item.staff_apply_note}}">{{item.staff_apply_note}}</text>
+    <text class="user-note" wx:if="{{item.staff_apply_status === 'rejected' && item.staff_reject_reason}}">未通过：{{item.staff_reject_reason}}</text>
+
+    <view class="user-ops">
+      <picker mode="selector" range="{{roleLabels}}" value="{{item.roleIndex}}" data-id="{{item.id}}" bindchange="onRoleChange">
+        <view class="chip">{{item.roleText}} ›</view>
+      </picker>
+      <view
+        wx:if="{{item.role === 'park'}}"
+        class="chip {{item.park_role_text ? '' : 'need'}}"
+        data-id="{{item.id}}"
+        bindtap="onConfigRole"
+      >{{item.park_role_text || '配置角色'}} ›</view>
+      <view class="chip ghost" data-id="{{item.id}}" bindtap="onResetPassword">密码</view>
+      <view class="chip ok" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onApprove">通过</view>
+      <view class="chip danger" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onReject">拒绝</view>
+    </view>
+
+  </view>
+
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+  <view class="park-empty" wx:if="{{!loading && list.length === 0}}">没有符合条件的用户</view>
+  <view class="park-loading" wx:if="{{loadingMore}}">加载更多...</view>
+
+  <view class="sheet-mask" wx:if="{{sheetVisible}}" bindtap="onCloseSheet">
+    <view class="sheet" catchtap="noop">
+      <text class="sheet-title">选择角色</text>
+      <view class="sheet-item" wx:for="{{parkRoles}}" wx:key="value" data-value="{{item.value}}" bindtap="onPickSheetRole">{{item.label}}</view>
+    </view>
+  </view>
+</view>

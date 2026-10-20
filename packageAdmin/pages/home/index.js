@@ -92,6 +92,22 @@ const ALL_MENUS = [
     theme: 'purple',
     permission: 'investments',
   },
+  {
+    title: '用户管理',
+    desc: '工作人员申请 · 分配角色',
+    url: '/packageAdmin/pages/staff/index',
+    icon: 'team',
+    theme: 'blue',
+    permission: 'users',
+  },
+  {
+    title: '角色管理',
+    desc: '配置每个角色能进入的工作台菜单',
+    url: '/packageAdmin/pages/staff/roles',
+    icon: 'policy',
+    theme: 'green',
+    permission: 'roles',
+  },
 ]
 
 Page({

@@ -1,0 +1,30 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">头像</text>
+      <view class="avatar-box" bindtap="onChooseAvatar">
+        <image class="avatar-img" src="{{avatarLocal}}" mode="aspectFill" binderror="onAvatarError" />
+        <text class="avatar-tip">点击更换</text>
+      </view>
+      <text class="avatar-limit">支持 jpg、png、webp。超过 1MB 自动压缩，最大 2MB，与企业图片相同。</text>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">名称</text>
+      <view class="form-field">
+        <input class="form-input" maxlength="50" value="{{name}}" bindinput="onNameInput" placeholder="请输入名称" />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <view class="form-field">
+        <text class="phone-readonly">{{phone}}</text>
+      </view>
+    </view>
+
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
+      <text class="action-btn-text">保存</text>
+    </view>
+  </view>
+</view>

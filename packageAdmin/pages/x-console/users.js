@@ -15,11 +15,7 @@ Page({
   },
 
   onShow() {
-    if (!superAuth.isSuperLoggedIn()) {
-      wx.redirectTo({ url: '/packageAdmin/pages/x-console/gate' })
-      return
-    }
-    this.loadList()
+    wx.redirectTo({ url: '/packageAdmin/pages/staff/index' })
   },
 
   loadList() {
