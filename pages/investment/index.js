@@ -18,9 +18,12 @@ Page({
   },
 
   loadHouses(defaultHouseId) {
-    request('/houses')
+    request('/houses', { data: { lease_sale_status: 'all' } })
       .then((res) => {
-        const houses = res.data || []
+        const payload = res.data || {}
+        const houses = Array.isArray(payload.list)
+          ? payload.list
+          : (Array.isArray(payload) ? payload : [])
         let houseIndex = 0
         if (defaultHouseId) {
           const idx = houses.findIndex((h) => String(h.id) === String(defaultHouseId))
@@ -28,7 +31,7 @@ Page({
         }
         this.setData({
           houses,
-          houseTitles: ['暂不指定房源'].concat(houses.map((h) => h.title)),
+          houseTitles: ['暂不指定房源'].concat(houses.map((h) => h.title || `${h.building_no || ''}栋 ${h.room_no || ''}`)),
           houseIndex,
         })
       })

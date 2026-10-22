@@ -1,3 +1,43 @@
 @import '../../styles/park.wxss';
 
 page { background: #f4f6f8; }
+
+.house-admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin: 16rpx 0 20rpx;
+}
+
+.house-tone-tag {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.house-tone-tag.tone-blue { background: #1f6feb; }
+.house-tone-tag.tone-red { background: #c23b3b; }
+.house-tone-tag.tone-yellow { background: #c9a227; color: #1f2937; }
+.house-tone-tag.tone-gray { background: #6b7280; }
+
+.house-admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.house-tone-tag {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.house-tone-tag.tone-blue { background: #1f6feb; }
+.house-tone-tag.tone-red { background: #c23b3b; }
+.house-tone-tag.tone-yellow { background: #c9a227; color: #1f2937; }
+.house-tone-tag.tone-gray { background: #6b7280; }

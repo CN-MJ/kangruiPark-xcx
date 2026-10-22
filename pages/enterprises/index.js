@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request')
-const { resolveMediaUrl } = require('../../utils/media')
+const { resolveMediaUrl, materializeMediaUrl } = require('../../utils/media')
 const { DISTRICT_NAMES } = require('../../utils/ganzhouDistrict')
 
 function splitMajorName(name) {
@@ -241,6 +241,18 @@ Page({
     this.loadList({ reset: true }).finally(() => wx.stopPullDownRefresh())
   },
 
+  hydrateCovers(items, startIndex) {
+    items.forEach((item, offset) => {
+      const remote = item.coverRemote
+      if (!remote) return
+      const index = startIndex + offset
+      materializeMediaUrl(remote).then((local) => {
+        if (!local || local === item.cover) return
+        this.setData({ [`list[${index}].cover`]: local })
+      })
+    })
+  },
+
   loadList({ reset = false } = {}) {
     if (this.data.loading || this.data.loadingMore) return Promise.resolve()
     if (!reset && !this.data.hasMore) return Promise.resolve()
@@ -271,6 +283,9 @@ Page({
             tagsPreview: (item.categories || []).slice(0, 3).map((c) => c.name),
           }
         })
+        if (mapped.length) {
+          console.log('[图片] 企业列表封面', mapped.slice(0, 3).map((item) => item.coverRemote))
+        }
         const pagination = payload.pagination || {}
         const current = pagination.current_page || page
         const last = pagination.last_page || current
@@ -284,6 +299,8 @@ Page({
           loadingMore: false,
           resultTotal: pagination.total != null ? pagination.total : this.data.resultTotal,
         })
+
+        this.hydrateCovers(mapped, startIndex)
       })
       .catch((err) => {
         this.setData({ loading: false, loadingMore: false })

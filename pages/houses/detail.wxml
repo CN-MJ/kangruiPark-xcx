@@ -1,17 +1,38 @@
-<view class="page-wrap" wx:if="{{detail}}">
-  <swiper class="house-swiper" indicator-dots autoplay wx:if="{{detail.images && detail.images.length}}">
-    <swiper-item wx:for="{{detail.images}}" wx:key="*this">
-      <image class="house-swiper-image" src="{{item}}" mode="aspectFill" />
-    </swiper-item>
-  </swiper>
-  <view class="card">
-    <view class="card-title">{{detail.title}}</view>
-    <text class="order-meta">面积：{{detail.area}}</text>
-    <text class="order-meta">价格：{{detail.price}}</text>
-    <text class="order-meta">户型：{{detail.house_type}}</text>
-    <text class="order-time">{{detail.description}}</text>
-    <view class="action-btn action-btn-primary" bindtap="onInvestment">
-      <text class="action-btn-text">登记招商意向</text>
+<view class="house-detail" wx:if="{{detail}}">
+  <view class="house-detail-card">
+    <view class="house-detail-head">
+      <view>
+        <text class="house-detail-title">{{detail.buildingText}} {{detail.roomText}}</text>
+        <text class="house-detail-sub">房源详情</text>
+      </view>
+      <view class="house-detail-badge tone-{{detail.lease_sale_tone}}">{{detail.lease_sale_text}}</view>
+    </view>
+
+    <view class="house-detail-grid">
+      <view class="house-detail-cell">
+        <text class="house-detail-label">栋号</text>
+        <text class="house-detail-value">{{detail.buildingText}}</text>
+      </view>
+      <view class="house-detail-cell">
+        <text class="house-detail-label">层数</text>
+        <text class="house-detail-value">{{detail.floorText}}</text>
+      </view>
+      <view class="house-detail-cell">
+        <text class="house-detail-label">层高</text>
+        <text class="house-detail-value">{{detail.heightText}}</text>
+      </view>
+      <view class="house-detail-cell">
+        <text class="house-detail-label">房号</text>
+        <text class="house-detail-value">{{detail.roomText}}</text>
+      </view>
+      <view class="house-detail-cell house-detail-cell-full">
+        <text class="house-detail-label">建筑面积</text>
+        <text class="house-detail-value">{{detail.areaText}}</text>
+      </view>
+      <view class="house-detail-cell house-detail-cell-full" wx:if="{{detail.house_type}}">
+        <text class="house-detail-label">类型</text>
+        <text class="house-detail-value">{{detail.house_type}}</text>
+      </view>
     </view>
   </view>
 </view>

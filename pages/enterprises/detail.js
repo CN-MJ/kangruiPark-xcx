@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request')
-const { resolveMediaList } = require('../../utils/media')
+const { resolveMediaList, materializeMediaList } = require('../../utils/media')
 
 Page({
   data: {
@@ -15,6 +15,11 @@ Page({
     this.loadDetail(options.id)
   },
 
+  onImageError(e) {
+    const src = e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.url
+    console.warn('[图片] image 组件加载失败', { src, err: e.detail })
+  },
+
   loadDetail(id) {
     this.setData({ loading: true })
     request(`/enterprises/${id}`)
@@ -24,10 +29,22 @@ Page({
           ? detail.images
           : (detail.cover ? [detail.cover] : [])
         const remoteImages = resolveMediaList(rawImages)
+        console.log('[图片] 企业详情地址', { id, raw: rawImages, remote: remoteImages })
         detail.images = remoteImages.map((src, index) => ({ id: index, src }))
         detail.cover = remoteImages[0] || ''
-        detail.galleryLoading = false
+        detail.galleryLoading = !!remoteImages.length
         this.setData({ detail, loading: false })
+
+        if (!remoteImages.length) return null
+        return materializeMediaList(remoteImages).then((localImages) => {
+          const usable = (localImages || []).filter(Boolean)
+          console.log('[图片] 企业详情落地', { remote: remoteImages, local: usable })
+          if (!usable.length) return
+          detail.images = usable.map((src, index) => ({ id: index, src }))
+          detail.cover = usable[0] || ''
+          detail.galleryLoading = false
+          this.setData({ detail })
+        })
       })
       .catch((err) => {
         this.setData({ loading: false })

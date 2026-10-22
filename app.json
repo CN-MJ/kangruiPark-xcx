@@ -87,6 +87,14 @@
   "usingComponents": {
     "kr-icon": "/components/kr-icon/index"
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于选择企业地址、展示园区位置"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation"
+  ],
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
 }

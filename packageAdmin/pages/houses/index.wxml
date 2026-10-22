@@ -1,24 +1,26 @@
-<view class="park-page">
+<view class="park-page house-admin">
   <view class="action-btn action-btn-primary" bindtap="onCreate">
     <text class="action-btn-text">新增房源</text>
   </view>
 
-  <picker mode="selector" range="{{statusTabs}}" value="{{statusFilterIndex}}" bindchange="onStatusFilter">
-    <view class="park-filter-tab active" style="display:inline-block;margin-bottom:20rpx;">
-      状态：{{statusTabs[statusFilterIndex]}}
-    </view>
-  </picker>
+  <view class="house-admin-filters">
+    <picker mode="selector" range="{{leaseTabs}}" range-key="label" value="{{leaseFilterIndex}}" bindchange="onLeaseFilter">
+      <view class="park-filter-tab active">租售：{{leaseTabs[leaseFilterIndex].label}}</view>
+    </picker>
+    <picker mode="selector" range="{{marketTabs}}" value="{{marketFilterIndex}}" bindchange="onMarketFilter">
+      <view class="park-filter-tab active">上架：{{marketTabs[marketFilterIndex]}}</view>
+    </picker>
+  </view>
 
   <view class="park-list-card" wx:for="{{list}}" wx:key="id">
     <view class="park-list-head-row">
-      <text class="park-list-title">{{item.title}}</text>
-      <text class="park-status-tag {{item.statusClass}}">{{item.statusText}}</text>
+      <text class="park-list-title">{{item.displayTitle}}</text>
+      <text class="house-tone-tag {{item.toneClass}}">{{item.lease_sale_text}}</text>
     </view>
-    <text class="park-list-meta">{{item.house_type}} · 面积 {{item.area}} · {{item.price}}</text>
-    <text class="park-list-meta">排序：{{item.sort_order}} · 招商意向 <text class="highlight">{{item.intents_count || 0}}</text> 条</text>
-    <text class="park-list-meta">小程序「园区房源」展示，详情页可提交招商意向</text>
+    <text class="park-list-meta">{{item.metaText}}</text>
+    <text class="park-list-meta">{{item.marketText}} · 排序 {{item.sort_order}} · 意向 {{item.intents_count || 0}} 条</text>
     <view class="park-btn-row">
-      <view class="action-btn-sm" wx:if="{{item.intents_count > 0}}" data-id="{{item.id}}" data-title="{{item.title}}" bindtap="onViewIntents">
+      <view class="action-btn-sm" wx:if="{{item.intents_count > 0}}" data-id="{{item.id}}" data-title="{{item.displayTitle}}" bindtap="onViewIntents">
         <text class="action-btn-sm-text">查看意向</text>
       </view>
       <view class="action-btn-sm" data-id="{{item.id}}" bindtap="onEdit">

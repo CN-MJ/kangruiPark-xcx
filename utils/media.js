@@ -25,8 +25,11 @@ function resolveMediaUrl(src) {
       const path = matched[3] || ''
       if (!base) return value
       const baseHost = base.replace(/^https?:\/\//i, '').split('/')[0].split(':')[0].toLowerCase()
-      // 正式域名上的 http 图片地址一律改成配置里的 https，否则开发版图片组件不加载
-      if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]' || host === baseHost || path.indexOf('/storage/') === 0) {
+      // localhost / 同域 / 本站 storage 的 http 地址改到当前配置的 https
+      const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '[::1]'
+      const isSameHost = host === baseHost
+      const isOurStorage = path.indexOf('/storage/uploads/') === 0 && (isSameHost || isLocalHost || matched[1] === 'http')
+      if (isLocalHost || isSameHost || isOurStorage) {
         return `${base}${path}`
       }
       return value

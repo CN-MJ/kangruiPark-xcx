@@ -1,10 +1,63 @@
-<view class="page-wrap">
-  <view class="card-title">园区房源</view>
-  <view class="card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onDetail">
-    <image wx:if="{{item.images && item.images.length}}" src="{{item.images[0]}}" mode="aspectFill" class="news-cover" />
-    <view class="card-title">{{item.title}}</view>
-    <text class="order-meta">面积：{{item.area}}</text>
-    <text class="order-meta">价格：{{item.price}}</text>
+<view class="house-page">
+  <view class="house-hero">
+    <text class="house-hero-title">园区房源</text>
+    <text class="house-hero-sub">按栋查看可租可售房间</text>
   </view>
-  <view class="empty-tip" wx:if="{{!loading && list.length === 0}}">暂无房源</view>
+
+  <view class="house-legend">
+    <view class="house-legend-item" wx:for="{{legend}}" wx:key="tone">
+      <view class="house-dot tone-{{item.tone}}"></view>
+      <text>{{item.label}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="house-status-scroll" scroll-x enable-flex>
+    <view
+      class="house-status-chip {{statusFilter === item.value ? 'is-on' : ''}}"
+      wx:for="{{statusFilters}}"
+      wx:key="value"
+      data-value="{{item.value}}"
+      bindtap="onStatusTap"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <scroll-view class="house-building-scroll" scroll-x enable-flex wx:if="{{buildings.length}}">
+    <view
+      class="house-building-tab {{activeBuilding === item.building_no ? 'is-on' : ''}}"
+      wx:for="{{buildings}}"
+      wx:key="building_no"
+      data-no="{{item.building_no}}"
+      bindtap="onBuildingTap"
+    >
+      <text class="house-building-name">{{item.label}}</text>
+      <text class="house-building-count">{{item.count}}套</text>
+    </view>
+  </scroll-view>
+
+  <view class="house-count" wx:if="{{!loading && totalCount}}">
+    当前筛选共 {{totalCount}} 套
+    <text wx:if="{{activeBuilding}}"> · {{activeBuilding}}栋展示中</text>
+  </view>
+
+  <view class="house-floor" wx:for="{{floors}}" wx:key="floor" wx:for-item="floorItem">
+    <view class="house-floor-head">
+      <text class="house-floor-title">{{floorItem.floorLabel}}</text>
+      <text class="house-floor-meta" wx:if="{{floorItem.heightText}}">层高 {{floorItem.heightText}}</text>
+    </view>
+    <view class="house-room-grid">
+      <view
+        class="house-room tone-{{item.lease_sale_tone}}"
+        wx:for="{{floorItem.rooms}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onRoomTap"
+      >
+        <text class="house-room-no">{{item.room_no}}</text>
+        <text class="house-room-area">{{item.building_area_text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:if="{{!loading && floors.length === 0}}">暂无符合条件的房源</view>
+  <view class="empty-tip" wx:if="{{loading}}">加载中…</view>
 </view>

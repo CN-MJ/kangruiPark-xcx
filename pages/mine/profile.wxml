@@ -23,6 +23,30 @@
       </view>
     </view>
 
+    <view class="form-item" wx:if="{{canEditIdentity}}">
+      <text class="form-label">身份类型</text>
+      <text class="identity-tip">授权登录后可自行选择，仅支持访客或商户</text>
+      <view class="identity-row">
+        <view
+          class="identity-chip {{role === 'visitor' ? 'is-on' : ''}}"
+          data-role="visitor"
+          bindtap="onRoleTap"
+        >访客</view>
+        <view
+          class="identity-chip {{role === 'merchant' ? 'is-on' : ''}}"
+          data-role="merchant"
+          bindtap="onRoleTap"
+        >商户</view>
+      </view>
+    </view>
+
+    <view class="form-item" wx:elif="{{isParkAccount}}">
+      <text class="form-label">身份类型</text>
+      <view class="form-field">
+        <text class="phone-readonly">工作人员（由管理员分配，不可自改）</text>
+      </view>
+    </view>
+
     <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
       <text class="action-btn-text">保存</text>
     </view>

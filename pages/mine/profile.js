@@ -1,4 +1,15 @@
-const { getName, getPhone, getHasAvatar, saveUserProfile, requirePhoneVerified } = require('../../utils/user')
+const {
+  getName,
+  getPhone,
+  getHasAvatar,
+  getRole,
+  isPark,
+  isPhoneVerified,
+  saveUserProfile,
+  requirePhoneVerified,
+  ROLE_VISITOR,
+  ROLE_MERCHANT,
+} = require('../../utils/user')
 const { userRequest } = require('../../utils/request')
 const { uploadUserAvatar, downloadUserAvatar } = require('../../utils/upload')
 
@@ -12,6 +23,9 @@ Page({
     avatarLocal: DEFAULT_AVATAR,
     avatarDirty: false,
     localPath: '',
+    role: ROLE_VISITOR,
+    canEditIdentity: false,
+    isParkAccount: false,
     submitting: false,
   },
 
@@ -19,10 +33,15 @@ Page({
     if (!requirePhoneVerified()) {
       return
     }
+    const role = getRole() || ROLE_VISITOR
+    const parkAccount = isPark()
     this.setData({
       name: getName() || '',
       phone: getPhone(),
       avatarLocal: DEFAULT_AVATAR,
+      role: (role === ROLE_MERCHANT || role === ROLE_VISITOR) ? role : ROLE_VISITOR,
+      canEditIdentity: isPhoneVerified() && !parkAccount,
+      isParkAccount: parkAccount,
     })
     if (getHasAvatar()) {
       downloadUserAvatar().then((local) => {
@@ -33,6 +52,13 @@ Page({
 
   onNameInput(e) {
     this.setData({ name: e.detail.value })
+  },
+
+  onRoleTap(e) {
+    if (!this.data.canEditIdentity) return
+    const role = e.currentTarget.dataset.role
+    if (role !== ROLE_VISITOR && role !== ROLE_MERCHANT) return
+    this.setData({ role })
   },
 
   onChooseAvatar() {
@@ -87,6 +113,9 @@ Page({
       .then((avatar) => {
         const data = { name }
         if (avatar) data.avatar = avatar
+        if (this.data.canEditIdentity) {
+          data.role = this.data.role === ROLE_MERCHANT ? ROLE_MERCHANT : ROLE_VISITOR
+        }
         return userRequest('/users/profile', { method: 'PATCH', data })
       })
       .then((res) => {

@@ -1,14 +1,17 @@
 const { parkRequest } = require('../../../utils/request')
 const parkAuth = require('../../../utils/parkAuth')
 const { applyParkNavTheme } = require('../../utils/navTheme')
-const { HOUSE_STATUS_FILTER } = require('../../utils/cms')
+const { HOUSE_LEASE_FILTER, HOUSE_MARKET_FILTER } = require('../../utils/cms')
 
 Page({
   data: {
     list: [],
-    statusTabs: HOUSE_STATUS_FILTER,
-    statusFilterIndex: 0,
-    statusFilter: '',
+    leaseTabs: HOUSE_LEASE_FILTER,
+    leaseFilterIndex: 0,
+    leaseFilter: 'all',
+    marketTabs: HOUSE_MARKET_FILTER.map((item) => item.label),
+    marketFilterIndex: 0,
+    marketFilter: 'all',
     page: 1,
     hasMore: true,
     loading: false,
@@ -27,12 +30,25 @@ Page({
     if (this.data.hasMore && !this.data.loading) this.loadList(true)
   },
 
-  onStatusFilter(e) {
+  onLeaseFilter(e) {
     const index = Number(e.detail.value)
-    const statusMap = ['', '1', '0']
+    const item = HOUSE_LEASE_FILTER[index] || HOUSE_LEASE_FILTER[0]
     this.setData({
-      statusFilterIndex: index,
-      statusFilter: statusMap[index] || '',
+      leaseFilterIndex: index,
+      leaseFilter: item.value,
+      page: 1,
+      list: [],
+      hasMore: true,
+    })
+    this.loadList()
+  },
+
+  onMarketFilter(e) {
+    const index = Number(e.detail.value)
+    const item = HOUSE_MARKET_FILTER[index] || HOUSE_MARKET_FILTER[0]
+    this.setData({
+      marketFilterIndex: index,
+      marketFilter: item.value,
       page: 1,
       list: [],
       hasMore: true,
@@ -44,7 +60,12 @@ Page({
     if (this.data.loading) return
     const page = loadMore ? this.data.page + 1 : 1
     const params = { page }
-    if (this.data.statusFilter !== '') params.status = this.data.statusFilter
+    if (this.data.leaseFilter && this.data.leaseFilter !== 'all') {
+      params.lease_sale_status = this.data.leaseFilter
+    }
+    if (this.data.marketFilter && this.data.marketFilter !== 'all') {
+      params.status = this.data.marketFilter
+    }
 
     this.setData({ loading: true })
     parkRequest('/park/houses', { data: params })
@@ -52,8 +73,15 @@ Page({
         const payload = res.data || {}
         const rows = (payload.data || []).map((item) => ({
           ...item,
-          statusText: item.status === 1 ? '在售/在租' : '已售/已租',
-          statusClass: item.status === 1 ? 'on' : 'off',
+          displayTitle: item.title || `${item.building_no || ''}栋 ${item.room_no || ''}`,
+          metaText: [
+            item.floor_label || (item.floor != null ? `${item.floor}层` : ''),
+            item.floor_height != null ? `层高${item.floor_height}m` : '',
+            item.building_area_text || item.area || '',
+            item.house_type || '',
+          ].filter(Boolean).join(' · '),
+          toneClass: `tone-${item.lease_sale_tone || 'blue'}`,
+          marketText: item.status === 1 ? '已上架' : '已下架',
         }))
         this.setData({
           list: loadMore ? this.data.list.concat(rows) : rows,
