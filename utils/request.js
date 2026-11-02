@@ -46,7 +46,11 @@ function request(url, options = {}) {
           resolve(res.data)
           return
         }
-        const msg = (res.data && res.data.msg) || '请求失败'
+        const body = res.data
+        const msg =
+          (body && typeof body === 'object' && (body.msg || body.message))
+          || (typeof body === 'string' && body.trim() ? body.trim().slice(0, 80) : '')
+          || `请求失败(${res.statusCode || 0})`
         reject(new Error(msg))
       },
       fail(err) {
@@ -111,7 +115,7 @@ function userRequest(url, options = {}) {
       Authorization: token ? `Bearer ${token}` : '',
     },
   }).catch((err) => {
-    if (err.message && (err.message.includes('微信授权') || err.message.includes('手机号'))) {
+    if (err.message && (err.message.includes('快捷登录') || err.message.includes('手机号') || err.message.includes('请先登录'))) {
       const { setPhoneVerified } = require('./user')
       const userAuth = require('./userAuth')
       setPhoneVerified(false)

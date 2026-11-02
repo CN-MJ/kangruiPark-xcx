@@ -1,0 +1,82 @@
+<view class="page-wrap">
+  <view class="action-btn action-btn-primary" bindtap="openCreate">
+    <text class="action-btn-text">发布新服务</text>
+  </view>
+
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <image class="svc-cover" wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill" />
+    <view class="card-title">{{item.name}}</view>
+    <text class="order-meta" wx:if="{{item.summary}}">{{item.summary}}</text>
+    <text class="order-meta">价格：{{item.price_text || '面议'}}</text>
+    <text class="order-meta">状态：{{item.status_text}}</text>
+    <view class="park-btn-row">
+      <view class="action-btn-sm" data-id="{{item.id}}" bindtap="openEdit">
+        <text class="action-btn-sm-text">编辑</text>
+      </view>
+      <view class="action-btn-sm" data-id="{{item.id}}" data-status="{{item.status}}" bindtap="onToggleShelf">
+        <text class="action-btn-sm-text">{{item.status === 1 ? '下架' : '上架'}}</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" bindtap="onDelete">
+        <text class="action-btn-sm-text danger">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:if="{{loading}}">加载中...</view>
+  <view class="empty-tip" wx:elif="{{!list.length}}">暂无服务，点击上方发布</view>
+</view>
+
+<view class="form-mask" wx:if="{{showForm}}" catchtouchmove="preventMove">
+  <view class="form-sheet">
+    <view class="form-sheet-head">
+      <text class="card-title">{{editingId ? '编辑服务' : '发布服务'}}</text>
+    </view>
+
+    <scroll-view class="form-sheet-body" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="form-item">
+        <text class="form-label">服务名称</text>
+        <input class="form-input" data-field="name" value="{{form.name}}" bindinput="onField" placeholder="如：健康体检套餐" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">一句话简介</text>
+        <input class="form-input" data-field="summary" value="{{form.summary}}" bindinput="onField" placeholder="可选" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">价格说明</text>
+        <input class="form-input" data-field="price_text" value="{{form.price_text}}" bindinput="onField" placeholder="可不填，默认面议" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">服务图片</text>
+        <text class="form-tip">最多 {{maxImages}} 张，单张 2MB 以内</text>
+        <view class="image-grid">
+          <view class="image-item" wx:for="{{form.displayImages}}" wx:key="*this">
+            <image src="{{item}}" mode="aspectFill" class="image-thumb" />
+            <view class="image-remove" data-index="{{index}}" bindtap="onRemoveImage">×</view>
+          </view>
+          <view class="image-add" wx:if="{{form.images.length < maxImages && !submitting}}" bindtap="onAddImages">
+            <text class="image-add-text">+</text>
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">详情</text>
+        <textarea class="form-textarea" data-field="description" value="{{form.description}}" bindinput="onField" placeholder="可选" />
+      </view>
+      <view class="form-body-spacer"></view>
+    </scroll-view>
+
+    <view class="form-sheet-foot">
+      <view class="form-status-row">
+        <text class="form-label">上架状态</text>
+        <view
+          class="status-toggle {{form.status === 1 ? 'on' : 'off'}}"
+          bindtap="onToggleStatusInForm"
+        >{{form.status === 1 ? '上架中' : '已下架'}}</view>
+      </view>
+      <view class="form-actions">
+        <view class="form-btn ghost" bindtap="closeForm">取消</view>
+        <view class="form-btn primary" bindtap="onSubmit">{{submitting ? '提交中...' : '保存'}}</view>
+      </view>
+    </view>
+  </view>
+</view>

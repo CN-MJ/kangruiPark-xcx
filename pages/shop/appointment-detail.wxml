@@ -1,0 +1,52 @@
+<view class="detail-page" wx:if="{{detail}}">
+  <view class="detail-hero">
+    <view class="detail-hero-top">
+      <text class="detail-service">{{detail.serviceName}}</text>
+      <text class="appt-status {{detail.statusTone}}">{{detail.status_text}}</text>
+    </view>
+    <text class="detail-ent" wx:if="{{detail.enterpriseName}}">{{detail.enterpriseName}}</text>
+    <text class="detail-price" wx:if="{{detail.servicePrice}}">价格：{{detail.servicePrice}}</text>
+    <text class="detail-summary" wx:if="{{detail.serviceSummary}}">{{detail.serviceSummary}}</text>
+  </view>
+
+  <view class="detail-card">
+    <text class="detail-section">访客信息</text>
+    <view class="detail-row">
+      <text class="detail-label">姓名</text>
+      <text class="detail-value">{{detail.user_name || '—'}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">手机</text>
+      <text class="detail-value">{{detail.user_phone || '—'}}</text>
+    </view>
+    <view class="detail-call-btn" wx:if="{{detail.user_phone}}" bindtap="onCall">拨打电话</view>
+  </view>
+
+  <view class="detail-card">
+    <text class="detail-section">预约信息</text>
+    <view class="detail-row">
+      <text class="detail-label">预约时间</text>
+      <text class="detail-value strong">{{detail.timeText}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">提交时间</text>
+      <text class="detail-value">{{detail.createdText}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">状态</text>
+      <text class="detail-value">{{detail.status_text}}</text>
+    </view>
+  </view>
+
+  <view class="detail-bottom" wx:if="{{detail.status === 0}}">
+    <view class="appt-btn ghost" data-action="reject" bindtap="onAction">拒绝</view>
+    <view class="appt-btn primary" data-action="confirm" bindtap="onAction">确认预约</view>
+  </view>
+  <view class="detail-safe" wx:if="{{detail.status === 0}}"></view>
+</view>
+
+<view class="appt-loading" wx:if="{{loading}}">加载中...</view>
+<view class="appt-empty" wx:elif="{{!detail}}">
+  <text class="appt-empty-title">预约不存在</text>
+  <text class="appt-empty-desc">记录可能已删除或无权查看</text>
+</view>

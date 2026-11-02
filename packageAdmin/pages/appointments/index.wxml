@@ -53,6 +53,7 @@
     <view class="park-empty-icon">
       <kr-icon name="order" size="64" color="#cbd5e1" />
     </view>
-    <text class="park-empty-text">暂无预约记录</text>
+    <text class="park-empty-text">暂无园区预约记录</text>
+    <text class="park-empty-text" style="margin-top:12rpx;font-size:24rpx;color:#94a3b8;">访客对企业的预约由企业在「访客预约处理」中受理</text>
   </view>
 </view>

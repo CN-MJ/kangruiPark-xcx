@@ -1,10 +1,6 @@
 <view class="page-wrap">
-  <view class="card">
-    <view class="card-title">园区导览</view>
-    <view class="place-item" wx:for="{{places}}" wx:key="name">
-      <text class="place-name">{{item.name}}</text>
-      <text class="place-desc">{{item.desc}}</text>
-    </view>
+  <view class="empty-card">
+    <view class="empty-title">综合导航即将上线</view>
+    <view class="empty-desc">园区楼宇、配套设施的地图导览正在筹备中，上线后即可一键查找与导航，敬请期待。</view>
   </view>
-  <view class="tip-text">更多导航功能持续完善中</view>
 </view>

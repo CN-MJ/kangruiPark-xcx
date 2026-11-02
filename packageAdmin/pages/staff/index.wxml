@@ -13,7 +13,7 @@
         data-key="{{item.key}}"
         bindtap="onFilterTap"
       >
-        {{item.label}}{{item.key === 'pending' && pendingCount ? ' ' + pendingCount : ''}}
+        {{item.label}}{{item.key === 'pending' && pendingCount ? ' ' + pendingCount : ''}}{{item.key === 'merchant_pending' && merchantPendingCount ? ' ' + merchantPendingCount : ''}}
       </view>
     </view>
   </scroll-view>
@@ -26,10 +26,15 @@
     <view class="user-top">
       <text class="user-name">{{item.name || '未命名'}}</text>
       <text class="user-phone">{{item.phone}}</text>
-      <text class="mini-tag" wx:if="{{item.isPending}}">待审</text>
+      <text class="mini-tag" wx:if="{{item.isPending}}">岗位待审</text>
+      <text class="mini-tag" wx:if="{{item.isMerchantPending}}">商户待审</text>
     </view>
+    <text class="user-note" wx:if="{{item.boundEnterpriseName}}">所属企业：{{item.boundEnterpriseName}}</text>
+    <text class="user-note" wx:if="{{item.isMerchantPending && item.applyEnterpriseName}}">申请企业：{{item.applyEnterpriseName}}</text>
+    <text class="user-note" wx:if="{{item.merchant_apply_note}}">商户备注：{{item.merchant_apply_note}}</text>
+    <text class="user-note" wx:if="{{item.merchant_apply_status === 'rejected' && item.merchant_reject_reason}}">商户未通过：{{item.merchant_reject_reason}}</text>
     <text class="user-note" wx:if="{{item.staff_apply_note}}">{{item.staff_apply_note}}</text>
-    <text class="user-note" wx:if="{{item.staff_apply_status === 'rejected' && item.staff_reject_reason}}">未通过：{{item.staff_reject_reason}}</text>
+    <text class="user-note" wx:if="{{item.staff_apply_status === 'rejected' && item.staff_reject_reason}}">岗位未通过：{{item.staff_reject_reason}}</text>
 
     <view class="user-ops">
       <picker mode="selector" range="{{roleLabels}}" value="{{item.roleIndex}}" data-id="{{item.id}}" bindchange="onRoleChange">
@@ -42,8 +47,10 @@
         bindtap="onConfigRole"
       >{{item.park_role_text || '配置角色'}} ›</view>
       <view class="chip ghost" data-id="{{item.id}}" bindtap="onResetPassword">密码</view>
-      <view class="chip ok" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onApprove">通过</view>
-      <view class="chip danger" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onReject">拒绝</view>
+      <view class="chip ok" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onApprove">岗位通过</view>
+      <view class="chip danger" wx:if="{{item.isPending}}" data-id="{{item.id}}" bindtap="onReject">岗位拒绝</view>
+      <view class="chip ok" wx:if="{{item.isMerchantPending}}" data-id="{{item.id}}" bindtap="onApproveMerchant">商户通过</view>
+      <view class="chip danger" wx:if="{{item.isMerchantPending}}" data-id="{{item.id}}" bindtap="onRejectMerchant">商户拒绝</view>
     </view>
 
   </view>

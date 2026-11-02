@@ -137,6 +137,8 @@ Page({
     this.setData({ formStatus: Number(e.detail.value) })
   },
 
+  preventMove() {},
+
   onCancelForm() {
     this.setData({ showForm: false })
   },

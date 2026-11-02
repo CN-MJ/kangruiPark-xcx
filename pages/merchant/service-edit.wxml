@@ -1,0 +1,42 @@
+<view class="page-wrap">
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">服务名称</text>
+      <view class="form-field">
+        <input class="form-input" placeholder="如：健康体检套餐" value="{{name}}" data-field="name" bindinput="onInput" />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">一句话简介</text>
+      <view class="form-field">
+        <input class="form-input" placeholder="列表展示用" value="{{summary}}" data-field="summary" bindinput="onInput" />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">价格说明</text>
+      <view class="form-field">
+        <input class="form-input" placeholder="如：面议 / 98元起" value="{{price_text}}" data-field="price_text" bindinput="onInput" />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">服务详情</text>
+      <view class="form-field">
+        <textarea
+          class="form-textarea"
+          placeholder="详细介绍服务内容、流程等"
+          value="{{description}}"
+          data-field="description"
+          bindinput="onInput"
+          maxlength="2000"
+        />
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">上架状态</text>
+      <switch checked="{{status === 1}}" bindchange="onStatusChange" color="#003791" />
+    </view>
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
+      <text class="action-btn-text">{{id ? '保存修改' : '发布服务'}}</text>
+    </view>
+  </view>
+</view>

@@ -17,7 +17,7 @@ const SECTIONS = [
     title: '企业增值',
     items: [
       { id: 'enterprise', label: '企业增值', icon: 'enterprise', bg: '#f3eeff' },
-      { id: 'enterprises', label: '健康企业汇', icon: 'merchants', bg: '#e8f0ff' },
+      { id: 'enterprises', label: '赣南健康企业库', icon: 'merchants', bg: '#e8f0ff' },
       { id: 'repair', label: 'IT报修', icon: 'repair', bg: '#e8f6ff' },
       { id: 'activity', label: '活动报备', icon: 'appointment', bg: '#fff8e8' },
       { id: 'news_list', label: '园区资讯', icon: 'news', bg: '#eef4ff' },
@@ -29,7 +29,7 @@ const SECTIONS = [
     items: [
       { id: 'nav', label: '综合导航', icon: 'nav', bg: '#ffece8' },
       { id: 'news_list', label: '新闻公告', icon: 'news', bg: '#fff3e8' },
-      { id: 'enterprises', label: '健康企业汇', icon: 'merchants', bg: '#e8eef9' },
+      { id: 'enterprises', label: '赣南健康企业库', icon: 'merchants', bg: '#e8eef9' },
       { id: 'order', label: '我的订单', icon: 'order', bg: '#eef4ff' },
     ],
   },

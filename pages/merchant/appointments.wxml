@@ -1,7 +1,9 @@
 <view class="page-wrap">
   <view class="card" wx:for="{{list}}" wx:key="id">
-    <view class="card-title">{{item.resource_name}}</view>
+    <view class="card-title">{{item.enterprise_service ? item.enterprise_service.name : item.resource_name}}</view>
+    <text class="order-meta" wx:if="{{item.enterprise}}">企业：{{item.enterprise.name}}</text>
     <text class="order-meta">{{item.user_name}} · {{item.user_phone}}</text>
+    <text class="order-meta" wx:if="{{item.appointment_time}}">时间：{{item.appointment_time}}</text>
     <text class="order-meta">状态：{{item.status_text}}</text>
     <view class="park-btn-row" wx:if="{{item.status===0}}">
       <view class="action-btn-sm" data-id="{{item.id}}" data-action="confirm" bindtap="onAction">

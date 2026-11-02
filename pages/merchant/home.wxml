@@ -1,8 +1,19 @@
 <view class="page-wrap">
   <view class="card" wx:if="{{merchant}}">
-    <view class="card-title">{{merchant.name}}</view>
+    <view class="card-title">{{merchant.enterprise ? merchant.enterprise.name : merchant.name}}</view>
+    <text class="order-meta" wx:if="{{merchant.enterprise}}">工作台账号：{{merchant.name}}</text>
     <text class="order-meta">联系人：{{merchant.contact_name}}</text>
     <text class="order-meta">电话：{{merchant.contact_phone}}</text>
+    <text class="order-meta" wx:if="{{!merchant.enterprise_id}}" style="color:#b45309;">未绑定入驻企业，请联系园区管理员</text>
+    <text class="order-meta" style="color:{{merchant.has_mp_openid ? '#059669' : '#b45309'}};">
+      服务号消息：{{merchant.has_mp_openid ? '已绑定' : '未绑定（收不到新预约通知）'}}
+    </text>
+    <view class="action-btn action-btn-ghost" style="margin-top:16rpx;" bindtap="onBindMp" wx:if="{{!merchant.has_mp_openid}}">
+      <text class="action-btn-text ghost">绑定服务号接收通知</text>
+    </view>
+  </view>
+  <view class="card">
+    <view class="action-btn action-btn-primary" bindtap="goServices"><text class="action-btn-text">服务管理</text></view>
   </view>
   <view class="card" wx:if="{{stats}}">
     <text class="order-meta">预约总数：{{stats.total}}</text>

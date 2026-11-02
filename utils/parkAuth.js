@@ -44,6 +44,11 @@ function hasPermission(permission) {
     }
   } catch (e) {}
 
+  // 模板消息配置仅超管代管可见，园区管理员也不可见
+  if (permission === 'wechat_templates') {
+    return false
+  }
+
   const user = getParkUser()
   const perms = (user && user.permissions) || []
   if (perms.indexOf('*') !== -1) return true

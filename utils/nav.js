@@ -4,7 +4,7 @@ const ROUTES = {
   feedback: '/pages/feedback/index',
   nav: '/pages/nav/index',
   repair: '/pages/repair/index',
-  visitor: '/pages/appointment/create?type=visitor',
+  visitor: '/pages/enterprises/index?mode=service&from=visitor',
   activity: '/pages/appointment/create?type=activity',
   more: '/pages/more/index',
   property: '/pages/property/index',
@@ -18,7 +18,7 @@ const ROUTES = {
   parking_query: '/pages/parking/index',
   news_list: '/pages/news/list',
   contact: '/pages/contact/index',
-  visitor_reg: '/pages/appointment/create?type=visitor',
+  visitor_reg: '/pages/enterprises/index?mode=service&from=visitor',
   more_service: '/pages/more/index',
   news_detail: '/pages/news/detail',
   news_more: '/pages/news/list',
@@ -26,7 +26,6 @@ const ROUTES = {
   investment: '/pages/investment/index',
   policies: '/pages/policies/index',
   service_team: '/pages/service-team/index',
-  activities: '/pages/activities/index',
   merchant_login: '/pages/merchant/login',
 }
 

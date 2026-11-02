@@ -148,6 +148,16 @@
     </view>
   </view>
 
+  <view class="card" wx:if="{{id}}">
+    <text class="section-title">访客预约相关</text>
+    <view class="action-btn action-btn-ghost" bindtap="goServices">
+      <text class="action-btn-text ghost">管理企业服务</text>
+    </view>
+    <view class="action-btn action-btn-ghost" style="margin-top:16rpx;" bindtap="goBindAccount">
+      <text class="action-btn-text ghost">绑定企业工作台账号</text>
+    </view>
+  </view>
+
   <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
     <view wx:if="{{submitting}}" class="action-btn-spinner"></view>
     <text class="action-btn-text">{{submitting ? '保存中' : '保存'}}</text>

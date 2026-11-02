@@ -1,0 +1,179 @@
+page {
+  background: #f2f5fa;
+}
+
+.bind-page {
+  min-height: 100vh;
+  padding: 48rpx 32rpx calc(48rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.bind-card {
+  padding: 40rpx 32rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 10rpx 28rpx rgba(15, 40, 100, 0.08);
+}
+
+.bind-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+}
+
+.bind-desc {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.qr-canvas-hidden {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+  width: 420px;
+  height: 420px;
+}
+
+.qr-box {
+  margin: 32rpx auto 12rpx;
+  width: 360rpx;
+  height: 360rpx;
+  padding: 16rpx;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1rpx solid #e8eef5;
+  border-radius: 16rpx;
+}
+
+.qr-img {
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+}
+
+.qr-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 24rpx;
+}
+
+.qr-hint {
+  display: block;
+  text-align: center;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.qr-hint.err {
+  color: #b45309;
+  background: #fff7ed;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  margin-top: 8rpx;
+  text-align: left;
+}
+
+.poll-row {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.poll-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #003791;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.poll-text {
+  font-size: 24rpx;
+  color: #003791;
+}
+
+.ok-icon {
+  width: 96rpx;
+  height: 96rpx;
+  margin: 8rpx auto 20rpx;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+  font-size: 52rpx;
+  font-weight: 700;
+  line-height: 96rpx;
+  text-align: center;
+}
+
+.bind-btn {
+  margin-top: 24rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.bind-btn.primary {
+  background: #003791;
+  color: #fff;
+}
+
+.bind-btn.ghost {
+  background: #eef3fb;
+  color: #003791;
+}
+
+.foot-tip {
+  display: block;
+  margin-top: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.follow-block {
+  margin-top: 32rpx;
+  padding-top: 28rpx;
+  border-top: 1rpx solid #eef2f7;
+}
+
+.follow-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+}
+
+.follow-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.qr-box.follow {
+  margin-top: 20rpx;
+}

@@ -49,6 +49,9 @@
         <text class="tag {{item.statusClass}}">{{item.merchant_apply_status_text || item.role_text}}</text>
       </view>
       <text class="park-list-meta">{{item.phone}}</text>
+      <text class="park-list-meta" wx:if="{{item.applyEnterpriseName}}">申请企业：{{item.applyEnterpriseName}}</text>
+      <text class="park-list-meta" wx:if="{{item.boundEnterpriseName}}">所属企业：{{item.boundEnterpriseName}}</text>
+      <text class="park-list-meta" wx:if="{{item.merchant_apply_note}}">备注：{{item.merchant_apply_note}}</text>
       <text class="park-list-meta" wx:if="{{item.applyText}}">申请时间：{{item.applyText}}</text>
       <text class="park-list-meta" wx:if="{{item.checkinText}}">入驻时间：{{item.checkinText}}</text>
       <view class="park-btn-row" wx:if="{{item.isPending}}">
@@ -56,6 +59,8 @@
           class="action-btn-sm"
           data-id="{{item.id}}"
           data-name="{{item.name}}"
+          data-enterprise-id="{{item.merchant_apply_enterprise_id}}"
+          data-enterprise-name="{{item.applyEnterpriseName}}"
           bindtap="onApprove"
         >
           <text class="action-btn-sm-text">通过</text>

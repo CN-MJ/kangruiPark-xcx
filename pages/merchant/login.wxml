@@ -1,9 +1,9 @@
 <view class="page-wrap">
   <view class="card" wx:if="{{checked && !workbenchEnabled}}">
     <view class="card-title">商户工作台已停用</view>
-    <text class="login-tip">企业信息统一由园区工作台「健康企业汇」维护。访客可在健康企业汇浏览筛选企业。</text>
+    <text class="login-tip">企业信息统一由园区工作台「赣南健康企业库」维护。访客可在赣南健康企业库浏览筛选企业。</text>
     <view class="action-btn action-btn-primary" bindtap="goEnterprises">
-      <text class="action-btn-text">去健康企业汇看看</text>
+      <text class="action-btn-text">去赣南健康企业库看看</text>
     </view>
   </view>
 

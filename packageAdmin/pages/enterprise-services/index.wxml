@@ -1,0 +1,52 @@
+<view class="page-wrap">
+  <view class="action-btn action-btn-primary" bindtap="openCreate">
+    <text class="action-btn-text">代企业发布服务</text>
+  </view>
+
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <view class="card-title">{{item.name}}</view>
+    <text class="order-meta" wx:if="{{item.summary}}">{{item.summary}}</text>
+    <text class="order-meta" wx:if="{{item.price_text}}">价格：{{item.price_text}}</text>
+    <text class="order-meta">状态：{{item.status_text}}</text>
+    <view class="park-btn-row">
+      <view class="action-btn-sm" data-id="{{item.id}}" bindtap="openEdit">
+        <text class="action-btn-sm-text">编辑</text>
+      </view>
+      <view class="action-btn-sm danger" data-id="{{item.id}}" bindtap="onDelete">
+        <text class="action-btn-sm-text danger">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:if="{{loading}}">加载中...</view>
+  <view class="empty-tip" wx:elif="{{!list.length}}">暂无服务</view>
+</view>
+
+<view class="form-mask" wx:if="{{showForm}}">
+  <view class="form-sheet card">
+    <view class="card-title">{{editingId ? '编辑服务' : '发布服务'}}</view>
+    <view class="form-item">
+      <text class="form-label">名称</text>
+      <input class="form-input" data-field="name" value="{{form.name}}" bindinput="onField" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">简介</text>
+      <input class="form-input" data-field="summary" value="{{form.summary}}" bindinput="onField" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">价格说明</text>
+      <input class="form-input" data-field="price_text" value="{{form.price_text}}" bindinput="onField" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">详情</text>
+      <textarea class="form-textarea" data-field="description" value="{{form.description}}" bindinput="onField" />
+    </view>
+    <view class="form-item" bindtap="onToggleStatus">
+      <text class="form-label">状态：{{form.status === 1 ? '上架' : '下架'}}（点切换）</text>
+    </view>
+    <view class="park-btn-row">
+      <view class="action-btn-sm" bindtap="closeForm"><text class="action-btn-sm-text">取消</text></view>
+      <view class="action-btn-sm" bindtap="onSubmit"><text class="action-btn-sm-text">保存</text></view>
+    </view>
+  </view>
+</view>

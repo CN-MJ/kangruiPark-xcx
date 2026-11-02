@@ -52,14 +52,14 @@
         </view>
       </view>
 
-      <!-- 健康企业汇（公告上方） -->
+      <!-- 赣南健康企业库（公告上方） -->
       <view class="ent-home-card">
         <view class="ent-home-hero">
           <view class="ent-home-hero-glow"></view>
           <view class="ent-home-head" bindtap="onEnterpriseHomeTap" hover-class="press-scale">
             <view class="ent-home-head-main">
-              <text class="ent-home-kicker">全龄段大健康产业</text>
-              <text class="ent-home-title">健康企业汇</text>
+              <text class="ent-home-kicker">一站式 ｜全龄段｜普惠型</text>
+              <text class="ent-home-title">大健康产业综合体</text>
               <text class="ent-home-stats" wx:if="{{!enterpriseHome.loading}}">
                 <text wx:if="{{enterpriseHome.district}}">{{enterpriseHome.district}} · </text>
                 {{enterpriseHome.total}} 家企业 · {{enterpriseHome.majorCount}} 大类 · {{enterpriseHome.minorCount}} 小类
@@ -180,7 +180,7 @@
           </scroll-view>
 
           <view class="ent-home-empty" wx:elif="{{!enterpriseHome.loading}}" bindtap="onEnterpriseHomeTap">
-            暂无企业，点击进入健康企业汇浏览分类
+            暂无企业，点击进入赣南健康企业库浏览分类
           </view>
         </view>
       </view>

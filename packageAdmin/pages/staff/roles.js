@@ -57,23 +57,26 @@ Page({
   openEditor(role) {
     const selected = role.menus || []
     const lockedAdmin = role.key === 'admin'
-    this._selected = selected.slice()
-    if (lockedAdmin && this._selected.indexOf('users') === -1) {
-      this._selected.push('users')
-    }
-    if (lockedAdmin && this._selected.indexOf('roles') === -1) {
-      this._selected.push('roles')
+    const adminLocked = ['users', 'roles']
+    this._selected = selected.slice().filter((k) => k !== 'wechat_templates')
+    if (lockedAdmin) {
+      adminLocked.forEach((k) => {
+        if (this._selected.indexOf(k) === -1) this._selected.push(k)
+      })
     }
     this.setData({
       editing: true,
       editingKey: role.key,
       editingName: role.name || '',
       isSystem: !!role.is_system,
-      menuItems: (this.data.menus || []).map((item) => ({
-        ...item,
-        checked: this._selected.indexOf(item.key) !== -1 || (lockedAdmin && (item.key === 'users' || item.key === 'roles')),
-        locked: lockedAdmin && (item.key === 'users' || item.key === 'roles'),
-      })),
+      menuItems: (this.data.menus || [])
+        .filter((item) => item.key !== 'wechat_templates')
+        .map((item) => ({
+          ...item,
+          checked: this._selected.indexOf(item.key) !== -1
+            || (lockedAdmin && adminLocked.indexOf(item.key) !== -1),
+          locked: lockedAdmin && adminLocked.indexOf(item.key) !== -1,
+        })),
     })
   },
 
@@ -96,11 +99,11 @@ Page({
       return
     }
     let permissions = (this._selected || []).slice()
-    if (this.data.editingKey === 'admin' && permissions.indexOf('users') === -1) {
-      permissions.push('users')
-    }
-    if (this.data.editingKey === 'admin' && permissions.indexOf('roles') === -1) {
-      permissions.push('roles')
+    permissions = permissions.filter((k) => k !== 'wechat_templates')
+    if (this.data.editingKey === 'admin') {
+      ;['users', 'roles'].forEach((k) => {
+        if (permissions.indexOf(k) === -1) permissions.push(k)
+      })
     }
     const isNew = this.data.editingKey === 'new'
     const req = isNew

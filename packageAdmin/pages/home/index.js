@@ -37,7 +37,7 @@ const ALL_MENUS = [
     permission: 'news',
   },
   {
-    title: '健康企业汇',
+    title: '赣南健康企业库',
     desc: '走访企业录入与管理',
     url: '/packageAdmin/pages/enterprises/index',
     icon: 'merchants',
@@ -77,14 +77,6 @@ const ALL_MENUS = [
     permission: 'service_teams',
   },
   {
-    title: '活动管理',
-    desc: '活动发布 · 报名管理',
-    url: '/packageAdmin/pages/activities/index',
-    icon: 'activity',
-    theme: 'orange',
-    permission: 'activities',
-  },
-  {
     title: '招商意向',
     desc: '线索跟进 · 关联房源',
     url: '/packageAdmin/pages/investments/index',
@@ -94,7 +86,7 @@ const ALL_MENUS = [
   },
   {
     title: '用户管理',
-    desc: '工作人员申请 · 分配角色',
+    desc: '岗位申请 · 商户入驻审核 · 分配角色',
     url: '/packageAdmin/pages/staff/index',
     icon: 'team',
     theme: 'blue',
@@ -107,6 +99,14 @@ const ALL_MENUS = [
     icon: 'policy',
     theme: 'green',
     permission: 'roles',
+  },
+  {
+    title: '模板消息配置',
+    desc: '服务号推送模板 ID 与字段映射',
+    url: '/packageAdmin/pages/wechat-templates/index',
+    icon: 'news',
+    theme: 'orange',
+    permission: 'wechat_templates',
   },
 ]
 
@@ -223,7 +223,7 @@ Page({
     if (parkAuth.isSuperActingAsPark()) {
       wx.showModal({
         title: '结束代管',
-        content: '当前为超管代管工作台。退出后将结束控制台会话，微信个人登录会保留。',
+        content: '当前为超管代管工作台。退出后将结束控制台会话，个人登录会保留。',
         success: (res) => {
           if (!res.confirm) return
           const { superRequest } = require('../../../utils/request')
@@ -239,7 +239,7 @@ Page({
 
     wx.showModal({
       title: '退出登录',
-      content: '确定退出园区工作台吗？不影响微信个人登录。',
+      content: '确定退出园区工作台吗？不影响当前个人登录。',
       success: (res) => {
         if (!res.confirm) return
         parkRequest('/park/logout', { method: 'POST' }).finally(() => {

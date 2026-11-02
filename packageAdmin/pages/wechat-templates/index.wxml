@@ -1,0 +1,57 @@
+<view class="page">
+  <view class="hint-card">
+    <text class="hint-text">在微信公众平台申请模板后，填写模板 ID，并把「微信字段名」与业务数据源对齐。仅管理员与超管可配置。</text>
+  </view>
+
+  <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:elif="{{!editing}}">
+    <view class="tpl-card" wx:for="{{templates}}" wx:key="key" data-key="{{item.key}}" bindtap="onEdit">
+      <view class="tpl-head">
+        <text class="tpl-name">{{item.name}}</text>
+        <text class="tpl-badge {{item.enabled ? 'on' : 'off'}}">{{item.enabled ? '启用' : '关闭'}}</text>
+      </view>
+      <text class="tpl-desc">{{item.description}}</text>
+      <text class="tpl-meta">模板 ID：{{item.effective_template_id || '未配置'}}</text>
+      <text class="tpl-meta">字段映射：{{item.field_map.length}} 项</text>
+      <text class="tpl-link">编辑配置</text>
+    </view>
+    <view class="park-empty" wx:if="{{!loading && templates.length === 0}}">暂无推送模板</view>
+  </block>
+
+  <view class="editor" wx:if="{{editing}}">
+    <text class="editor-title">{{editName}}</text>
+    <text class="editor-sub" wx:if="{{editDesc}}">{{editDesc}}</text>
+
+    <view class="form-item">
+      <text class="form-label">模板 ID</text>
+      <input class="form-input" value="{{editTemplateId}}" bindinput="onTemplateIdInput" placeholder="公众平台模板 ID，可留空沿用 .env" />
+      <text class="form-tip" wx:if="{{editEnvFallback}}">环境变量兜底：{{editEnvFallback}}</text>
+    </view>
+
+    <view class="form-item row">
+      <text class="form-label">启用推送</text>
+      <switch checked="{{editEnabled}}" bindchange="onEnabledChange" color="#003791" />
+    </view>
+
+    <view class="form-item">
+      <view class="field-head">
+        <text class="form-label">字段映射</text>
+        <text class="add-field" bindtap="onAddField">+ 添加字段</text>
+      </view>
+      <view class="field-row" wx:for="{{editFields}}" wx:key="index">
+        <input class="field-key" value="{{item.wechat_key}}" data-index="{{index}}" data-prop="wechat_key" bindinput="onFieldInput" placeholder="如 thing1" />
+        <picker mode="selector" range="{{sourceLabels}}" value="{{item.sourceIndex}}" data-index="{{index}}" bindchange="onSourcePick">
+          <view class="field-source">{{sourceLabels[item.sourceIndex] || '选择数据源'}}</view>
+        </picker>
+        <text class="field-del" data-index="{{index}}" bindtap="onRemoveField">删</text>
+      </view>
+      <text class="form-tip" wx:if="{{editFields.length === 0}}">请至少添加一条字段映射</text>
+    </view>
+
+    <view class="editor-ops">
+      <view class="btn primary {{saving ? 'disabled' : ''}}" bindtap="onSave">保存</view>
+      <view class="btn ghost" bindtap="onCancel">取消</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+.page-wrap { padding: 24rpx; }
+.form-item { margin-top: 20rpx; }
+.form-label { font-size: 24rpx; color: #64748b; display: block; margin-bottom: 8rpx; }
+.form-input {
+  width: 100%; box-sizing: border-box; padding: 16rpx 20rpx;
+  background: #f8fafc; border-radius: 12rpx; font-size: 28rpx;
+}
+.empty-tip { padding: 40rpx; text-align: center; color: #94a3b8; }

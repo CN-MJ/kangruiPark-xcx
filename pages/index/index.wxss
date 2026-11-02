@@ -231,7 +231,7 @@ page {
   padding-left: 8rpx;
 }
 
-/* 健康企业汇首页内容卡 */
+/* 赣南健康企业库首页内容卡 */
 .ent-home-card {
   margin-bottom: var(--space);
   background: #ffffff;

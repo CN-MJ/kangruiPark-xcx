@@ -8,9 +8,9 @@ const { resolveMediaList, materializeMediaList } = require('../../../utils/media
 const { DISTRICT_NAMES, resolveDistrict } = require('../../../utils/ganzhouDistrict')
 
 const AUDIENCE_OPTIONS = [
-  { value: 'c', label: '面向百姓C端' },
-  { value: 'b', label: '面向企业B端' },
-  { value: 'bc', label: 'BC兼顾' },
+  { value: 'c', label: '服务个人' },
+  { value: 'b', label: '服务企业' },
+  { value: 'bc', label: '个人与企业均可' },
 ]
 
 const SOURCE_OPTIONS = [
@@ -350,5 +350,19 @@ Page({
         })
         wx.showToast({ title: err.message || '保存失败', icon: 'none' })
       })
+  },
+
+  goServices() {
+    if (!this.data.id) return
+    wx.navigateTo({
+      url: `/packageAdmin/pages/enterprise-services/index?enterprise_id=${this.data.id}&enterprise_name=${encodeURIComponent(this.data.name || '')}`,
+    })
+  },
+
+  goBindAccount() {
+    if (!this.data.id) return
+    wx.navigateTo({
+      url: `/packageAdmin/pages/merchant-accounts/index?enterprise_id=${this.data.id}&enterprise_name=${encodeURIComponent(this.data.name || '')}&contact_phone=${encodeURIComponent(this.data.contact_phone || '')}&contact_name=${encodeURIComponent(this.data.contact_name || '')}`,
+    })
   },
 })

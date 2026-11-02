@@ -3,13 +3,17 @@
     <view class="search-bar">
       <input
         class="search-input"
-        placeholder="搜索企业名称 / 业务 / 地址"
+        placeholder="搜索企业 / 服务名称"
         value="{{keyword}}"
         bindinput="onKeywordInput"
         confirm-type="search"
         bindconfirm="onSearch"
       />
       <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+    <view class="mode-row" wx:if="{{showModeSwitch}}">
+      <view class="mode-chip {{listMode === 'service' ? 'active' : ''}}" data-mode="service" bindtap="onListMode">找服务</view>
+      <view class="mode-chip {{listMode === 'enterprise' ? 'active' : ''}}" data-mode="enterprise" bindtap="onListMode">找企业</view>
     </view>
 
     <view class="filter-bar">
@@ -25,48 +29,93 @@
     <scroll-view class="quick-scroll" scroll-x enhanced show-scrollbar="{{false}}">
       <view class="quick-row">
         <view class="quick-chip {{settleOnly ? 'active' : ''}}" bindtap="onToggleSettle">入驻园区</view>
-        <view class="quick-chip {{audience === 'c' ? 'active' : ''}}" data-value="c" bindtap="onAudience">面向 C 端</view>
-        <view class="quick-chip {{audience === 'b' ? 'active' : ''}}" data-value="b" bindtap="onAudience">面向 B 端</view>
-        <view class="quick-chip {{audience === 'bc' ? 'active' : ''}}" data-value="bc" bindtap="onAudience">BC 兼顾</view>
+        <view class="quick-chip {{audience === 'c' ? 'active' : ''}}" data-value="c" bindtap="onAudience">服务个人</view>
+        <view class="quick-chip {{audience === 'b' ? 'active' : ''}}" data-value="b" bindtap="onAudience">服务企业</view>
+        <view class="quick-chip {{audience === 'bc' ? 'active' : ''}}" data-value="bc" bindtap="onAudience">个人与企业均可</view>
       </view>
     </scroll-view>
 
-    <view class="filter-status" wx:if="{{hasCategoryFilter || settleOnly || audience || district}}">
-      <text class="filter-status-text" wx:if="{{resultTotal != null}}">共 {{resultTotal}} 家</text>
+    <view class="filter-status" wx:if="{{hasCategoryFilter || settleOnly || audience || district || resultTotal != null}}">
+      <text class="filter-status-text" wx:if="{{resultTotal != null}}">共 {{resultTotal}} {{listMode === 'service' ? '项服务' : '家'}}</text>
       <view class="filter-clear" wx:if="{{hasCategoryFilter || district}}" bindtap="onClearCategory">清除筛选</view>
     </view>
   </view>
 
-  <view
-    class="ent-card"
-    wx:for="{{list}}"
-    wx:key="id"
-    data-id="{{item.id}}"
-    bindtap="onDetail"
-    hover-class="press-scale"
-  >
-    <image class="ent-cover" src="{{item.cover || '/images/default-cover.jpg'}}" mode="aspectFill" />
-    <view class="ent-body">
-      <view class="ent-title-row">
-        <text class="ent-title">{{item.name}}</text>
-        <text class="ent-park" wx:if="{{item.settle_in_park}}">入驻</text>
+  <block wx:if="{{listMode === 'enterprise'}}">
+    <view
+      class="ent-card"
+      wx:for="{{list}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onDetail"
+      hover-class="press-scale"
+    >
+      <image class="ent-cover" src="{{item.cover || '/images/default-cover.jpg'}}" mode="aspectFill" />
+      <view class="ent-body">
+        <view class="ent-title-row">
+          <text class="ent-title">{{item.name}}</text>
+          <text class="ent-park" wx:if="{{item.settle_in_park}}">入驻</text>
+        </view>
+        <view class="ent-tags">
+          <text class="ent-tag district" wx:if="{{item.district}}">{{item.district}}</text>
+          <text class="ent-tag" wx:if="{{item.primary_category}}">{{item.primary_category.name}}</text>
+          <text class="ent-tag subject" wx:for="{{item.tagsPreview}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+        </view>
+        <text class="ent-meta">{{item.service_audience_text}}</text>
+        <text class="ent-scope">{{item.scopePreview}}</text>
+        <view class="svc-preview" wx:if="{{item.servicesPreview && item.servicesPreview.length}}">
+          <text class="svc-preview-label">服务</text>
+          <text class="svc-preview-item" wx:for="{{item.servicesPreview}}" wx:for-item="svc" wx:key="id">{{svc.name}}</text>
+        </view>
       </view>
-      <view class="ent-tags">
-        <text class="ent-tag district" wx:if="{{item.district}}">{{item.district}}</text>
-        <text class="ent-tag" wx:if="{{item.primary_category}}">{{item.primary_category.name}}</text>
-        <text class="ent-tag subject" wx:for="{{item.tagsPreview}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
-      </view>
-      <text class="ent-meta">{{item.service_audience_text}}</text>
-      <text class="ent-scope">{{item.scopePreview}}</text>
     </view>
-  </view>
+  </block>
 
-  <view class="empty-tip" wx:if="{{!loading && list.length === 0}}">暂无符合条件的企业</view>
-  <view class="footer-tip" wx:if="{{list.length > 0}}">
+  <block wx:else>
+    <view
+      class="svc-card"
+      wx:for="{{serviceList}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onServiceDetail"
+      hover-class="press-scale"
+    >
+      <image
+        class="svc-card-cover"
+        src="{{item.cover || '/images/default-cover.jpg'}}"
+        mode="aspectFill"
+      />
+      <view class="svc-card-body">
+        <view class="svc-card-top">
+          <text class="svc-card-name">{{item.name}}</text>
+          <text class="svc-card-price">{{item.price_text || '面议'}}</text>
+        </view>
+        <text class="svc-card-summary" wx:if="{{item.summary}}">{{item.summary}}</text>
+        <view class="svc-card-ent" wx:if="{{item.enterprise}}">
+          <text class="svc-card-ent-name">{{item.enterprise.name}}</text>
+          <text class="ent-park" wx:if="{{item.enterprise.settle_in_park}}">入驻</text>
+        </view>
+        <view class="svc-card-actions">
+          <view class="svc-card-link">查看详情</view>
+          <view
+            class="svc-card-action"
+            data-id="{{item.id}}"
+            data-name="{{item.name}}"
+            data-ent="{{item.enterprise && item.enterprise.name}}"
+            catchtap="onBookFromList"
+          >立即预约</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="empty-tip" wx:if="{{!loading && listMode === 'enterprise' && list.length === 0}}">暂无符合条件的企业</view>
+  <view class="empty-tip" wx:if="{{!loading && listMode === 'service' && serviceList.length === 0}}">暂无符合条件的服务</view>
+  <view class="footer-tip" wx:if="{{(listMode === 'enterprise' && list.length > 0) || (listMode === 'service' && serviceList.length > 0)}}">
     <text wx:if="{{loadingMore}}">加载中...</text>
     <text wx:elif="{{!hasMore}}">没有更多了</text>
   </view>
-  <view class="empty-tip" wx:if="{{loading && list.length === 0}}">加载中...</view>
+  <view class="empty-tip" wx:if="{{loading && ((listMode === 'enterprise' && list.length === 0) || (listMode === 'service' && serviceList.length === 0))}}">加载中...</view>
 
   <!-- 分类筛选面板：左大类 + 右小类 -->
   <view class="cat-mask" wx:if="{{catPanelOpen}}" catchtouchmove="preventMove" bindtap="closeCatPanel">

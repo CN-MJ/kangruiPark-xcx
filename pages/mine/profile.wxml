@@ -23,10 +23,32 @@
       </view>
     </view>
 
-    <view class="form-item" wx:if="{{canEditIdentity}}">
+    <view class="form-item" wx:if="{{merchantApplyStatus === 'pending'}}">
+      <text class="form-label">商户申请进度</text>
+      <view class="apply-box">
+        <text class="apply-status">审核中</text>
+        <text class="identity-tip">申请企业：{{applyEnterpriseName || enterpriseName || '—'}}</text>
+        <text class="identity-tip" wx:if="{{applyNote}}">备注：{{applyNote}}</text>
+        <text class="identity-tip">园区管理员将在「用户管理」中审核，通过后即可管理企业服务。</text>
+      </view>
+      <view class="action-btn action-btn-ghost" style="margin-top:20rpx;" bindtap="onCancelApply">
+        <text class="action-btn-text ghost">撤回申请，恢复访客</text>
+      </view>
+    </view>
+
+    <view class="form-item" wx:elif="{{merchantApplyStatus === 'rejected'}}">
+      <text class="form-label">商户申请进度</text>
+      <view class="apply-box rejected">
+        <text class="apply-status">未通过</text>
+        <text class="identity-tip" wx:if="{{merchantRejectReason}}">原因：{{merchantRejectReason}}</text>
+        <text class="identity-tip">可修改企业与备注后重新提交申请</text>
+      </view>
+    </view>
+
+    <view class="form-item" wx:if="{{canEditIdentity || isApprovedMerchant}}">
       <text class="form-label">身份类型</text>
-      <text class="identity-tip">授权登录后可自行选择，仅支持访客或商户</text>
-      <view class="identity-row">
+      <text class="identity-tip" wx:if="{{canEditIdentity && !isApprovedMerchant}}">选择商户需指定入驻企业并填写备注，提交后由园区审核</text>
+      <view class="identity-row" wx:if="{{canEditIdentity}}">
         <view
           class="identity-chip {{role === 'visitor' ? 'is-on' : ''}}"
           data-role="visitor"
@@ -38,6 +60,9 @@
           bindtap="onRoleTap"
         >商户</view>
       </view>
+      <view class="form-field" wx:elif="{{isApprovedMerchant}}">
+        <text class="phone-readonly">商户（已认证）</text>
+      </view>
     </view>
 
     <view class="form-item" wx:elif="{{isParkAccount}}">
@@ -47,8 +72,37 @@
       </view>
     </view>
 
-    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
-      <text class="action-btn-text">保存</text>
+    <view class="form-item" wx:if="{{isApprovedMerchant && enterpriseName}}">
+      <text class="form-label">所属企业</text>
+      <view class="form-field">
+        <text class="phone-readonly">{{enterpriseName}}</text>
+      </view>
+      <text class="identity-tip">更换企业请联系园区管理员</text>
+    </view>
+
+    <block wx:if="{{canEditIdentity && role === 'merchant' && !isApprovedMerchant}}">
+      <view class="form-item">
+        <text class="form-label">申请所属企业</text>
+        <view class="form-picker {{enterpriseName ? '' : 'placeholder'}}" bindtap="onPickEnterprise">
+          {{enterpriseName || '搜索 / 筛选企业后选择'}}
+        </view>
+        <text class="identity-tip">支持按名称搜索，也可按区县、分类筛选</text>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">申请备注</text>
+        <textarea
+          class="form-textarea"
+          maxlength="500"
+          value="{{applyNote}}"
+          bindinput="onApplyNoteInput"
+          placeholder="请说明身份、职务或与企业的关系，便于园区审核"
+        />
+      </view>
+    </block>
+
+    <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit" wx:if="{{merchantApplyStatus !== 'pending'}}">
+      <text class="action-btn-text">{{role === 'merchant' && !isApprovedMerchant && canEditIdentity ? '提交商户申请' : '保存'}}</text>
     </view>
   </view>
 </view>

@@ -4,10 +4,12 @@
     "pages/mine/index",
     "pages/mine/login",
     "pages/mine/profile",
+    "pages/mine/pick-enterprise",
     "pages/mine/bind-phone",
     "pages/orders/index",
     "pages/appointment/index",
     "pages/appointment/create",
+    "pages/wechat/mp-bind",
     "pages/parking/index",
     "pages/parking/confirm-entry",
     "pages/parking/confirm-exit",
@@ -22,6 +24,7 @@
     "pages/enterprise/index",
     "pages/enterprises/index",
     "pages/enterprises/detail",
+    "pages/enterprises/service-detail",
     "pages/property/index",
     "pages/more/index"
     ,"pages/houses/index"
@@ -31,12 +34,14 @@
     ,"pages/policies/index"
     ,"pages/policies/detail"
     ,"pages/service-team/index"
-    ,"pages/activities/index"
-    ,"pages/activities/detail"
     ,"pages/merchant/login"
     ,"pages/merchant/home"
     ,"pages/merchant/change-password"
     ,"pages/merchant/appointments"
+    ,"pages/merchant/services"
+    ,"pages/shop/services"
+    ,"pages/shop/appointments"
+    ,"pages/shop/appointment-detail"
     ,"pages/auth/forgot-password"
   ],
   "subPackages": [
@@ -54,8 +59,11 @@
         "pages/merchants/index",
         "pages/staff/index",
         "pages/staff/roles",
+        "pages/wechat-templates/index",
         "pages/enterprises/index",
         "pages/enterprises/edit",
+        "pages/enterprise-services/index",
+        "pages/merchant-accounts/index",
         "pages/enterprise-categories/index",
         "pages/houses/index",
         "pages/houses/edit",
@@ -63,9 +71,6 @@
         "pages/policies/edit",
         "pages/service-teams/index",
         "pages/service-teams/edit",
-        "pages/activities/index",
-        "pages/activities/edit",
-        "pages/activities/registrations",
         "pages/investments/index",
         "pages/investments/detail",
         "pages/x-console/gate",

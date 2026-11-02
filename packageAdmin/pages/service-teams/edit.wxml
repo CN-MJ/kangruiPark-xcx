@@ -2,10 +2,20 @@
   <view class="card">
     <view class="form-item">
       <text class="form-label">证件照</text>
-      <view class="st-photo-box" bindtap="onChoosePhoto">
-        <image wx:if="{{photoLocal}}" class="st-photo" src="{{photoLocal}}" mode="aspectFill" />
-        <text wx:else class="st-photo-placeholder">上传证件照</text>
+      <view class="st-photo-box" bindtap="onChoosePhoto" hover-class="st-photo-box--press">
+        <image
+          wx:if="{{photoLocal}}"
+          class="st-photo"
+          src="{{photoLocal}}"
+          mode="aspectFill"
+          binderror="onPhotoError"
+        />
+        <view wx:else class="st-photo-placeholder-wrap">
+          <text class="st-photo-placeholder">点击选择证件照</text>
+          <text class="st-photo-placeholder-sub">相册或拍照</text>
+        </view>
       </view>
+      <text class="st-photo-hint" wx:if="{{photoDirty}}">已选择，点击下方「保存」后才会上传到服务器</text>
     </view>
     <view class="form-item">
       <text class="form-label">姓名</text>
@@ -28,7 +38,7 @@
       <input class="form-input" type="number" value="{{sort_order}}" data-key="sort_order" bindinput="onInput" placeholder="越小越靠前，如 1、2、3" />
     </view>
     <view class="action-btn action-btn-primary {{submitting ? 'is-loading' : ''}}" bindtap="onSubmit">
-      <text class="action-btn-text">保存</text>
+      <text class="action-btn-text">{{submitting ? '保存中…' : '保存'}}</text>
     </view>
   </view>
 </view>

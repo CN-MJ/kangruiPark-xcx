@@ -11,15 +11,15 @@ function wxLoginCode() {
     wx.login({
       success: (res) => {
         if (res.code) resolve(res.code)
-        else reject(new Error('微信登录失败'))
+        else reject(new Error('登录失败，请重试'))
       },
-      fail: () => reject(new Error('微信登录失败')),
+      fail: () => reject(new Error('登录失败，请重试')),
     })
   })
 }
 
 /**
- * 微信授权手机号登录
+ * 手机号快捷登录（微信 getPhoneNumber）
  * @param {string} phoneCode getPhoneNumber 返回的 code；本地 mock 可用 MOCK:138xxxx
  */
 function wechatPhoneLogin(phoneCode, name) {

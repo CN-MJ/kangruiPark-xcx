@@ -284,17 +284,17 @@ Page({
         const audiences = [
           {
             value: 'c',
-            label: '面向 C 端',
+            label: '服务个人',
             count: ((audC.data && audC.data.pagination) || {}).total || 0,
           },
           {
             value: 'b',
-            label: '面向 B 端',
+            label: '服务企业',
             count: ((audB.data && audB.data.pagination) || {}).total || 0,
           },
           {
             value: 'bc',
-            label: 'BC 兼顾',
+            label: '个人与企业均可',
             count: ((audBc.data && audBc.data.pagination) || {}).total || 0,
           },
           {

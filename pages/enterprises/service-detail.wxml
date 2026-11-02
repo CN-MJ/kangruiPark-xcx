@@ -1,0 +1,63 @@
+<view class="svc-detail" wx:if="{{detail}}">
+  <swiper
+    class="svc-swiper"
+    indicator-dots="{{detail.images.length > 1}}"
+    autoplay="{{detail.images.length > 1}}"
+    circular="{{detail.images.length > 1}}"
+    wx:if="{{detail.images && detail.images.length}}"
+  >
+    <swiper-item wx:for="{{detail.images}}" wx:key="id">
+      <image
+        class="svc-swiper-img"
+        src="{{item.src}}"
+        mode="aspectFill"
+        data-url="{{item.src}}"
+        bindtap="onPreview"
+      />
+    </swiper-item>
+  </swiper>
+  <view class="svc-swiper svc-swiper--empty" wx:else>
+    <image class="svc-swiper-img" src="/images/default-cover.jpg" mode="aspectFill" />
+  </view>
+
+  <view class="svc-panel">
+    <view class="svc-head">
+      <text class="svc-title">{{detail.name}}</text>
+      <text class="svc-price">{{detail.price_text}}</text>
+    </view>
+    <text class="svc-summary" wx:if="{{detail.summary}}">{{detail.summary}}</text>
+
+    <view class="svc-ent" wx:if="{{detail.enterprise}}" bindtap="onOpenEnterprise" hover-class="press-soft">
+      <image
+        class="svc-ent-cover"
+        src="{{detail.enterpriseCover || '/images/default-cover.jpg'}}"
+        mode="aspectFill"
+      />
+      <view class="svc-ent-main">
+        <text class="svc-ent-name">{{detail.enterprise.name}}</text>
+        <view class="svc-ent-meta">
+          <text wx:if="{{detail.enterprise.district}}">{{detail.enterprise.district}}</text>
+          <text class="park-tag" wx:if="{{detail.enterprise.settle_in_park}}">入驻园区</text>
+        </view>
+      </view>
+      <text class="svc-ent-arrow">查看企业</text>
+    </view>
+  </view>
+
+  <view class="svc-panel" wx:if="{{detail.description}}">
+    <text class="svc-section-title">服务说明</text>
+    <text class="svc-desc">{{detail.description}}</text>
+  </view>
+  <view class="svc-panel" wx:else>
+    <text class="svc-section-title">服务说明</text>
+    <text class="svc-desc muted">商家暂未填写详细说明</text>
+  </view>
+
+  <view class="svc-bottom-safe"></view>
+  <view class="svc-bottom">
+    <view class="svc-book-btn" bindtap="onBook">立即预约</view>
+  </view>
+</view>
+
+<view class="empty-tip" wx:if="{{loading}}">加载中...</view>
+<view class="empty-tip" wx:elif="{{!detail}}">服务不存在或已下架</view>

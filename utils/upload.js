@@ -197,7 +197,11 @@ function uploadImage(filePath, options = {}) {
 }
 
 function isRemoteImageUrl(src) {
-  return typeof src === 'string' && /^https?:\/\//i.test(src)
+  if (typeof src !== 'string' || !src) return false
+  // 微信本地临时路径也会是 http://tmp/... / wxfile://，必须走上传
+  if (/^wxfile:\/\//i.test(src)) return false
+  if (/^https?:\/\/(tmp|usr)\//i.test(src)) return false
+  return /^https?:\/\//i.test(src)
 }
 
 /**
@@ -275,14 +279,95 @@ function uploadLocalImages(paths, options = {}) {
   return run()
 }
 
+const SERVICE_MAX_COUNT = 3
+
+/**
+ * 商户服务图片上传（微信用户 Token → /user/shop/upload；工作台 Token → /merchant/upload）
+ */
+function uploadServiceImage(filePath, options = {}) {
+  const mode = options.mode === 'merchant' ? 'merchant' : 'user'
+  let token = ''
+  if (mode === 'merchant') {
+    const merchantAuth = require('./merchantAuth')
+    token = merchantAuth.getToken && merchantAuth.getToken()
+  } else {
+    const userAuth = require('./userAuth')
+    token = userAuth.getToken()
+  }
+  if (!token) {
+    return Promise.reject(new Error(mode === 'merchant' ? '请先登录企业工作台' : '请先登录'))
+  }
+
+  const url = mode === 'merchant'
+    ? `${API_BASE_URL}/merchant/upload`
+    : `${API_BASE_URL}/user/shop/upload`
+
+  return compressToLimit(filePath, ENTERPRISE_MAX_BYTES, ENTERPRISE_SOFT_BYTES).then((path) => new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url,
+      filePath: path,
+      name: 'file',
+      timeout: UPLOAD_TIMEOUT,
+      header: {
+        Authorization: `Bearer ${token}`,
+      },
+      success(res) {
+        try {
+          const data = JSON.parse(res.data)
+          if (res.statusCode >= 200 && res.statusCode < 300 && data.code === 200) {
+            const { resolveMediaUrl } = require('./media')
+            const raw = (data.data && (data.data.path || data.data.url)) || ''
+            // 存相对 path 便于后端入库；展示用 resolve
+            resolve({
+              path: data.data && data.data.path ? data.data.path : raw,
+              url: resolveMediaUrl((data.data && (data.data.url || data.data.path)) || raw),
+            })
+            return
+          }
+          reject(new Error((data && data.msg) || '上传失败'))
+        } catch (e) {
+          reject(new Error('上传失败'))
+        }
+      },
+      fail(err) {
+        reject(parseNetworkError(err))
+      },
+    })
+  }))
+}
+
+function chooseServiceImages(currentCount = 0, maxCount = SERVICE_MAX_COUNT) {
+  return chooseEnterpriseImages(currentCount, maxCount)
+}
+
+async function uploadLocalServiceImages(paths, options = {}) {
+  const list = Array.isArray(paths) ? paths.slice() : []
+  const mode = options.mode === 'merchant' ? 'merchant' : 'user'
+  const pending = list
+    .map((src, index) => ({ src, index }))
+    .filter((item) => item.src && !isRemoteImageUrl(item.src) && !String(item.src).startsWith('uploads/'))
+
+  for (let i = 0; i < pending.length; i += 1) {
+    const item = pending[i]
+    // eslint-disable-next-line no-await-in-loop
+    const uploaded = await uploadServiceImage(item.src, { mode })
+    list[item.index] = uploaded.path || uploaded.url
+  }
+  return list
+}
+
 module.exports = {
   uploadImage,
   uploadUserAvatar,
   downloadUserAvatar,
   chooseEnterpriseImages,
   uploadLocalImages,
+  uploadServiceImage,
+  chooseServiceImages,
+  uploadLocalServiceImages,
   isRemoteImageUrl,
   compressToLimit,
   ENTERPRISE_MAX_BYTES,
   ENTERPRISE_MAX_COUNT,
+  SERVICE_MAX_COUNT,
 }

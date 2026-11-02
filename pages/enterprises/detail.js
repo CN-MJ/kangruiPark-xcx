@@ -1,5 +1,5 @@
 const { request } = require('../../utils/request')
-const { resolveMediaList, materializeMediaList } = require('../../utils/media')
+const { resolveMediaUrl, resolveMediaList, materializeMediaList, materializeMediaUrl } = require('../../utils/media')
 
 Page({
   data: {
@@ -20,6 +20,17 @@ Page({
     console.warn('[图片] image 组件加载失败', { src, err: e.detail })
   },
 
+  hydrateServiceCovers(services) {
+    ;(services || []).forEach((svc, index) => {
+      const remote = svc.coverRemote
+      if (!remote) return
+      materializeMediaUrl(remote).then((local) => {
+        if (!local || local === svc.cover) return
+        this.setData({ [`detail.services[${index}].cover`]: local })
+      })
+    })
+  },
+
   loadDetail(id) {
     this.setData({ loading: true })
     request(`/enterprises/${id}`)
@@ -29,16 +40,24 @@ Page({
           ? detail.images
           : (detail.cover ? [detail.cover] : [])
         const remoteImages = resolveMediaList(rawImages)
-        console.log('[图片] 企业详情地址', { id, raw: rawImages, remote: remoteImages })
         detail.images = remoteImages.map((src, index) => ({ id: index, src }))
         detail.cover = remoteImages[0] || ''
         detail.galleryLoading = !!remoteImages.length
+        detail.services = (detail.services || []).map((svc) => {
+          const coverRemote = resolveMediaUrl(svc.cover || (svc.images && svc.images[0]) || '')
+          return {
+            ...svc,
+            coverRemote,
+            cover: coverRemote || '/images/default-cover.jpg',
+            price_text: svc.price_text || '面议',
+          }
+        })
         this.setData({ detail, loading: false })
+        this.hydrateServiceCovers(detail.services)
 
         if (!remoteImages.length) return null
         return materializeMediaList(remoteImages).then((localImages) => {
           const usable = (localImages || []).filter(Boolean)
-          console.log('[图片] 企业详情落地', { remote: remoteImages, local: usable })
           if (!usable.length) return
           detail.images = usable.map((src, index) => ({ id: index, src }))
           detail.cover = usable[0] || ''
@@ -81,5 +100,20 @@ Page({
       return
     }
     wx.makePhoneCall({ phoneNumber: String(phone) })
+  },
+
+  onServiceDetail(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({ url: `/pages/enterprises/service-detail?id=${id}` })
+  },
+
+  onBookService(e) {
+    const { id, name } = e.currentTarget.dataset
+    if (!id) return
+    const ent = this.data.detail || {}
+    wx.navigateTo({
+      url: `/pages/appointment/create?type=service&service_id=${id}&service_name=${encodeURIComponent(name || '')}&enterprise_name=${encodeURIComponent(ent.name || '')}`,
+    })
   },
 })

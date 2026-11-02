@@ -63,3 +63,50 @@
   color: #1f6feb;
   border-color: #1f6feb;
 }
+
+.form-picker {
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  background: #f8fafc;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #0f172a;
+}
+
+.form-picker.placeholder {
+  color: #94a3b8;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 18rpx 20rpx;
+  box-sizing: border-box;
+  background: #f8fafc;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.apply-box {
+  padding: 20rpx;
+  border-radius: 12rpx;
+  background: #eff6ff;
+}
+
+.apply-box.rejected {
+  background: #fef2f2;
+}
+
+.apply-status {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1d4ed8;
+  margin-bottom: 8rpx;
+}
+
+.apply-box.rejected .apply-status {
+  color: #b91c1c;
+}

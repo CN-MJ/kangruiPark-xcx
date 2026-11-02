@@ -1,4 +1,4 @@
-const { parkRequest } = require('../../../utils/request')
+const { parkRequest, request } = require('../../../utils/request')
 const parkAuth = require('../../../utils/parkAuth')
 const superAuth = require('../../../utils/superAuth')
 
@@ -6,7 +6,8 @@ const ROLE_KEYS = ['visitor', 'merchant', 'park']
 const ROLE_LABELS = ['访客', '商户', '工作人员']
 const FILTERS = [
   { key: 'all', label: '全部' },
-  { key: 'pending', label: '待审核' },
+  { key: 'pending', label: '岗位待审' },
+  { key: 'merchant_pending', label: '商户待审' },
   { key: 'visitor', label: '访客' },
   { key: 'merchant', label: '商户' },
   { key: 'park', label: '工作人员' },
@@ -21,7 +22,10 @@ Page({
     filters: FILTERS,
     activeFilter: 'all',
     pendingCount: 0,
+    merchantPendingCount: 0,
     parkRoles: [],
+    enterpriseNames: [],
+    enterpriseOptions: [],
     parkRoleLabels: ['全部角色'],
     assignLabels: [],
     parkRoleFilterIndex: 0,
@@ -34,7 +38,21 @@ Page({
 
   onShow() {
     if (!this.ensureAccess()) return
+    this.loadEnterprises()
     this.loadList(true)
+  },
+
+  loadEnterprises() {
+    // 审核绑企需包含非入驻园区企业，勿再强制 settle_in_park=1
+    request('/enterprises', { data: { page: 1, per_page: 100 } })
+      .then((res) => {
+        const list = (res.data && res.data.list) || []
+        this.setData({
+          enterpriseOptions: list,
+          enterpriseNames: list.map((item) => item.name),
+        })
+      })
+      .catch(() => {})
   },
 
   onPullDownRefresh() {
@@ -98,6 +116,7 @@ Page({
     const params = { page }
     const filter = this.data.activeFilter
     if (filter === 'pending') params.staff_apply_status = 'pending'
+    if (filter === 'merchant_pending') params.apply_status = 'pending'
     if (filter === 'visitor' || filter === 'merchant' || filter === 'park') params.role = filter
     if (filter === 'park' && this.data.parkRoleFilterIndex > 0) {
       const role = this.data.parkRoles[this.data.parkRoleFilterIndex - 1]
@@ -119,6 +138,7 @@ Page({
           page: pagination.current_page || page,
           lastPage: pagination.last_page || 1,
           pendingCount: payload.pending_count || 0,
+          merchantPendingCount: payload.merchant_pending_count || 0,
           parkRoles,
           assignLabels: parkRoles.map((role) => role.label),
           parkRoleLabels: ['全部角色'].concat(parkRoles.map((role) => role.label)),
@@ -132,23 +152,132 @@ Page({
 
   decorate(item, parkRoles) {
     const roles = parkRoles || this.data.parkRoles
+    const applyEnt = item.merchant_apply_enterprise || null
+    const boundEnt = item.enterprise || null
     return {
       ...item,
       roleText: item.role_text || '访客',
       roleIndex: Math.max(0, ROLE_KEYS.indexOf(item.role)),
       parkRoleIndex: Math.max(0, roles.findIndex((role) => role.value === item.park_role)),
       isPending: item.staff_apply_status === 'pending',
+      isMerchantPending: item.merchant_apply_status === 'pending',
+      applyEnterpriseName: applyEnt ? applyEnt.name : '',
+      boundEnterpriseName: boundEnt ? boundEnt.name : '',
     }
   },
 
   onRoleChange(e) {
     const id = Number(e.currentTarget.dataset.id)
     const role = ROLE_KEYS[Number(e.detail.value)]
-    if (role !== 'park') {
-      this.patchUser(id, { role })
+    if (role === 'park') {
+      this.openRoleSheet(id, 'assign')
       return
     }
-    this.openRoleSheet(id, 'assign')
+    if (role === 'merchant') {
+      this.pickEnterpriseFull((enterpriseId) => {
+        this.patchUser(id, { role: 'merchant', enterprise_id: enterpriseId })
+      })
+      return
+    }
+    this.patchUser(id, { role })
+  },
+
+  onApproveMerchant(e) {
+    const id = Number(e.currentTarget.dataset.id)
+    const user = this.data.list.find((item) => item.id === id)
+    const preferredId = Number((user && user.merchant_apply_enterprise_id) || 0)
+    const options = this.data.enterpriseOptions || []
+    // 申请人已选企业时可直接通过，不依赖本地企业下拉是否含入驻筛选
+    if (!preferredId && !options.length) {
+      wx.showToast({ title: '暂无企业，请先维护企业库', icon: 'none' })
+      return
+    }
+    let index = preferredId
+      ? options.findIndex((item) => item.id === preferredId)
+      : 0
+    if (index < 0) index = 0
+    const applyName = (user && user.applyEnterpriseName)
+      || (options[index] && options[index].name)
+      || '申请企业'
+    const defaultEnterpriseId = preferredId || (options[index] && options[index].id)
+    if (!defaultEnterpriseId) {
+      wx.showToast({ title: '缺少待绑定企业', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '通过商户申请',
+      content: `默认绑定「${applyName}」。确认通过？若需改绑企业，请先点「改绑企业再通过」。`,
+      confirmText: '通过',
+      cancelText: '改绑',
+      success: (res) => {
+        if (res.confirm) {
+          this.reviewMerchant(id, { enterprise_id: defaultEnterpriseId })
+          return
+        }
+        if (res.cancel) {
+          this.pickEnterpriseFull((enterpriseId) => {
+            this.reviewMerchant(id, { enterprise_id: enterpriseId })
+          }, preferredId)
+        }
+      },
+    })
+  },
+
+  pickEnterpriseFull(done, preferredId) {
+    const options = this.data.enterpriseOptions || []
+    if (!options.length) {
+      wx.showToast({ title: '暂无企业可选，请先在企业库维护', icon: 'none' })
+      return
+    }
+    let index = 0
+    if (preferredId) {
+      const found = options.findIndex((item) => item.id === preferredId)
+      if (found >= 0) index = found
+    }
+    const sheet = options.slice(0, 6)
+    wx.showActionSheet({
+      itemList: sheet.map((item) => item.name),
+      success: (res) => {
+        const ent = sheet[res.tapIndex]
+        if (ent) done(ent.id)
+      },
+    })
+  },
+
+  onRejectMerchant(e) {
+    const id = Number(e.currentTarget.dataset.id)
+    wx.showModal({
+      title: '拒绝商户申请',
+      editable: true,
+      placeholderText: '请填写拒绝原因',
+      confirmColor: '#dc2626',
+      success: (res) => {
+        if (!res.confirm) return
+        const reason = (res.content || '').trim()
+        if (!reason) {
+          wx.showToast({ title: '请填写原因', icon: 'none' })
+          return
+        }
+        parkRequest(`/park/users/${id}/reject-merchant`, {
+          method: 'POST',
+          data: { reject_reason: reason },
+        })
+          .then((ret) => {
+            wx.showToast({ title: ret.msg || '已拒绝', icon: 'none' })
+            this.loadList(true)
+          })
+          .catch((err) => wx.showToast({ title: err.message || '处理失败', icon: 'none' }))
+      },
+    })
+  },
+
+  reviewMerchant(id, data) {
+    parkRequest(`/park/users/${id}/approve-merchant`, { method: 'POST', data })
+      .then((ret) => {
+        wx.showToast({ title: ret.msg || '已通过', icon: 'success' })
+        this.loadList(true)
+      })
+      .catch((err) => wx.showToast({ title: err.message || '处理失败', icon: 'none' }))
   },
 
   onParkRoleChange(e) {

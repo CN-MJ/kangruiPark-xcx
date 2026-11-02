@@ -19,8 +19,8 @@ Page({
     applyParkNavTheme()
     if (!isPhoneVerified() || !userAuth.isLoggedIn()) {
       wx.showModal({
-        title: '需要微信授权',
-        content: '请先微信授权手机号登录后，再使用园区账号密码进入工作台',
+        title: '需要登录',
+        content: '请先手机号快捷登录后，再使用园区账号密码进入工作台',
         confirmText: '去授权',
         showCancel: false,
         success: () => {
@@ -32,7 +32,7 @@ Page({
     if (!isPark()) {
       wx.showModal({
         title: '无权进入',
-        content: '当前微信账号不是园区人员，无法登录工作台',
+        content: '当前账号不是园区人员，无法登录工作台',
         confirmText: '知道了',
         showCancel: false,
         success: () => {

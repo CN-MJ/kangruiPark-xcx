@@ -18,8 +18,8 @@ Page({
     if (!requirePhoneVerified({ redirect: false })) {
       this.setData({ loading: false, list: [], needVerify: true })
       wx.showModal({
-        title: '需要微信授权',
-        content: '绑定车辆前请先微信授权手机号登录',
+        title: '需要登录',
+        content: '绑定车辆前请先手机号快捷登录',
         confirmText: '去登录',
         success: (res) => {
           if (res.confirm) {

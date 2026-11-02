@@ -43,7 +43,10 @@ Page({
     district: '',
     districtOptions: DISTRICT_NAMES,
     keyword: '',
+    listMode: 'service',
+    showModeSwitch: true,
     list: [],
+    serviceList: [],
     page: 1,
     hasMore: true,
     loading: false,
@@ -63,6 +66,20 @@ Page({
     if (options.settle_in_park === '1' || options.settle_in_park === 1) {
       this.setData({ settleOnly: true })
     }
+    // 访客预约：只展示服务列表，不显示「找企业」；入驻园区需用户自行点选筛选
+    const from = decodeQueryValue(options.from || '')
+    const isVisitorBooking = from === 'visitor'
+    // 支持 ?mode=enterprise 强制找企业；默认找服务
+    const mode = decodeQueryValue(options.mode || options.list_mode || '')
+    const patch = {}
+    if (isVisitorBooking) {
+      patch.showModeSwitch = false
+      patch.listMode = 'service'
+      wx.setNavigationBarTitle({ title: '访客预约' })
+    } else if (mode === 'enterprise' || mode === 'service') {
+      patch.listMode = mode
+    }
+    if (Object.keys(patch).length) this.setData(patch)
     this.loadDistricts()
     this.loadCategories().then(() => this.loadList({ reset: true }))
   },
@@ -229,6 +246,13 @@ Page({
     this.setData({ keyword: e.detail.value })
   },
 
+  onListMode(e) {
+    const mode = e.currentTarget.dataset.mode
+    if (!mode || mode === this.data.listMode) return
+    this.setData({ listMode: mode, list: [], serviceList: [], page: 1, hasMore: true })
+    this.loadList({ reset: true })
+  },
+
   onSearch() {
     this.loadList({ reset: true })
   },
@@ -241,14 +265,14 @@ Page({
     this.loadList({ reset: true }).finally(() => wx.stopPullDownRefresh())
   },
 
-  hydrateCovers(items, startIndex) {
+  hydrateCovers(items, startIndex, listKey = 'list') {
     items.forEach((item, offset) => {
       const remote = item.coverRemote
       if (!remote) return
       const index = startIndex + offset
       materializeMediaUrl(remote).then((local) => {
         if (!local || local === item.cover) return
-        this.setData({ [`list[${index}].cover`]: local })
+        this.setData({ [`${listKey}[${index}].cover`]: local })
       })
     })
   },
@@ -258,7 +282,8 @@ Page({
     if (!reset && !this.data.hasMore) return Promise.resolve()
 
     const page = reset ? 1 : this.data.page
-    const loadingKey = reset || this.data.list.length === 0 ? 'loading' : 'loadingMore'
+    const currentLen = this.data.listMode === 'service' ? this.data.serviceList.length : this.data.list.length
+    const loadingKey = reset || currentLen === 0 ? 'loading' : 'loadingMore'
     this.setData({ [loadingKey]: true })
 
     const data = { page, per_page: 10 }
@@ -269,9 +294,42 @@ Page({
     if (this.data.district) data.district = this.data.district
     if (this.data.keyword.trim()) data.keyword = this.data.keyword.trim()
 
-    return request('/enterprises', { data })
+    const isServiceMode = this.data.listMode === 'service'
+    const api = isServiceMode ? '/enterprise-services' : '/enterprises'
+    if (!isServiceMode) data.with_services = 1
+
+    return request(api, { data })
       .then((res) => {
         const payload = res.data || {}
+        const pagination = payload.pagination || {}
+        const current = pagination.current_page || page
+        const last = pagination.last_page || current
+
+        if (isServiceMode) {
+          const startIndex = reset ? 0 : this.data.serviceList.length
+          const mapped = (payload.list || []).map((item) => {
+            const coverRemote = resolveMediaUrl(item.cover || (item.images && item.images[0]) || '')
+            return {
+              ...item,
+              coverRemote,
+              cover: coverRemote || '/images/default-cover.jpg',
+              price_text: item.price_text || '面议',
+            }
+          })
+          const serviceList = reset ? mapped : this.data.serviceList.concat(mapped)
+          this.setData({
+            serviceList,
+            list: [],
+            page: current + 1,
+            hasMore: current < last,
+            loading: false,
+            loadingMore: false,
+            resultTotal: pagination.total != null ? pagination.total : this.data.resultTotal,
+          })
+          this.hydrateCovers(mapped, startIndex, 'serviceList')
+          return
+        }
+
         const startIndex = reset ? 0 : this.data.list.length
         const mapped = (payload.list || []).map((item) => {
           const coverRemote = resolveMediaUrl(item.cover || (item.images && item.images[0]) || '')
@@ -281,18 +339,14 @@ Page({
             cover: coverRemote || '/images/default-cover.jpg',
             scopePreview: (item.business_intro || '').slice(0, 60),
             tagsPreview: (item.categories || []).slice(0, 3).map((c) => c.name),
+            servicesPreview: (item.services || []).slice(0, 3),
           }
         })
-        if (mapped.length) {
-          console.log('[图片] 企业列表封面', mapped.slice(0, 3).map((item) => item.coverRemote))
-        }
-        const pagination = payload.pagination || {}
-        const current = pagination.current_page || page
-        const last = pagination.last_page || current
         const list = reset ? mapped : this.data.list.concat(mapped)
 
         this.setData({
           list,
+          serviceList: [],
           page: current + 1,
           hasMore: current < last,
           loading: false,
@@ -300,7 +354,7 @@ Page({
           resultTotal: pagination.total != null ? pagination.total : this.data.resultTotal,
         })
 
-        this.hydrateCovers(mapped, startIndex)
+        this.hydrateCovers(mapped, startIndex, 'list')
       })
       .catch((err) => {
         this.setData({ loading: false, loadingMore: false })
@@ -310,5 +364,19 @@ Page({
 
   onDetail(e) {
     wx.navigateTo({ url: `/pages/enterprises/detail?id=${e.currentTarget.dataset.id}` })
+  },
+
+  onServiceDetail(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({ url: `/pages/enterprises/service-detail?id=${id}` })
+  },
+
+  onBookFromList(e) {
+    const { id, name, ent } = e.currentTarget.dataset
+    if (!id) return
+    wx.navigateTo({
+      url: `/pages/appointment/create?type=service&service_id=${id}&service_name=${encodeURIComponent(name || '')}&enterprise_name=${encodeURIComponent(ent || '')}`,
+    })
   },
 })

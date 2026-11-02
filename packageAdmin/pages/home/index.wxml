@@ -75,11 +75,10 @@
       <text class="overview-item">待跟进意向 <text class="num">{{stats.investments_pending}}</text></text>
     </view>
     <view class="overview-row">
-      <text class="overview-item">健康企业汇 <text class="num">{{stats.enterprises_total}}</text></text>
+      <text class="overview-item">赣南健康企业库 <text class="num">{{stats.enterprises_total}}</text></text>
       <text class="overview-item">入驻园区 <text class="num">{{stats.merchants_count}}</text></text>
     </view>
     <view class="overview-row">
-      <text class="overview-item">进行中活动 <text class="num">{{stats.activities_open}}</text></text>
       <text class="overview-item">展示政策 <text class="num">{{stats.policies_published}}</text></text>
     </view>
   </view>

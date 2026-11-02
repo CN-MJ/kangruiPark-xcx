@@ -50,6 +50,41 @@
     <text class="section-label">主营业务简介</text>
     <text class="scope-text">{{detail.business_intro}}</text>
   </view>
+
+  <view class="card" wx:if="{{detail.services && detail.services.length}}">
+    <view class="title-row">
+      <text class="card-title">可预约服务</text>
+      <text class="svc-count">{{detail.services.length}} 项</text>
+    </view>
+    <view
+      class="svc-item"
+      wx:for="{{detail.services}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onServiceDetail"
+      hover-class="press-soft"
+    >
+      <image
+        class="svc-thumb"
+        src="{{item.cover || '/images/default-cover.jpg'}}"
+        mode="aspectFill"
+      />
+      <view class="svc-main">
+        <text class="svc-name">{{item.name}}</text>
+        <text class="svc-summary" wx:if="{{item.summary}}">{{item.summary}}</text>
+        <text class="svc-price">{{item.price_text || '面议'}}</text>
+      </view>
+      <view
+        class="svc-book"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+        catchtap="onBookService"
+      >预约</view>
+    </view>
+  </view>
+  <view class="card" wx:elif="{{detail && !loading}}">
+    <text class="scope-text">该企业暂无可预约服务</text>
+  </view>
 </view>
 
 <view class="empty-tip" wx:if="{{loading}}">加载中...</view>

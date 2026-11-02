@@ -8,38 +8,6 @@
     </view>
   </view>
 
-  <view class="form-card" wx:if="{{showForm}}">
-    <text class="form-card-title">{{editingId ? '编辑分类' : '新增分类'}}</text>
-    <text class="form-hint">归属：{{formParentName}}</text>
-
-    <view class="form-item">
-      <text class="form-label">名称</text>
-      <view class="form-field">
-        <input class="form-input" data-key="formName" value="{{formName}}" bindinput="onFormInput" placeholder="请输入分类名称" />
-      </view>
-    </view>
-
-    <view class="form-row">
-      <view class="form-item form-item--half">
-        <text class="form-label">排序</text>
-        <view class="form-field">
-          <input class="form-input" type="number" data-key="formSort" value="{{formSort}}" bindinput="onFormInput" placeholder="数字越小越前" />
-        </view>
-      </view>
-      <view class="form-item form-item--half">
-        <text class="form-label">状态</text>
-        <picker mode="selector" range="{{['停用','启用']}}" value="{{formStatus}}" bindchange="onFormStatusChange">
-          <view class="form-picker">{{formStatus === 1 ? '启用' : '停用'}}</view>
-        </picker>
-      </view>
-    </view>
-
-    <view class="form-actions">
-      <view class="action-btn-sm" bindtap="onCancelForm"><text class="action-btn-sm-text">取消</text></view>
-      <view class="action-btn-sm primary" bindtap="onSaveForm"><text class="action-btn-sm-text primary">保存</text></view>
-    </view>
-  </view>
-
   <view class="major-card" wx:for="{{majors}}" wx:key="id">
     <view class="major-head" data-id="{{item.id}}" bindtap="onToggleExpand">
       <view class="major-index">{{index + 1}}</view>
@@ -126,4 +94,39 @@
     <text class="park-empty-text">暂无分类，请先点「同步标准 6 大类」</text>
   </view>
   <view class="park-loading" wx:if="{{loading}}">加载中...</view>
+
+  <!-- 底部浮层表单：加小类/新增大类/编辑时就地填写，无需滚回顶部 -->
+  <view class="form-mask" wx:if="{{showForm}}" catchtouchmove="preventMove" bindtap="onCancelForm"></view>
+  <view class="form-sheet" wx:if="{{showForm}}" catchtouchmove="preventMove">
+    <view class="form-sheet-handle"></view>
+    <text class="form-card-title">{{editingId ? '编辑分类' : (formParentId ? '新增小类' : '新增大类')}}</text>
+    <text class="form-hint">归属：{{formParentName}}</text>
+
+    <view class="form-item">
+      <text class="form-label">名称</text>
+      <view class="form-field">
+        <input class="form-input" focus="{{showForm}}" data-key="formName" value="{{formName}}" bindinput="onFormInput" placeholder="请输入分类名称" />
+      </view>
+    </view>
+
+    <view class="form-row">
+      <view class="form-item form-item--half">
+        <text class="form-label">排序</text>
+        <view class="form-field">
+          <input class="form-input" type="number" data-key="formSort" value="{{formSort}}" bindinput="onFormInput" placeholder="数字越小越前" />
+        </view>
+      </view>
+      <view class="form-item form-item--half">
+        <text class="form-label">状态</text>
+        <picker mode="selector" range="{{['停用','启用']}}" value="{{formStatus}}" bindchange="onFormStatusChange">
+          <view class="form-picker">{{formStatus === 1 ? '启用' : '停用'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-actions">
+      <view class="action-btn-sm" bindtap="onCancelForm"><text class="action-btn-sm-text">取消</text></view>
+      <view class="action-btn-sm primary" bindtap="onSaveForm"><text class="action-btn-sm-text primary">保存</text></view>
+    </view>
+  </view>
 </view>

@@ -42,7 +42,7 @@ Page({
         theme: 'orange',
       },
       {
-        title: '健康企业汇',
+        title: '赣南健康企业库',
         desc: '走访企业录入与管理',
         url: '/packageAdmin/pages/enterprises/index',
         icon: 'merchants',
@@ -75,13 +75,6 @@ Page({
         url: '/packageAdmin/pages/service-teams/index',
         icon: 'team',
         theme: 'blue',
-      },
-      {
-        title: '活动管理',
-        desc: '活动发布 · 报名管理',
-        url: '/packageAdmin/pages/activities/index',
-        icon: 'activity',
-        theme: 'orange',
       },
       {
         title: '招商意向',
@@ -170,7 +163,7 @@ Page({
   onLogout() {
     wx.showModal({
       title: '退出控制台',
-      content: '仅退出超管控制台，微信个人登录会保留。',
+      content: '仅退出超管控制台，个人登录会保留。',
       success: (res) => {
         if (!res.confirm) return
         superRequest('/super/logout', { method: 'POST' }).finally(() => {

@@ -64,8 +64,12 @@ Page({
           ...item,
           timeText: formatDateTime(item.appointment_time),
           statusText: item.status_text || ({ 0: '待确认', 1: '已确认', 2: '已拒绝', 3: '已取消' }[item.status] || '待确认'),
-          displayTitle: item.merchant ? `拜访 ${item.resource_name}` : item.resource_name,
-          locationText: item.merchant && item.merchant.location ? item.merchant.location : '',
+          displayTitle: item.enterprise_service
+            ? `${item.enterprise_service.name}${item.enterprise ? ` · ${item.enterprise.name}` : ''}`
+            : (item.merchant ? `拜访 ${item.resource_name}` : item.resource_name),
+          locationText: item.merchant && item.merchant.location
+            ? item.merchant.location
+            : (item.enterprise ? item.enterprise.name : ''),
         }))
         this.setData({ list, loading: false })
       })

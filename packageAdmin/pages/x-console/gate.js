@@ -15,7 +15,7 @@ Page({
 
   onLoad() {
     if (!requirePhoneVerified({ redirect: false })) {
-      wx.showToast({ title: '请先微信授权登录', icon: 'none' })
+      wx.showToast({ title: '请先手机号快捷登录', icon: 'none' })
       setTimeout(() => wx.redirectTo({ url: '/pages/mine/login' }), 500)
       return
     }

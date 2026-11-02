@@ -11,6 +11,8 @@ const {
   isPhoneVerified,
   getStaffApplyStatus,
   getStaffRejectReason,
+  getEnterpriseId,
+  getEnterpriseName,
   saveUserProfile,
   requirePhoneVerified,
   clearUserProfile,
@@ -18,10 +20,11 @@ const {
 const { request, userRequest, parkRequest } = require('../../utils/request')
 const { downloadUserAvatar } = require('../../utils/upload')
 const { isRemoteHttpUrl } = require('../../utils/media')
+const { bindVisitorMpOpenid, openVisitorMpBindIfNeeded } = require('../../utils/wechatMp')
 const userAuth = require('../../utils/userAuth')
 const superAuth = require('../../utils/superAuth')
 
-const APP_VERSION = '1.0.0'
+const APP_VERSION = '1.0.16'
 const VERSION_TAP_NEED = 7
 const VERSION_TAP_WINDOW_MS = 2500
 
@@ -40,6 +43,7 @@ Page({
     hasUserAccount: false,
     staffApplyStatus: 'none',
     staffApplyDesc: '提交后由管理员分配岗位',
+    enterpriseName: '',
     headerPhoneText: '未登录 · 点击登录',
     appVersion: APP_VERSION,
   },
@@ -58,7 +62,7 @@ Page({
     if (loggedIn) {
       headerPhoneText = phone
     } else if (phone && !verified) {
-      headerPhoneText = `${phone} · 点击授权登录`
+      headerPhoneText = `${phone} · 点击登录`
     } else if (phone) {
       headerPhoneText = `${phone} · 点击登录`
     }
@@ -83,6 +87,7 @@ Page({
       hasUserAccount: loggedIn,
       staffApplyStatus: loggedIn ? getStaffApplyStatus() : 'none',
       staffApplyDesc: this.staffApplyDesc(loggedIn ? getStaffApplyStatus() : 'none', getStaffRejectReason()),
+      enterpriseName: loggedIn && isMerchant() ? getEnterpriseName() : '',
       headerPhoneText,
     })
     this.applyAvatar(loggedIn && getHasAvatar())
@@ -102,6 +107,9 @@ Page({
             roleText: res.data.role_text,
             isVisitor: res.data.role === 'visitor',
             isMerchant: res.data.role === 'merchant',
+            enterpriseName: res.data.role === 'merchant' && res.data.enterprise
+              ? res.data.enterprise.name
+              : '',
             isParkAccount: syncedPark,
             isParkStaff: syncedPark && parkAuth.isParkLoggedIn(),
             parkStaffName: syncedPark && parkAuth.getParkUser() ? parkAuth.getParkUser().name : '',
@@ -166,6 +174,18 @@ Page({
     wx.navigateTo({ url: '/pages/vehicles/index' })
   },
 
+  onBindMpNotify() {
+    if (!requirePhoneVerified()) return
+    const phone = getPhone()
+    if (!phone) {
+      wx.showToast({ title: '请先绑定手机号', icon: 'none' })
+      return
+    }
+    bindVisitorMpOpenid(phone).catch(() => {
+      wx.showToast({ title: '复制失败，请重试', icon: 'none' })
+    })
+  },
+
   goContact() {
     nav.go('contact')
   },
@@ -199,11 +219,59 @@ Page({
             staffApplyDesc: this.staffApplyDesc('pending', ''),
           })
           wx.showToast({ title: ret.msg || '已提交', icon: 'none' })
+          const phone = (ret.data && ret.data.phone) || getPhone()
+          if (phone) {
+            setTimeout(() => {
+              openVisitorMpBindIfNeeded({ phone, from: 'staff_apply' }).catch(() => {})
+            }, 500)
+          }
         }).catch((err) => {
           wx.showToast({ title: err.message || '提交失败', icon: 'none' })
         })
       },
     })
+  },
+
+  goShopServices() {
+    if (!requirePhoneVerified()) return
+    if (!getEnterpriseId()) {
+      wx.showModal({
+        title: '尚未绑定企业',
+        content: '请先在个人资料中选择商户身份并绑定所属企业',
+        confirmText: '去绑定',
+        success: (res) => {
+          if (res.confirm) wx.navigateTo({ url: '/pages/mine/profile' })
+        },
+      })
+      return
+    }
+    wx.navigateTo({ url: '/pages/shop/services' })
+  },
+
+  goShopAppointments() {
+    if (!requirePhoneVerified()) return
+    if (!getEnterpriseId()) {
+      wx.showModal({
+        title: '尚未绑定企业',
+        content: '请先在个人资料中选择商户身份并绑定所属企业',
+        confirmText: '去绑定',
+        success: (res) => {
+          if (res.confirm) wx.navigateTo({ url: '/pages/mine/profile' })
+        },
+      })
+      return
+    }
+    const phone = getPhone()
+    const go = () => wx.navigateTo({ url: '/pages/shop/appointments' })
+    if (!phone) {
+      go()
+      return
+    }
+    openVisitorMpBindIfNeeded({ phone, from: 'shop' })
+      .then((ret) => {
+        if (ret && ret.skipped) go()
+      })
+      .catch(() => go())
   },
 
   goEnterprises() {
@@ -229,13 +297,24 @@ Page({
       this.goParkLogin()
       return
     }
-    wx.navigateTo({ url: '/packageAdmin/pages/home/index' })
+    const phone = getPhone()
+    const go = () => wx.navigateTo({ url: '/packageAdmin/pages/home/index' })
+    if (!phone) {
+      go()
+      return
+    }
+    // 待审申请会推服务号，未绑定则先授权
+    openVisitorMpBindIfNeeded({ phone, from: 'park' })
+      .then((ret) => {
+        if (ret && ret.skipped) go()
+      })
+      .catch(() => go())
   },
 
   onLogoutPark() {
     wx.showModal({
       title: '退出园区工作台',
-      content: '仅退出工作台账号，不影响微信个人登录',
+      content: '仅退出工作台账号，不影响当前个人登录',
       success: (res) => {
         if (!res.confirm) return
         parkRequest('/park/logout', { method: 'POST' }).finally(() => {
@@ -249,8 +328,8 @@ Page({
 
   onLogoutUser() {
     wx.showModal({
-      title: '退出微信账号',
-      content: '退出后需重新授权手机号，园区工作台也会一并退出。',
+      title: '退出登录',
+      content: '退出后需重新手机号快捷登录，园区工作台也会一并退出。',
       success: (res) => {
         if (!res.confirm) return
         const finish = () => {

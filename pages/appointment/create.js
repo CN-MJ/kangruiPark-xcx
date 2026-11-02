@@ -1,5 +1,6 @@
 const { request } = require('../../utils/request')
 const { getPhone, setPhone, getName, setName } = require('../../utils/user')
+const { openVisitorMpBindIfNeeded } = require('../../utils/wechatMp')
 
 const TYPE_CONFIG = {
   venue: {
@@ -8,6 +9,9 @@ const TYPE_CONFIG = {
   },
   visitor: {
     title: '访客预约',
+  },
+  service: {
+    title: '服务预约',
   },
   activity: {
     title: '活动报备',
@@ -25,6 +29,9 @@ Page({
     merchantNames: [],
     merchantIndex: 0,
     merchantsLoading: false,
+    serviceId: 0,
+    serviceName: '',
+    enterpriseName: '',
     userName: '',
     userPhone: '',
     date: '',
@@ -36,10 +43,21 @@ Page({
     const type = options.type || 'venue'
     const config = TYPE_CONFIG[type] || TYPE_CONFIG.venue
     wx.setNavigationBarTitle({ title: config.title })
+
+    const serviceName = options.service_name
+      ? decodeURIComponent(options.service_name)
+      : ''
+    const enterpriseName = options.enterprise_name
+      ? decodeURIComponent(options.enterprise_name)
+      : ''
+
     this.setData({
       appointmentType: type,
       pageTitle: config.title,
       resources: config.resources || [],
+      serviceId: options.service_id ? Number(options.service_id) : 0,
+      serviceName,
+      enterpriseName,
       userName: getName(),
       userPhone: getPhone(),
       date: this.getToday(),
@@ -112,6 +130,7 @@ Page({
       resourceIndex,
       merchants,
       merchantIndex,
+      serviceId,
     } = this.data
 
     if (!userName.trim()) {
@@ -133,7 +152,13 @@ Page({
       appointment_time: `${date} ${time}:00`,
     }
 
-    if (appointmentType === 'visitor') {
+    if (appointmentType === 'service') {
+      if (!serviceId) {
+        wx.showToast({ title: '缺少服务信息', icon: 'none' })
+        return
+      }
+      payload.enterprise_service_id = serviceId
+    } else if (appointmentType === 'visitor') {
       if (!merchants.length) {
         wx.showToast({ title: '暂无可选公司', icon: 'none' })
         return
@@ -153,7 +178,19 @@ Page({
     })
       .then((res) => {
         wx.showToast({ title: res.msg || '提交成功', icon: 'success' })
-        setTimeout(() => wx.navigateBack(), 1500)
+        const phone = userPhone.trim()
+        // 未授权才进授权页；已绑定服务号则直接返回
+        setTimeout(() => {
+          openVisitorMpBindIfNeeded({ phone, from: 'appointment', replace: true })
+            .then((ret) => {
+              if (ret && ret.skipped) {
+                wx.navigateBack({ delta: 1 })
+              }
+            })
+            .catch(() => {
+              wx.navigateBack({ delta: 1 })
+            })
+        }, 600)
       })
       .catch((err) => {
         wx.showToast({ title: err.message || '提交失败', icon: 'none' })

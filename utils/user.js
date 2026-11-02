@@ -9,6 +9,9 @@ const PHONE_VERIFIED_KEY = 'user_phone_verified'
 const APPLY_STATUS_KEY = 'user_merchant_apply_status'
 const STAFF_APPLY_KEY = 'user_staff_apply_status'
 const STAFF_REJECT_KEY = 'user_staff_reject_reason'
+const ENTERPRISE_ID_KEY = 'user_enterprise_id'
+const ENTERPRISE_NAME_KEY = 'user_enterprise_name'
+const HAS_MP_OPENID_KEY = 'user_has_mp_openid'
 
 const ROLE_VISITOR = 'visitor'
 const ROLE_MERCHANT = 'merchant'
@@ -74,6 +77,22 @@ function getStaffRejectReason() {
   return wx.getStorageSync(STAFF_REJECT_KEY) || ''
 }
 
+function getEnterpriseId() {
+  return Number(wx.getStorageSync(ENTERPRISE_ID_KEY) || 0) || 0
+}
+
+function getHasMpOpenid() {
+  return wx.getStorageSync(HAS_MP_OPENID_KEY) === '1'
+}
+
+function setHasMpOpenid(bound) {
+  wx.setStorageSync(HAS_MP_OPENID_KEY, bound ? '1' : '')
+}
+
+function getEnterpriseName() {
+  return wx.getStorageSync(ENTERPRISE_NAME_KEY) || ''
+}
+
 function isMerchant() {
   return getRole() === ROLE_MERCHANT
 }
@@ -96,6 +115,7 @@ function saveUserProfile(user) {
   if (user.role_text) wx.setStorageSync(ROLE_TEXT_KEY, user.role_text)
   if (user.checked_in_at) wx.setStorageSync(CHECKED_IN_KEY, user.checked_in_at)
   if (user.phone_verified !== undefined) setPhoneVerified(user.phone_verified)
+  if (user.has_mp_openid !== undefined) setHasMpOpenid(!!user.has_mp_openid)
   if (user.merchant_apply_status !== undefined) {
     wx.setStorageSync(APPLY_STATUS_KEY, user.merchant_apply_status || 'none')
   }
@@ -104,6 +124,14 @@ function saveUserProfile(user) {
   }
   if (user.staff_reject_reason !== undefined) {
     wx.setStorageSync(STAFF_REJECT_KEY, user.staff_reject_reason || '')
+  }
+  if (Object.prototype.hasOwnProperty.call(user, 'enterprise_id')) {
+    wx.setStorageSync(ENTERPRISE_ID_KEY, user.enterprise_id || '')
+  }
+  if (user.enterprise && user.enterprise.name) {
+    wx.setStorageSync(ENTERPRISE_NAME_KEY, user.enterprise.name)
+  } else if (Object.prototype.hasOwnProperty.call(user, 'enterprise') && !user.enterprise) {
+    wx.setStorageSync(ENTERPRISE_NAME_KEY, '')
   }
   if (user.token) {
     const userAuth = require('./userAuth')
@@ -128,8 +156,8 @@ function requirePhoneVerified(options = {}) {
 
   if (redirect) {
     wx.showModal({
-      title: '需要微信授权',
-      content: '请先微信授权手机号登录后，才能使用此功能',
+      title: '需要登录',
+      content: '请先手机号快捷登录后，才能使用此功能',
       confirmText: '去登录',
       success: (res) => {
         if (res.confirm) {
@@ -143,7 +171,7 @@ function requirePhoneVerified(options = {}) {
 }
 
 function clearUserProfile() {
-  // 退出微信账号时一并清超管与园区工作台会话
+  // 退出登录时一并清超管与园区工作台会话
   wx.removeStorageSync(PHONE_KEY)
   wx.removeStorageSync(NAME_KEY)
   wx.removeStorageSync(AVATAR_KEY)
@@ -155,6 +183,9 @@ function clearUserProfile() {
   wx.removeStorageSync(APPLY_STATUS_KEY)
   wx.removeStorageSync(STAFF_APPLY_KEY)
   wx.removeStorageSync(STAFF_REJECT_KEY)
+  wx.removeStorageSync(ENTERPRISE_ID_KEY)
+  wx.removeStorageSync(ENTERPRISE_NAME_KEY)
+  wx.removeStorageSync(HAS_MP_OPENID_KEY)
   const userAuth = require('./userAuth')
   userAuth.clearToken()
   try {
@@ -186,6 +217,10 @@ module.exports = {
   getMerchantApplyStatus,
   getStaffApplyStatus,
   getStaffRejectReason,
+  getEnterpriseId,
+  getEnterpriseName,
+  getHasMpOpenid,
+  setHasMpOpenid,
   isMerchant,
   isVisitor,
   isPark,

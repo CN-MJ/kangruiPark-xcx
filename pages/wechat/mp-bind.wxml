@@ -1,0 +1,68 @@
+<view class="bind-page">
+  <!-- 已授权：必须关注才能收到模板消息 -->
+  <view class="bind-card" wx:if="{{complete}}">
+    <view class="ok-icon">✓</view>
+    <text class="bind-title">授权成功</text>
+    <text class="bind-desc">微信身份已绑定。请务必关注下方服务号，否则无法收到预约进度的微信通知。</text>
+
+    <view class="follow-block">
+      <text class="follow-title">请关注服务号（必做）</text>
+      <text class="follow-desc">预约提交、确认、拒绝等进度都会通过该服务号推送；未关注将收不到消息。</text>
+      <view class="qr-box follow">
+        <image
+          wx:if="{{followQrUrl && !followQrError}}"
+          class="qr-img"
+          src="{{followQrUrl}}"
+          mode="aspectFit"
+          show-menu-by-longpress="{{true}}"
+          binderror="onFollowQrError"
+        />
+        <view class="qr-loading" wx:else>可微信搜索「赣州康瑞产业园」关注</view>
+      </view>
+      <text class="qr-hint">长按识别关注「赣州康瑞产业园」</text>
+    </view>
+
+    <view class="bind-btn primary" bindtap="onSkip">我已关注，完成</view>
+  </view>
+
+  <!-- 待授权 -->
+  <view class="bind-card" wx:elif="{{!loadError}}">
+    <text class="bind-title">{{fromAppointment ? '预约已提交' : '开启消息通知'}}</text>
+    <text class="bind-desc">请长按下图二维码并「识别图中二维码」，在微信中完成授权。授权并关注服务号后，才能收到预约相关微信通知。</text>
+
+    <canvas canvas-id="authQrCanvas" class="qr-canvas-hidden" style="width:420px;height:420px;"></canvas>
+
+    <view class="qr-box">
+      <image
+        wx:if="{{qrImagePath}}"
+        class="qr-img"
+        src="{{qrImagePath}}"
+        mode="aspectFit"
+        show-menu-by-longpress="{{true}}"
+        binderror="onQrError"
+      />
+      <view class="qr-loading" wx:else>二维码生成中…</view>
+    </view>
+
+    <text class="qr-hint err" wx:if="{{qrError}}">{{qrErrorMsg}}</text>
+    <text class="qr-hint" wx:else>长按图片 → 识别图中二维码</text>
+
+    <view class="poll-row" wx:if="{{polling}}">
+      <view class="poll-dot"></view>
+      <text class="poll-text">授权完成后将自动刷新</text>
+    </view>
+
+    <view class="bind-btn primary" bindtap="onRecheck">我已授权，检测一下</view>
+    <view class="bind-btn ghost" bindtap="onCopyLink">复制链接打开（备用）</view>
+    <view class="bind-btn ghost" bindtap="onSkip">{{fromAppointment ? '稍后再说' : '返回'}}</view>
+
+    <text class="foot-tip">必须关注服务号「赣州康瑞产业园」，否则收不到预约微信通知。</text>
+  </view>
+
+  <!-- 异常 -->
+  <view class="bind-card" wx:else>
+    <text class="bind-title">暂时无法授权</text>
+    <text class="bind-desc">{{loadError}}</text>
+    <view class="bind-btn ghost" bindtap="onSkip">返回</view>
+  </view>
+</view>

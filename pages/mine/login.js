@@ -23,7 +23,7 @@ const MOCK_PRESETS = [
   },
   {
     id: 'park_enterprise',
-    label: '健康企业汇录入',
+    label: '赣南健康企业库录入',
     phone: '13800000002',
     hint: '工作台密码 12345678',
   },
@@ -96,13 +96,13 @@ Page({
     if (this.data.submitting) return
     const detail = e.detail || {}
     if (detail.errMsg && detail.errMsg.indexOf('ok') === -1) {
-      wx.showToast({ title: '需要授权手机号才能登录', icon: 'none' })
+      wx.showToast({ title: '需要手机号才能登录', icon: 'none' })
       return
     }
     const phoneCode = detail.code
     if (!phoneCode) {
       wx.showToast({
-        title: this.data.mockHint ? '未获取到授权码，请使用下方开发登录' : '未获取到授权码，请重试',
+        title: this.data.mockHint ? '未获取到手机号，请使用下方开发登录' : '未获取到手机号，请重试',
         icon: 'none',
       })
       return

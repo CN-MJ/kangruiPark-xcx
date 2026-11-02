@@ -11,23 +11,41 @@
     </view>
   </view>
 
+  <!-- 商户功能置顶 -->
+  <block wx:if="{{hasUserAccount && isMerchant}}">
+    <view class="card menu-card" bindtap="goShopServices">
+      <view>
+        <text class="menu-title">我的企业服务</text>
+        <text class="menu-desc">{{enterpriseName ? ('管理「' + enterpriseName + '」的服务') : '请先在资料中绑定所属企业'}}</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="card menu-card" bindtap="goShopAppointments">
+      <view>
+        <text class="menu-title">访客预约处理</text>
+        <text class="menu-desc">确认或拒绝针对本企业服务的预约</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </block>
+
   <!-- 个人功能 -->
   <view class="card menu-card" bindtap="goOrders">
     <text class="menu-title">我的订单</text>
     <text class="menu-arrow">›</text>
   </view>
 
-  <view class="card menu-card" bindtap="goVehicles">
+  <view class="card menu-card" bindtap="onBindMpNotify" wx:if="{{hasUserAccount && phoneVerified}}">
     <view>
-      <text class="menu-title">我的车辆</text>
-      <text class="menu-desc">绑定车牌，接收摄像头识别提醒</text>
+      <text class="menu-title">预约消息通知</text>
+      <text class="menu-desc">绑定服务号，接收预约确认/拒绝通知</text>
     </view>
     <text class="menu-arrow">›</text>
   </view>
 
   <view class="card menu-card" bindtap="goEnterprises">
     <view>
-      <text class="menu-title">健康企业汇</text>
+      <text class="menu-title">赣南健康企业库</text>
       <text class="menu-desc">浏览园区健康服务企业</text>
     </view>
     <text class="menu-arrow">›</text>
@@ -42,6 +60,14 @@
     <view>
       <text class="menu-title">申请成为工作人员</text>
       <text class="menu-desc">{{staffApplyDesc}}</text>
+    </view>
+    <text class="menu-arrow">›</text>
+  </view>
+
+  <view class="card menu-card" bindtap="goVehicles">
+    <view>
+      <text class="menu-title">我的车辆</text>
+      <text class="menu-desc">绑定车牌，接收摄像头识别提醒</text>
     </view>
     <text class="menu-arrow">›</text>
   </view>
@@ -63,15 +89,15 @@
       </view>
       <text class="menu-arrow">›</text>
     </view>
-
-    <view class="card menu-card" wx:if="{{isParkStaff}}" bindtap="onLogoutPark">
-      <text class="menu-title logout-title">退出园区工作台</text>
-      <text class="menu-arrow">›</text>
-    </view>
   </block>
 
+  <view class="card menu-card" wx:if="{{hasUserAccount && isParkAccount && isParkStaff}}" bindtap="onLogoutPark">
+    <text class="menu-title logout-title">退出园区工作台</text>
+    <text class="menu-arrow">›</text>
+  </view>
+
   <view class="card menu-card" wx:if="{{hasUserAccount}}" bindtap="onLogoutUser">
-    <text class="menu-title logout-title">退出微信账号</text>
+    <text class="menu-title logout-title">退出登录</text>
     <text class="menu-arrow">›</text>
   </view>
 
